@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "dev": "node server.js",
+    "start": "node server-mongodb.js",
+    "dev": "node server-mongodb.js",
     "build": "echo 'Build complete'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
