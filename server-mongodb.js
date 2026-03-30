@@ -14,7 +14,7 @@ require('dotenv').config();
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://mandea:<db_password>@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0', {
+mongoose.connect('mongodb+srv://mandea:REPLACE_WITH_YOUR_ACTUAL_PASSWORD@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
