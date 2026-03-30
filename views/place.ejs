@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><%= place.name %> - Ethiopia 361°</title>
+<link rel="stylesheet" href="/css/style.css">
+<link rel="stylesheet" href="/css/ai-chat.css">
+<style>
+    .place-detail {
+        max-width: 800px;
+        margin: 40px auto;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        border-radius: 8px;
+    }
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        height: 0;
+        overflow: hidden;
+        margin-top: 20px;
+    }
+    .video-container video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .video-container iframe {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+    .place-image {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin: 20px 0;
+    }
+    
+    .photo-gallery {
+        margin: 30px 0;
+    }
+    
+    .photo-gallery h3 {
+        color: #004d40;
+        margin-bottom: 20px;
+        font-size: 1.5rem;
+    }
+    
+    .gallery-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .gallery-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        aspect-ratio: 4/3;
+    }
+    
+    .gallery-item:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    }
+    
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+    
+    .gallery-item:hover img {
+        transform: scale(1.1);
+    }
+    
+    .gallery-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 77, 64, 0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+    
+    .gallery-item:hover .gallery-overlay {
+        opacity: 1;
+    }
+    
+    .view-icon {
+        font-size: 2rem;
+        color: white;
+    }
+    
+    .lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    
+    .lightbox-content {
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+    }
+    
+    .lightbox-content img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        border-radius: 8px;
+    }
+    
+    .close-lightbox {
+        position: absolute;
+        top: -40px;
+        right: 0;
+        color: white;
+        font-size: 3rem;
+        cursor: pointer;
+        background: none;
+        border: none;
+        transition: transform 0.3s ease;
+    }
+    
+    .close-lightbox:hover {
+        transform: scale(1.2);
+    }
+    .back-btn {
+        display: inline-block;
+        margin-bottom: 20px;
+        color: #004d40;
+        text-decoration: none;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+<h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+
+<div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
+
+<nav class="desktop-nav">
+<a href="/">Home</a>
+<a href="/destinations">Destinations</a>
+<a href="/culture">Culture</a>
+<a href="/guide">Travel Guide</a>
+<a href="/gallery">Gallery</a>
+<a href="/blog">Blog</a>
+<a href="/contact">Contact</a>
+</nav>
+
+<nav class="mobile-nav" id="mobile-nav">
+<a href="/">Home</a>
+<a href="/destinations">Destinations</a>
+<a href="/culture">Culture</a>
+<a href="/guide">Travel Guide</a>
+<a href="/gallery">Gallery</a>
+<a href="/blog">Blog</a>
+<a href="/contact">Contact</a>
+</nav>
+
+<select id="language" onchange="changeLanguage()">
+<option value="en">English</option>
+<option value="am">አማርኛ</option>
+</select>
+
+</header>
+
+<div class="place-detail">
+    <a href="/" class="back-btn">&larr; Back to Destinations</a>
+    <h2><%= place.name %></h2>
+    
+    <% if(place.image_url) { %>
+        <% if(place.image_url.startsWith('/uploads/')) { %>
+            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
+        <% } else { %>
+            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
+        <% } %>
+    <% } %>
+
+    <!-- Photo Gallery Section -->
+    <div class="photo-gallery">
+        <h3 data-en="Photo Gallery" data-am="ፎቶ ጋለሪ">Photo Gallery</h3>
+        <div class="gallery-grid">
+            <% 
+            // Get gallery images from database
+            let galleryImages = [];
+            
+            // Try to parse gallery_images JSON from database
+            try {
+                if (place.gallery_images) {
+                    galleryImages = JSON.parse(place.gallery_images);
+                }
+            } catch (e) {
+                console.log('Error parsing gallery_images:', e);
+            }
+            
+            // If no gallery images, fall back to main image + placeholders
+            if (galleryImages.length === 0) {
+                if(place.image_url) {
+                    if(place.image_url.startsWith('/uploads/')) {
+                        galleryImages.push(place.image_url);
+                    } else {
+                        galleryImages.push('/img/' + place.image_url);
+                    }
+                }
+                
+                // Add placeholder images if still not enough
+                if(galleryImages.length < 6) {
+                    const placeholders = [
+                        '/img/lalibela2.jpg',
+                        '/img/lalibela3.jpg', 
+                        '/img/lalibela4.jpg',
+                        '/img/lalibela5.jpg',
+                        '/img/lalibela6.jpg'
+                    ];
+                    
+                    // Add enough placeholders to reach 6 images total
+                    const needed = 6 - galleryImages.length;
+                    for(let i = 0; i < needed && i < placeholders.length; i++) {
+                        galleryImages.push(placeholders[i]);
+                    }
+                }
+            }
+            
+            galleryImages.forEach((imageSrc, index) => { %>
+                <div class="gallery-item" onclick="openLightbox('<%= imageSrc %>')">
+                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>">
+                    <div class="gallery-overlay">
+                        <span class="view-icon">🔍</span>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" onclick="closeLightbox()">
+        <div class="lightbox-content">
+            <img id="lightbox-image" src="" alt="Full size image">
+            <span class="close-lightbox">&times;</span>
+        </div>
+    </div>
+
+    <p><%= place.description %></p>
+    
+    <% if(place.video_url) { %>
+        <div class="video-container">
+            <% if(place.video_url.startsWith('/uploads/')) { %>
+                <video controls>
+                    <source src="<%= place.video_url %>" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            <% } else if(place.video_url.includes('youtube.com') || place.video_url.includes('youtu.be')) { %>
+                <% 
+                // Convert YouTube URL to embed format
+                let embedUrl = place.video_url;
+                if (embedUrl.includes('watch?v=')) {
+                    const videoId = embedUrl.split('watch?v=')[1].split('&')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                } else if (embedUrl.includes('youtu.be/')) {
+                    const videoId = embedUrl.split('youtu.be/')[1].split('?')[0];
+                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                }
+                %>
+                <iframe src="<%= embedUrl %>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <% } else { %>
+                <iframe src="<%= place.video_url %>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <% } %>
+        </div>
+    <% } %>
+</div>
+
+<footer>
+<p>© 2026 Ethiopia 361°</p>
+</footer>
+
+<script src="/js/language.js"></script>
+<script src="/js/ai-chat.js"></script>
+<script>
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (mobileNav.classList.contains('active')) {
+        mobileNav.classList.remove('active');
+        menuBtn.classList.remove('active');
+    } else {
+        mobileNav.classList.add('active');
+        menuBtn.classList.add('active');
+    }
+}
+
+function openLightbox(imageSrc) {
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImage = document.getElementById('lightbox-image');
+    
+    lightboxImage.src = imageSrc;
+    lightbox.style.display = 'flex';
+    document.body.style.overflow = 'hidden'; // Prevent scrolling
+}
+
+function closeLightbox() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.style.display = 'none';
+    document.body.style.overflow = 'auto'; // Enable scrolling
+}
+
+// Close lightbox with Escape key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape') {
+        closeLightbox();
+    }
+});
+</script>
+</body>
+</html>
