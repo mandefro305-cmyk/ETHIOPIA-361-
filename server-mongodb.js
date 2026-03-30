@@ -20,7 +20,11 @@ mongoose.connect('mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appN
 }).then(() => {
     console.log('Connected to MongoDB database.');
     initializeDatabase();
-}).catch(err => console.error('MongoDB connection error:', err));
+}).catch(err => {
+    console.error('MongoDB connection error details:', err);
+    console.error('Connection string used:', 'mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0');
+    process.exit(1); // Exit if can't connect to database
+});
 
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
@@ -346,12 +350,13 @@ app.get('/blog', (req, res) => res.render('blog'));
 app.get('/contact', (req, res) => res.render('contact'));
 
 // Start server
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 if (process.env.VERCEL === '1') {
     // Export for Vercel serverless
     module.exports = app;
 } else {
-    app.listen(port, '0.0.0.0', () => {
-        console.log(`Server listening on port ${port}`);
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+        console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
     });
 }
