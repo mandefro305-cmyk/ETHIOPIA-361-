@@ -14,7 +14,7 @@ require('dotenv').config();
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ethiopia-tourism', {
+mongoose.connect('mongodb+srv://mandea:<db_password>@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0', {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 }).then(() => {
