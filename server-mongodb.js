@@ -57,8 +57,8 @@ const upload = multer({
 });
 
 // Middleware
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.static('public'));
 app.use(session({
     secret: 'ethiopia-tourism-secret',
