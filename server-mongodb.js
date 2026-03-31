@@ -68,9 +68,6 @@ app.use(session({
 }));
 
 // Create upload directories if they don't exist
-const fs = require('fs');
-const path = require('path');
-
 const ensureDirectoriesExist = () => {
     const dirs = [
         path.join(__dirname, 'public/uploads'),
