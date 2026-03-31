@@ -599,6 +599,21 @@
                         <input type="text" id="name" name="name" required placeholder="e.g., Lalibela Rock-Hewn Churches">
                     </div>
                     
+                    <div class="form-group">
+                        <label for="category">
+                            <i class="fas fa-list"></i> Category
+                        </label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Historical & Cultural Sites">🏛️ Historical & Cultural Sites</option>
+                            <option value="Nature & Mountains">🌄 Nature & Mountains</option>
+                            <option value="Unique & Adventure Destinations">🌋 Unique & Adventure Destinations</option>
+                            <option value="Lakes & Water Attractions">🌊 Lakes & Water Attractions</option>
+                            <option value="Cities & Urban Tourism">🏙️ Cities & Urban Tourism</option>
+                            <option value="Relaxation & Resort Areas">🌿 Relaxation & Resort Areas</option>
+                        </select>
+                    </div>
+                    
                     <div class="form-group" style="grid-column: 1 / -1;">
                         <label for="description">
                             <i class="fas fa-align-left"></i> Description
@@ -643,8 +658,72 @@
                         <label for="video_url">
                             <i class="fas fa-link"></i> Or Video URL
                         </label>
-                        <input type="url" id="video_url" name="video_url" placeholder="e.g., YouTube embed URL">
-                        <small>If no file uploaded, this will be used</small>
+                        <input type="text" id="video_url" name="video_url" placeholder="https://www.youtube.com/embed/VIDEO_ID">
+                        <small>YouTube embed URL preferred</small>
+                    </div>
+                </div>
+                
+                <!-- Travel Guide Section -->
+                <div style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border-radius: 8px;">
+                    <h4 style="margin-bottom: 1rem; color: #2c3e50;">
+                        <i class="fas fa-map-signs"></i> Travel Guide Information
+                    </h4>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                        <div class="form-group">
+                            <label for="best_time_to_visit">
+                                <i class="fas fa-calendar-alt"></i> Best Time to Visit
+                            </label>
+                            <input type="text" id="best_time_to_visit" name="best_time_to_visit" placeholder="e.g., October to March">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="how_to_get_there">
+                                <i class="fas fa-route"></i> How to Get There
+                            </label>
+                            <input type="text" id="how_to_get_there" name="how_to_get_there" placeholder="e.g., Fly to Lalibela Airport">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="what_to_bring">
+                                <i class="fas fa-backpack"></i> What to Bring
+                            </label>
+                            <input type="text" id="what_to_bring" name="what_to_bring" placeholder="e.g., Comfortable shoes, camera">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="local_tips">
+                                <i class="fas fa-lightbulb"></i> Local Tips
+                            </label>
+                            <input type="text" id="local_tips" name="local_tips" placeholder="e.g., Hire local guide">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="entrance_fees">
+                                <i class="fas fa-ticket-alt"></i> Entrance Fees
+                            </label>
+                            <input type="text" id="entrance_fees" name="entrance_fees" placeholder="e.g., 1000 ETB for foreigners">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="opening_hours">
+                                <i class="fas fa-clock"></i> Opening Hours
+                            </label>
+                            <input type="text" id="opening_hours" name="opening_hours" placeholder="e.g., 8:00 AM - 6:00 PM">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="accommodation">
+                                <i class="fas fa-bed"></i> Accommodation
+                            </label>
+                            <input type="text" id="accommodation" name="accommodation" placeholder="e.g., Hotels and guesthouses available">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="nearby_attractions">
+                                <i class="fas fa-map-marked"></i> Nearby Attractions
+                            </label>
+                            <input type="text" id="nearby_attractions" name="nearby_attractions" placeholder="e.g., Yemrehana Kristos Church">
+                        </div>
                     </div>
                 </div>
                 

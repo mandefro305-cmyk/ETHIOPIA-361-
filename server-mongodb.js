@@ -65,6 +65,19 @@ function isAuthenticated(req, res, next) {
     res.redirect('/login');
 }
 
+// Helper function to get category icon
+function getCategoryIcon(category) {
+    const icons = {
+        'Historical & Cultural Sites': '🏛️',
+        'Nature & Mountains': '🌄',
+        'Unique & Adventure Destinations': '🌋',
+        'Lakes & Water Attractions': '🌊',
+        'Cities & Urban Tourism': '🏙️',
+        'Relaxation & Resort Areas': '🌿'
+    };
+    return icons[category] || '🏛️';
+}
+
 // Database initialization function for MongoDB
 async function initializeDatabase() {
     try {
@@ -100,6 +113,18 @@ async function initializeDatabase() {
                 {
                     name: 'Lalibela Rock-Hewn Churches',
                     description: 'Lalibela is famous for its rock-hewn churches carved into stone during the 12th century. These magnificent churches are considered one of the wonders of the world.',
+                    category: 'Historical & Cultural Sites',
+                    category_icon: '🏛️',
+                    travel_guide: {
+                        best_time_to_visit: 'October to March (dry season)',
+                        how_to_get_there: 'Fly to Lalibela Airport or drive 700km from Addis Ababa',
+                        what_to_bring: 'Comfortable shoes, camera, sun protection',
+                        local_tips: 'Hire local guide for detailed history',
+                        entrance_fees: '1000 ETB for foreigners',
+                        opening_hours: '8:00 AM - 6:00 PM daily',
+                        accommodation: 'Various hotels and guesthouses available',
+                        nearby_attractions: 'Yemrehana Kristos Church, Asheton Maryam Monastery'
+                    },
                     image_url: '/uploads/images/lalibela.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
@@ -114,6 +139,18 @@ async function initializeDatabase() {
                 {
                     name: 'Simien Mountains National Park',
                     description: 'The Simien Mountains offer breathtaking views, unique wildlife, and challenging trekking opportunities. Home to the Gelada baboon and Walia ibex.',
+                    category: 'Nature & Mountains',
+                    category_icon: '🌄',
+                    travel_guide: {
+                        best_time_to_visit: 'September to November, March to May',
+                        how_to_get_there: 'Drive 100km from Gondar or fly to Gondar then drive',
+                        what_to_bring: 'Warm clothing, hiking boots, camping gear',
+                        local_tips: 'Book permits in advance, hire scout mandatory',
+                        entrance_fees: '300 ETB per day + 150 ETB scout fee',
+                        opening_hours: '6:00 AM - 6:00 PM',
+                        accommodation: 'Camping sites and lodge available',
+                        nearby_attractions: 'Chenek Camp, Imet Gogo, Sankaber Camp'
+                    },
                     image_url: '/uploads/images/simien.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
@@ -243,9 +280,80 @@ app.get('/admin', isAuthenticated, async (req, res) => {
     }
 });
 
+// API Routes
+app.get('/api/places/by-category', async (req, res) => {
+    try {
+        const places = await Place.find({});
+        const categorizedPlaces = {};
+        
+        places.forEach(place => {
+            if (!categorizedPlaces[place.category]) {
+                categorizedPlaces[place.category] = [];
+            }
+            categorizedPlaces[place.category].push(place);
+        });
+        
+        res.json(categorizedPlaces);
+    } catch (error) {
+        console.error('Error fetching places by category:', error);
+        res.status(500).json({ error: 'Error fetching places' });
+    }
+});
+
+app.get('/api/places/:id/travel-guide', async (req, res) => {
+    try {
+        const place = await Place.findById(req.params.id);
+        if (!place) {
+            return res.status(404).json({ error: 'Place not found' });
+        }
+        res.json(place);
+    } catch (error) {
+        console.error('Error fetching travel guide:', error);
+        res.status(500).json({ error: 'Error fetching travel guide' });
+    }
+});
+
+// Categories Page
+app.get('/categories', (req, res) => {
+    res.render('categories');
+});
+
+// Places Page with Category Filter
+app.get('/places', async (req, res) => {
+    try {
+        const { category } = req.query;
+        let places;
+        
+        if (category) {
+            places = await Place.find({ category: category });
+        } else {
+            places = await Place.find({});
+        }
+        
+        res.render('places', { places, selectedCategory: category });
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        res.render('places', { places: [], selectedCategory: null });
+    }
+});
+
 // Admin Add Place
 app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }]), async (req, res) => {
-    const { name, description, image_url, video_url } = req.body;
+    const { 
+        name, 
+        description, 
+        image_url, 
+        video_url,
+        category,
+        best_time_to_visit,
+        how_to_get_there,
+        what_to_bring,
+        local_tips,
+        entrance_fees,
+        opening_hours,
+        accommodation,
+        nearby_attractions
+    } = req.body;
     
     try {
         // Determine image path
@@ -277,6 +385,18 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
         const newPlace = new Place({
             name,
             description,
+            category: category || 'Historical & Cultural Sites',
+            category_icon: getCategoryIcon(category),
+            travel_guide: {
+                best_time_to_visit,
+                how_to_get_there,
+                what_to_bring,
+                local_tips,
+                entrance_fees,
+                opening_hours,
+                accommodation,
+                nearby_attractions
+            },
             image_url: imagePath,
             video_url: videoPath,
             gallery_images: galleryImages

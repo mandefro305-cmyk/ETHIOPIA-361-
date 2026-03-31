@@ -23,6 +23,33 @@ const placeSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    category: {
+        type: String,
+        required: true,
+        enum: [
+            'Historical & Cultural Sites',
+            'Nature & Mountains',
+            'Unique & Adventure Destinations',
+            'Lakes & Water Attractions',
+            'Cities & Urban Tourism',
+            'Relaxation & Resort Areas'
+        ],
+        default: 'Historical & Cultural Sites'
+    },
+    category_icon: {
+        type: String,
+        default: '🏛️'
+    },
+    travel_guide: {
+        best_time_to_visit: { type: String, default: '' },
+        how_to_get_there: { type: String, default: '' },
+        what_to_bring: { type: String, default: '' },
+        local_tips: { type: String, default: '' },
+        entrance_fees: { type: String, default: '' },
+        opening_hours: { type: String, default: '' },
+        accommodation: { type: String, default: '' },
+        nearby_attractions: { type: String, default: '' }
+    },
     image_url: {
         type: String,
         default: ''
