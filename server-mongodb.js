@@ -14,10 +14,7 @@ require('dotenv').config();
 const app = express();
 
 // Connect to MongoDB
-mongoose.connect('mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-}).then(() => {
+mongoose.connect('mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0').then(() => {
     console.log('Connected to MongoDB database.');
     initializeDatabase();
 }).catch(err => {
@@ -52,11 +49,14 @@ const upload = multer({
 // Middleware
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static('public'));
 app.use(session({
     secret: 'ethiopia-tourism-secret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: { secure: false }
 }));
 
 // Authentication middleware
@@ -149,27 +149,44 @@ app.get('/login', (req, res) => {
 
 app.post('/login', async (req, res) => {
     try {
-        const { username, password } = req.body;
+        console.log('Login attempt - req.body:', req.body);
+        console.log('Login attempt - raw body:', JSON.stringify(req.body));
         
         // Check if body exists
-        if (!req.body || !username || !password) {
-            console.error('Login error: Missing form data');
+        if (!req.body) {
+            console.error('Login error: req.body is undefined');
+            return res.render('login', { error: 'Form submission error' });
+        }
+        
+        const { username, password } = req.body;
+        
+        // Check if username and password exist
+        if (!username || !password) {
+            console.error('Login error: Missing username or password');
+            console.error('Username:', username, 'Password:', password ? 'provided' : 'missing');
             return res.render('login', { error: 'Please fill all fields' });
         }
         
+        console.log('Looking for user:', username);
         const user = await User.findOne({ username: username });
         if (!user) {
+            console.error('User not found:', username);
             return res.render('login', { error: 'Invalid username or password' });
         }
+        
+        console.log('User found, checking password');
         const isMatch = await bcrypt.compare(password, user.password);
         if (isMatch) {
+            console.log('Login successful for user:', username);
             req.session.userId = user._id;
             res.redirect('/admin');
         } else {
+            console.error('Password mismatch for user:', username);
             res.render('login', { error: 'Invalid username or password' });
         }
     } catch (error) {
         console.error('Login error:', error);
+        console.error('Error stack:', error.stack);
         res.render('login', { error: 'Login failed' });
     }
 });
