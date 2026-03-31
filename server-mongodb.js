@@ -38,7 +38,7 @@ const storage = multer.diskStorage({
         }
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + '-' + file.originalname);
+        cb(null, Date.now() + path.extname(file.originalname));
     }
 });
 
@@ -46,13 +46,6 @@ const upload = multer({
     storage: storage,
     limits: {
         fileSize: 50 * 1024 * 1024 // 50MB limit
-    },
-    fileFilter: function (req, file, cb) {
-        if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
-            cb(null, true);
-        } else {
-            cb(new Error('Only image and video files are allowed'));
-        }
     }
 });
 
@@ -182,10 +175,13 @@ app.get('/logout', (req, res) => {
 // Admin Dashboard
 app.get('/admin', isAuthenticated, async (req, res) => {
     try {
+        console.log('Admin dashboard accessed by user:', req.session.userId);
         const places = await Place.find({});
+        console.log('Found places:', places.length);
         res.render('admin', { places });
     } catch (error) {
-        console.error('Admin dashboard error:', error);
+        console.error('Admin dashboard error details:', error);
+        console.error('Error stack:', error.stack);
         res.render('admin', { places: [] });
     }
 });
