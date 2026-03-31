@@ -74,17 +74,21 @@ async function initializeDatabase() {
         const adminExists = await User.findOne({ username: 'admin' });
         console.log('Admin user exists:', !!adminExists);
         
-        if (!adminExists) {
-            console.log('Creating admin user...');
-            // Create default admin user with plain text password
-            const hashedPassword = '$2b$10$wTf7tPOnv81wZ0j4x9xT1ObM19PZ43177Q82q81kH2n178N29gZl.'; // bcrypt hash for "admin"
-            const adminUser = new User({
-                username: 'admin',
-                password: hashedPassword
-            });
-            await adminUser.save();
-            console.log('Admin user created successfully');
+        // Always delete and recreate admin user to ensure correct password
+        if (adminExists) {
+            console.log('Deleting existing admin user...');
+            await User.deleteOne({ username: 'admin' });
         }
+        
+        console.log('Creating admin user...');
+        // Create default admin user with correct bcrypt hash for "admin"
+        const hashedPassword = '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // bcrypt hash for "admin"
+        const adminUser = new User({
+            username: 'admin',
+            password: hashedPassword
+        });
+        await adminUser.save();
+        console.log('Admin user created successfully');
 
         // Check if sample places exist
         const placesCount = await Place.countDocuments();
