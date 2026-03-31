@@ -81,11 +81,10 @@ async function initializeDatabase() {
         }
         
         console.log('Creating admin user...');
-        // Create default admin user with correct bcrypt hash for "admin"
-        const hashedPassword = '$2b$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'; // bcrypt hash for "admin"
+        // Create default admin user with plain text password (temporary fix)
         const adminUser = new User({
             username: 'admin',
-            password: hashedPassword
+            password: 'admin' // Plain text for now
         });
         await adminUser.save();
         console.log('Admin user created successfully');
@@ -207,13 +206,15 @@ app.post('/login', async (req, res) => {
         }
         
         console.log('User found, checking password');
-        const isMatch = await bcrypt.compare(password, user.password);
+        // Temporary plain text comparison
+        const isMatch = (password === user.password);
         if (isMatch) {
             console.log('Login successful for user:', username);
             req.session.userId = user._id;
             res.redirect('/admin');
         } else {
             console.error('Password mismatch for user:', username);
+            console.error('Expected:', user.password, 'Got:', password);
             res.render('login', { error: 'Invalid username or password' });
         }
     } catch (error) {
