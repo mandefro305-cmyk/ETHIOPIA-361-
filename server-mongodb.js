@@ -386,7 +386,17 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
             name,
             description,
             category: category || 'Historical & Cultural Sites',
-            category_icon: getCategoryIcon(category),
+            category_icon: (() => {
+                const icons = {
+                    'Historical & Cultural Sites': '🏛️',
+                    'Nature & Mountains': '🌄',
+                    'Unique & Adventure Destinations': '🌋',
+                    'Lakes & Water Attractions': '🌊',
+                    'Cities & Urban Tourism': '🏙️',
+                    'Relaxation & Resort Areas': '🌿'
+                };
+                return icons[category] || '🏛️';
+            })(),
             travel_guide: {
                 best_time_to_visit,
                 how_to_get_there,
