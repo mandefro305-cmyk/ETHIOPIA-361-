@@ -339,23 +339,29 @@ app.get('/places', async (req, res) => {
 
 // Admin Add Place
 app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }]), async (req, res) => {
-    const { 
-        name, 
-        description, 
-        image_url, 
-        video_url,
-        category,
-        best_time_to_visit,
-        how_to_get_there,
-        what_to_bring,
-        local_tips,
-        entrance_fees,
-        opening_hours,
-        accommodation,
-        nearby_attractions
-    } = req.body;
-    
     try {
+        console.log('Add place request received');
+        console.log('Request body:', req.body);
+        console.log('Request files:', req.files);
+        
+        const { 
+            name, 
+            description, 
+            image_url, 
+            video_url,
+            category,
+            best_time_to_visit,
+            how_to_get_there,
+            what_to_bring,
+            local_tips,
+            entrance_fees,
+            opening_hours,
+            accommodation,
+            nearby_attractions
+        } = req.body;
+        
+        console.log('Extracted fields - name:', name, 'category:', category);
+        
         // Determine image path
         let imagePath = image_url;
         if (req.files && req.files.image && req.files.image[0]) {
