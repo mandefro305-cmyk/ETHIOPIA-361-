@@ -59,14 +59,8 @@ app.use(session({
     cookie: { secure: false }
 }));
 
-// Authentication middleware
-function isAuthenticated(req, res, next) {
-    if (req.session.userId) return next();
-    res.redirect('/login');
-}
-
 // Helper function to get category icon
-function getCategoryIcon(category) {
+const getCategoryIcon = (category) => {
     const icons = {
         'Historical & Cultural Sites': '🏛️',
         'Nature & Mountains': '🌄',
@@ -76,6 +70,12 @@ function getCategoryIcon(category) {
         'Relaxation & Resort Areas': '🌿'
     };
     return icons[category] || '🏛️';
+};
+
+// Authentication middleware
+function isAuthenticated(req, res, next) {
+    if (req.session.userId) return next();
+    res.redirect('/login');
 }
 
 // Database initialization function for MongoDB
