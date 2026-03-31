@@ -68,56 +68,84 @@ function isAuthenticated(req, res, next) {
 // Database initialization function for MongoDB
 async function initializeDatabase() {
     try {
+        console.log('Initializing database...');
+        
         // Check if admin user exists
         const adminExists = await User.findOne({ username: 'admin' });
+        console.log('Admin user exists:', !!adminExists);
         
         if (!adminExists) {
-            // Create default admin user
-            const hashedPassword = '$2b$10$wTf7tPOnv81wZ0j4x9xT1ObM19PZ43177Q82q81kH2n178N29gZl.';
+            console.log('Creating admin user...');
+            // Create default admin user with plain text password
+            const hashedPassword = '$2b$10$wTf7tPOnv81wZ0j4x9xT1ObM19PZ43177Q82q81kH2n178N29gZl.'; // bcrypt hash for "admin"
             const adminUser = new User({
                 username: 'admin',
                 password: hashedPassword
             });
             await adminUser.save();
-            console.log('Admin user created');
+            console.log('Admin user created successfully');
         }
 
         // Check if sample places exist
         const placesCount = await Place.countDocuments();
+        console.log('Current places count:', placesCount);
         
         if (placesCount === 0) {
+            console.log('Creating sample places...');
             // Insert sample places
             const samplePlaces = [
                 {
                     name: 'Lalibela Rock-Hewn Churches',
-                    description: 'Lalibela is famous for its rock-hewn churches carved into stone.',
-                    image_url: 'lalibela.jpg',
+                    description: 'Lalibela is famous for its rock-hewn churches carved into stone during the 12th century. These magnificent churches are considered one of the wonders of the world.',
+                    image_url: '/uploads/images/lalibela.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                    gallery_images: ['/img/lalibela.jpg','/img/lalibela2.jpg','/img/lalibela3.jpg','/img/lalibela4.jpg','/img/lalibela5.jpg','/img/lalibela6.jpg']
+                    gallery_images: [
+                        '/uploads/images/lalibela1.jpg',
+                        '/uploads/images/lalibela2.jpg',
+                        '/uploads/images/lalibela3.jpg',
+                        '/uploads/images/lalibela4.jpg',
+                        '/uploads/images/lalibela5.jpg',
+                        '/uploads/images/lalibela6.jpg'
+                    ]
                 },
                 {
                     name: 'Simien Mountains National Park',
-                    description: 'Beautiful national park with dramatic mountains.',
-                    image_url: 'simien.jpg',
+                    description: 'The Simien Mountains offer breathtaking views, unique wildlife, and challenging trekking opportunities. Home to the Gelada baboon and Walia ibex.',
+                    image_url: '/uploads/images/simien.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                    gallery_images: ['/img/simien.jpg','/img/lalibela2.jpg','/img/lalibela3.jpg','/img/lalibela4.jpg','/img/lalibela5.jpg','/img/lalibela6.jpg']
+                    gallery_images: [
+                        '/uploads/images/simien1.jpg',
+                        '/uploads/images/simien2.jpg',
+                        '/uploads/images/simien3.jpg',
+                        '/uploads/images/simien4.jpg',
+                        '/uploads/images/simien5.jpg',
+                        '/uploads/images/simien6.jpg'
+                    ]
                 },
                 {
                     name: 'Entoto Park',
-                    description: 'A scenic park on the outskirts of Addis Ababa.',
-                    image_url: 'entoto.jpg',
+                    description: 'Entoto Park is a beautiful natural park overlooking Addis Ababa, offering stunning views, walking trails, and cultural experiences.',
+                    image_url: '/uploads/images/entoto.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
-                    gallery_images: ['/img/danakil.svg','/img/lalibela2.jpg','/img/lalibela3.jpg','/img/lalibela4.jpg','/img/lalibela5.jpg','/img/lalibela6.jpg']
+                    gallery_images: [
+                        '/uploads/images/entoto1.jpg',
+                        '/uploads/images/entoto2.jpg',
+                        '/uploads/images/entoto3.jpg',
+                        '/uploads/images/entoto4.jpg',
+                        '/uploads/images/entoto5.jpg',
+                        '/uploads/images/entoto6.jpg'
+                    ]
                 }
             ];
 
             await Place.insertMany(samplePlaces);
-            console.log('Sample places created');
+            console.log('Sample places created successfully');
         }
 
         console.log('Database initialized successfully');
     } catch (error) {
         console.error('Database initialization error:', error);
+        console.error('Error details:', error.message);
     }
 }
 
