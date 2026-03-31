@@ -293,12 +293,21 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
 // Admin Edit Place Form
 app.get('/admin/edit/:id', isAuthenticated, async (req, res) => {
     try {
+        console.log('Edit request for place ID:', req.params.id);
         const place = await Place.findById(req.params.id);
-        if (!place) return res.status(404).send("Place not found");
+        console.log('Found place:', place ? place.name : 'null');
+        
+        if (!place) {
+            console.error('Place not found with ID:', req.params.id);
+            return res.status(404).send("Place not found");
+        }
+        
+        console.log('Rendering edit form for place:', place.name);
         res.render('edit', { place });
     } catch (error) {
-        console.error('Edit form error:', error);
-        res.status(500).send('Error loading place');
+        console.error('Edit form error details:', error);
+        console.error('Error stack:', error.stack);
+        res.status(500).send('Error loading place: ' + error.message);
     }
 });
 
