@@ -210,11 +210,11 @@
                 <div id="image-preview" class="image-preview-container"></div>
                 <% if(place.gallery_images) { %>
                     <div class="current-media">
-                        <strong>Current Gallery Images (<%= JSON.parse(place.gallery_images).length %>/6):</strong><br>
+                        <strong>Current Gallery Images (<%= place.gallery_images.length %>/6):</strong><br>
                         <div class="current-gallery">
                             <% 
                             try {
-                                const galleryImages = JSON.parse(place.gallery_images);
+                                const galleryImages = place.gallery_images;
                                 galleryImages.forEach((img, index) => { %>
                                     <div class="current-gallery-item">
                                         <% if(img.startsWith('/uploads/')) { %>
