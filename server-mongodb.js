@@ -27,9 +27,17 @@ mongoose.connect('mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appN
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (file.mimetype.startsWith('image/')) {
-            cb(null, 'public/uploads/images/');
+            const dir = path.join(__dirname, 'public/uploads/images');
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+            cb(null, dir);
         } else if (file.mimetype.startsWith('video/')) {
-            cb(null, 'public/uploads/videos/');
+            const dir = path.join(__dirname, 'public/uploads/videos');
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+            cb(null, dir);
         } else {
             cb(new Error('Invalid file type'), null);
         }
@@ -58,6 +66,28 @@ app.use(session({
     saveUninitialized: false,
     cookie: { secure: false }
 }));
+
+// Create upload directories if they don't exist
+const fs = require('fs');
+const path = require('path');
+
+const ensureDirectoriesExist = () => {
+    const dirs = [
+        path.join(__dirname, 'public/uploads'),
+        path.join(__dirname, 'public/uploads/images'),
+        path.join(__dirname, 'public/uploads/videos')
+    ];
+    
+    dirs.forEach(dir => {
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+            console.log('Created directory:', dir);
+        }
+    });
+};
+
+// Call this function at startup
+ensureDirectoriesExist();
 
 // Helper function to get category icon
 const getCategoryIcon = (category) => {
@@ -365,7 +395,19 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
         // Determine image path
         let imagePath = image_url;
         if (req.files && req.files.image && req.files.image[0]) {
-            imagePath = '/uploads/images/' + req.files.image[0].filename;
+            const uploadedFile = req.files.image[0];
+            console.log('Image file uploaded:', uploadedFile);
+            console.log('File path:', uploadedFile.path);
+            console.log('File destination:', uploadedFile.destination);
+            console.log('File filename:', uploadedFile.filename);
+            
+            imagePath = '/uploads/images/' + uploadedFile.filename;
+            
+            // Check if file actually exists
+            const fullFilePath = path.join(uploadedFile.destination, uploadedFile.filename);
+            const fileExists = fs.existsSync(fullFilePath);
+            console.log('Full file path:', fullFilePath);
+            console.log('File exists:', fileExists);
         }
         
         // Determine video path
