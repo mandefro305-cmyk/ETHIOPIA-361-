@@ -148,8 +148,15 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', async (req, res) => {
-    const { username, password } = req.body;
     try {
+        const { username, password } = req.body;
+        
+        // Check if body exists
+        if (!req.body || !username || !password) {
+            console.error('Login error: Missing form data');
+            return res.render('login', { error: 'Please fill all fields' });
+        }
+        
         const user = await User.findOne({ username: username });
         if (!user) {
             return res.render('login', { error: 'Invalid username or password' });
