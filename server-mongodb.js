@@ -89,19 +89,6 @@ const ensureDirectoriesExist = () => {
 // Call this function at startup
 ensureDirectoriesExist();
 
-// Helper function to get category icon
-const getCategoryIcon = (category) => {
-    const icons = {
-        'Historical & Cultural Sites': '🏛️',
-        'Nature & Mountains': '🌄',
-        'Unique & Adventure Destinations': '🌋',
-        'Lakes & Water Attractions': '🌊',
-        'Cities & Urban Tourism': '🏙️',
-        'Relaxation & Resort Areas': '🌿'
-    };
-    return icons[category] || '🏛️';
-};
-
 // Authentication middleware
 function isAuthenticated(req, res, next) {
     if (req.session.userId) return next();
