@@ -38,6 +38,12 @@ const storage = multer.diskStorage({
                 fs.mkdirSync(dir, { recursive: true });
             }
             cb(null, dir);
+        } else if (file.mimetype === 'application/pdf') {
+            const dir = path.join(__dirname, 'public/uploads/pdfs');
+            if (!fs.existsSync(dir)) {
+                fs.mkdirSync(dir, { recursive: true });
+            }
+            cb(null, dir);
         } else {
             cb(new Error('Invalid file type'), null);
         }
@@ -73,7 +79,8 @@ const ensureDirectoriesExist = () => {
     const dirs = [
         path.join(__dirname, 'public/uploads'),
         path.join(__dirname, 'public/uploads/images'),
-        path.join(__dirname, 'public/uploads/videos')
+        path.join(__dirname, 'public/uploads/videos'),
+        path.join(__dirname, 'public/uploads/pdfs')
     ];
     
     dirs.forEach(dir => {
@@ -385,7 +392,7 @@ app.get('/places', async (req, res) => {
 });
 
 // Admin Add Place
-app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }]), async (req, res) => {
+app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }, { name: 'description_pdf', maxCount: 1 }]), async (req, res) => {
     try {
         console.log('Add place request received');
         console.log('Request body:', req.body);
@@ -441,6 +448,12 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
             additionalImages = req.files.additional_images.map(file => '/uploads/images/' + file.filename);
         }
         
+        // Handle PDF upload
+        let pdfPath = '';
+        if (req.files && req.files.description_pdf && req.files.description_pdf[0]) {
+            pdfPath = '/uploads/pdfs/' + req.files.description_pdf[0].filename;
+        }
+        
         // Create gallery images array (main image + additional images)
         let galleryImages = [];
         if (imagePath) {
@@ -467,18 +480,19 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
                 return icons[category] || '🏛️';
             })(),
             travel_guide: {
-                best_time_to_visit,
-                how_to_get_there,
-                what_to_bring,
-                local_tips,
-                entrance_fees,
-                opening_hours,
-                accommodation,
-                nearby_attractions
+                best_time_to_visit: best_time_to_visit || '',
+                how_to_get_there: how_to_get_there || '',
+                what_to_bring: what_to_bring || '',
+                local_tips: local_tips || '',
+                entrance_fees: entrance_fees || '',
+                opening_hours: opening_hours || '',
+                accommodation: accommodation || '',
+                nearby_attractions: nearby_attractions || ''
             },
             image_url: imagePath,
             video_url: videoPath,
-            gallery_images: galleryImages
+            gallery_images: galleryImages,
+            description_pdf: pdfPath
         });
         
         await newPlace.save();

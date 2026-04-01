@@ -144,7 +144,7 @@ async function loadDestinations() {
                 `}
                 <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
                 <p class="place-description">
-                    <span class="short-text" data-en="${place.description ? place.description.substring(0, 100) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 100) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 100) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
+                    <span class="short-text" data-en="${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 150) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
                     <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
                 </p>
                 <div class="card-actions">
@@ -154,6 +154,11 @@ async function loadDestinations() {
                         <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
                             <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
                         </button>
+                    ` : ''}
+                    ${place.description_pdf ? `
+                        <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
+                            <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
+                        </a>
                     ` : ''}
                 </div>
             </div>

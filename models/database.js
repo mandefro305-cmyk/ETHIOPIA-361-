@@ -69,6 +69,10 @@ const placeSchema = new mongoose.Schema({
     gallery_images: {
         type: [String],
         default: []
+    },
+    description_pdf: {
+        type: String,
+        default: ''
     }
 });
 
