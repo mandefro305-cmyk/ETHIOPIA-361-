@@ -514,40 +514,13 @@ footer {
   font-weight: 500;
 }
 
-/* Mobile Responsiveness */
+/* Gallery Styles */
 @media (max-width: 768px) {
-  .mobile-header {
-    display: block;
-  }
-  
-  .mobile-menu-btn {
-    display: flex;
-  }
-  
-  .desktop-nav {
-    display: none;
-  }
-  
-  header {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    text-align: left;
-  }
-  
-  header h1 {
-    font-size: 1.5rem;
-  }
-  nav {
-    justify-content: center;
-    width: 100%;
-    margin-top: 15px;
-  }
   .hero {
     height: 60vh;
     min-height: 300px;
   }
-  
+
   .hero-overlay {
     padding: 20px;
   }
