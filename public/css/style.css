@@ -82,6 +82,23 @@ header h1 {
     padding: 1rem 0;
 }
 
+/* Hide mobile navigation by default on desktop */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 80%;
+    height: 100vh;
+    background: linear-gradient(135deg, rgba(0,77,64,0.98), rgba(0,128,128,0.98));
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    padding: 5rem 2rem;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 999;
+    gap: 1rem;
+}
+
 .desktop-nav a, .mobile-nav a {
     color: rgba(255,255,255,0.9);
     text-decoration: none;
@@ -228,18 +245,7 @@ body.dark-mode .theme-toggle.light::before {
     }
     
     .mobile-nav {
-        position: fixed;
-        top: 0;
-        left: -100%;
-        width: 80%;
-        height: 100vh;
-        background: linear-gradient(135deg, rgba(0,77,64,0.98), rgba(0,128,128,0.98));
-        backdrop-filter: blur(20px);
-        flex-direction: column;
-        padding: 5rem 2rem;
-        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        z-index: 999;
-        gap: 1rem;
+        display: flex;
     }
     
     .mobile-nav.active {
