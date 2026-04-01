@@ -60,6 +60,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(session({
     secret: 'ethiopia-tourism-secret',
     resave: false,
@@ -139,15 +140,15 @@ async function initializeDatabase() {
                         accommodation: 'Various hotels and guesthouses available',
                         nearby_attractions: 'Yemrehana Kristos Church, Asheton Maryam Monastery'
                     },
-                    image_url: '/uploads/images/lalibela.jpg',
+                    image_url: 'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
-                        '/uploads/images/lalibela1.jpg',
-                        '/uploads/images/lalibela2.jpg',
-                        '/uploads/images/lalibela3.jpg',
-                        '/uploads/images/lalibela4.jpg',
-                        '/uploads/images/lalibela5.jpg',
-                        '/uploads/images/lalibela6.jpg'
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+1',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+2',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+3',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+4',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+5',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+6'
                     ]
                 },
                 {
@@ -165,29 +166,29 @@ async function initializeDatabase() {
                         accommodation: 'Camping sites and lodge available',
                         nearby_attractions: 'Chenek Camp, Imet Gogo, Sankaber Camp'
                     },
-                    image_url: '/uploads/images/simien.jpg',
+                    image_url: 'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+Mountains',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
-                        '/uploads/images/simien1.jpg',
-                        '/uploads/images/simien2.jpg',
-                        '/uploads/images/simien3.jpg',
-                        '/uploads/images/simien4.jpg',
-                        '/uploads/images/simien5.jpg',
-                        '/uploads/images/simien6.jpg'
+                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+1',
+                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+2',
+                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+3',
+                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+4',
+                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+5',
+                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+6'
                     ]
                 },
                 {
                     name: 'Entoto Park',
                     description: 'Entoto Park is a beautiful natural park overlooking Addis Ababa, offering stunning views, walking trails, and cultural experiences.',
-                    image_url: '/uploads/images/entoto.jpg',
+                    image_url: 'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+Park',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
-                        '/uploads/images/entoto1.jpg',
-                        '/uploads/images/entoto2.jpg',
-                        '/uploads/images/entoto3.jpg',
-                        '/uploads/images/entoto4.jpg',
-                        '/uploads/images/entoto5.jpg',
-                        '/uploads/images/entoto6.jpg'
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+1',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+2',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+3',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+4',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+5',
+                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+6'
                     ]
                 }
             ];
