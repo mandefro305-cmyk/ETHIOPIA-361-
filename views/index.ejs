@@ -93,34 +93,31 @@ async function loadPlaces() {
         }
         
         container.innerHTML = places.map(place => `
-            <div class="card">
+            <div class="destination-card">
                 ${place.image_url ? `
                     ${place.image_url.startsWith('/uploads/') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="card-image">`
                     }
                 ` : `
-                    <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
-                        <i class="fas fa-image" style="font-size: 3rem; color: white;"></i>
+                    <div class="card-header-gradient">
+                        <div class="gradient-content">
+                            <i class="fas fa-image"></i>
+                            <span data-en="No Image Available" data-am="ምስልክት የለም">No Image Available</span>
+                        </div>
                     </div>
                 `}
-                <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
-                <p class="place-description">
-                    <span class="short-text" data-en="${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 150) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
-                    <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
-                </p>
+                <div class="card-content">
+                    <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
+                    <p class="card-description" data-en="${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 120) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</p>
+                </div>
                 <div class="card-actions">
-                    <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
-                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                    <button class="card-btn btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+                    <a href="/place/${place.id}" class="card-btn btn-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
                     ${place.video_url ? `
-                        <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
+                        <button class="card-btn btn-video" onclick="showVideo('${place.video_url}', '${place.name}')">
                             <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
                         </button>
-                    ` : ''}
-                    ${place.description_pdf ? `
-                        <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
-                            <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
-                        </a>
                     ` : ''}
                 </div>
             </div>
