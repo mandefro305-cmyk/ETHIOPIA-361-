@@ -1,22 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Destinations</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations - Ethiopia 361°</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .destinations-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .destination-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .destination-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .destination-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .destination-content {
+            padding: 1.5rem;
+        }
+        
+        .destination-category {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .destination-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+        
+        .destination-description {
+            color: #6c757d;
+            margin-bottom: 1rem;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .destination-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-guide {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        
+        .btn-guide:hover {
+            background: #218838;
+        }
+        
+        .btn-details {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+        
+        .btn-details:hover {
+            background: #5a6fd8;
+        }
+        
+        .back-nav {
+            margin-bottom: 2rem;
+        }
+        
+        .back-nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-nav a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/">Ethiopia 361°</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/destinations" class="active">Destinations</a></li>
+                <li><a href="/categories">Categories</a></li>
+                <li><a href="/guide">Travel Guide</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<header>
-<h1>Tourist Destinations</h1>
-</header>
+    <div class="destinations-container">
+        <div class="back-nav">
+            <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
 
-<section>
+        <div class="page-header">
+            <h1 class="page-title">🌍 Explore Ethiopia's Destinations</h1>
+            <p class="page-subtitle">Discover amazing places across Ethiopia</p>
+        </div>
 
-<h2>Lalibela</h2>
-<p>Historic rock churches and UNESCO heritage site.</p>
+        <div id="destinationsContent" class="loading">
+            <i class="fas fa-spinner fa-spin"></i> Loading destinations...
+        </div>
+    </div>
 
-<h2>Simien Mountains</h2>
-<p>Great hiking, wildlife and landscapes.</p>
+    <script>
+        async function loadDestinations() {
+            try {
+                const response = await fetch('/api/places/by-category');
+                const data = await response.json();
+                
+                const container = document.getElementById('destinationsContent');
+                container.className = 'destinations-grid';
+                
+                let allPlaces = [];
+                Object.keys(data).forEach(category => {
+                    allPlaces = allPlaces.concat(data[category]);
+                });
+                
+                if (allPlaces.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #6c757d;">No destinations available yet. Check back soon!</div>';
+                    return;
+                }
+                
+                container.innerHTML = allPlaces.map(place => `
+                    <div class="destination-card" onclick="window.location.href='/place/${place._id}'">
+                        <img src="${place.image_url || '/img/placeholder.jpg'}" alt="${place.name}" class="destination-image">
+                        <div class="destination-content">
+                            <span class="destination-category">${place.category_icon} ${place.category}</span>
+                            <h3 class="destination-title">${place.name}</h3>
+                            <p class="destination-description">${place.description}</p>
+                            <div class="destination-actions">
+                                <button class="btn-guide" onclick="event.stopPropagation(); showTravelGuide('${place._id}')">
+                                    <i class="fas fa-map-signs"></i> Travel Guide
+                                </button>
+                                <a href="/place/${place._id}" class="btn-details" onclick="event.stopPropagation()">
+                                    <i class="fas fa-info-circle"></i> Details
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading destinations:', error);
+                document.getElementById('destinationsContent').innerHTML = 
+                    '<div style="text-align: center; padding: 2rem; color: #dc3545;">Error loading destinations. Please try again later.</div>';
+            }
+        }
+
+        async function showTravelGuide(placeId) {
+            try {
+                const response = await fetch(`/api/places/${placeId}/travel-guide`);
+                const place = await response.json();
+                
+                alert(`🗺️ Travel Guide for ${place.name}\n\n` +
+                      `📅 Best Time: ${place.travel_guide.best_time_to_visit || 'N/A'}\n` +
+                      `🚗 How to Get There: ${place.travel_guide.how_to_get_there || 'N/A'}\n` +
+                      `🎒 What to Bring: ${place.travel_guide.what_to_bring || 'N/A'}\n` +
+                      `💡 Local Tips: ${place.travel_guide.local_tips || 'N/A'}\n` +
+                      `🎫 Entrance Fees: ${place.travel_guide.entrance_fees || 'N/A'}\n` +
+                      `🕐 Opening Hours: ${place.travel_guide.opening_hours || 'N/A'}\n` +
+                      `🏨 Accommodation: ${place.travel_guide.accommodation || 'N/A'}\n` +
+                      `📍 Nearby: ${place.travel_guide.nearby_attractions || 'N/A'}`);
+            } catch (error) {
+                console.error('Error loading travel guide:', error);
+                alert('Error loading travel guide. Please try again.');
+            }
+        }
+
+        // Load destinations when page loads
+        document.addEventListener('DOMContentLoaded', loadDestinations);
+    </script>
+</body>
+</html>
 
 <h2>Lake Tana</h2>
 <p>The largest lake in Ethiopia and source of the Blue Nile.</p>

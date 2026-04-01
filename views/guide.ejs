@@ -1,22 +1,343 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Travel Guide</title>
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel Guide - Ethiopia 361°</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .guide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-title {
+            font-size: 3rem;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+        
+        .guide-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .guide-card {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .guide-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .guide-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .guide-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        
+        .guide-content {
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .guide-content ul {
+            margin: 1rem 0;
+            padding-left: 1.5rem;
+        }
+        
+        .guide-content li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .destinations-preview {
+            margin-top: 3rem;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+        
+        .destinations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .destination-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .destination-item:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .destination-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .destination-name {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .back-nav {
+            margin-bottom: 2rem;
+        }
+        
+        .back-nav a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        
+        .back-nav a:hover {
+            text-decoration: underline;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="/">Ethiopia 361°</a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/destinations">Destinations</a></li>
+                <li><a href="/categories">Categories</a></li>
+                <li><a href="/guide" class="active">Travel Guide</a></li>
+                <li><a href="/contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
 
-<header>
-<h1>Travel Guide</h1>
-</header>
+    <div class="guide-container">
+        <div class="back-nav">
+            <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
+        </div>
 
-<section>
+        <div class="page-header">
+            <h1 class="page-title">🗺️ Complete Travel Guide</h1>
+            <p class="page-subtitle">Everything you need to know for your Ethiopia adventure</p>
+        </div>
 
-<h2>Transportation</h2>
-<p>Visitors can travel by plane, bus or car.</p>
+        <div class="guide-sections">
+            <div class="guide-card">
+                <div class="guide-icon">📅</div>
+                <h3 class="guide-title">Best Time to Visit</h3>
+                <div class="guide-content">
+                    <p>Ethiopia's climate varies by region:</p>
+                    <ul>
+                        <li><strong>October - March:</strong> Dry season, ideal for most regions</li>
+                        <li><strong>September - November:</strong> Harvest season, green landscapes</li>
+                        <li><strong>March - May:</strong> Spring season, pleasant weather</li>
+                        <li><strong>June - August:</strong> Rainy season, lush green scenery</li>
+                    </ul>
+                    <p><strong>Tip:</strong> Avoid heavy rains in July-August for trekking.</p>
+                </div>
+            </div>
 
-<h2>Best Time to Visit</h2>
-<p>October to March has comfortable weather.</p>
+            <div class="guide-card">
+                <div class="guide-icon">🚗</div>
+                <h3 class="guide-title">Transportation</h3>
+                <div class="guide-content">
+                    <p><strong>Getting Around Ethiopia:</strong></p>
+                    <ul>
+                        <li><strong>Flying:</strong> Ethiopian Airlines connects major cities daily</li>
+                        <li><strong>Buses:</strong> Comfortable long-distance buses between cities</li>
+                        <li><strong>Car Rental:</strong> 4WD recommended for rural areas</li>
+                        <li><strong>Taxis:</strong> Available in cities, agree on price first</li>
+                        <li><strong>Domestic Flights:</strong> Save time between distant destinations</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-icon">🎒</div>
+                <h3 class="guide-title">What to Bring</h3>
+                <div class="guide-content">
+                    <p><strong>Essential Items:</strong></p>
+                    <ul>
+                        <li>Comfortable walking shoes</li>
+                        <li>Light layers for temperature changes</li>
+                        <li>Sun protection (hat, sunscreen, sunglasses)</li>
+                        <li>Camera and extra batteries</li>
+                        <li>First aid kit and personal medications</li>
+                        <li>Power adapter (Type E, 220V)</li>
+                        <li>Reusable water bottle</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-icon">🍽️</div>
+                <h3 class="guide-title">Food & Cuisine</h3>
+                <div class="guide-content">
+                    <p><strong>Must-Try Dishes:</strong></p>
+                    <ul>
+                        <li><strong>Injera:</strong> Sour flatbread, staple food</li>
+                        <li><strong>Doro Wat:</strong> Spicy chicken stew</li>
+                        <li><strong>Kitfo:</strong> Raw minced beef with spices</li>
+                        <li><strong>Tibs:</strong> Grilled meat or vegetables</li>
+                        <li><strong>Shiro:</strong> Chickpea stew</li>
+                        <li><strong>Ethiopian Coffee:</strong> Traditional ceremony</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-icon">💡</div>
+                <h3 class="guide-title">Local Tips</h3>
+                <div class="guide-content">
+                    <p><strong>Important Advice:</strong></p>
+                    <ul>
+                        <li>Bargain politely in markets</li>
+                        <li>Ask permission before photographing people</li>
+                        <li>Learn basic Amharic phrases</li>
+                        <li>Respect local customs and dress codes</li>
+                        <li>Carry cash for rural areas</li>
+                        <li>Drink bottled water only</li>
+                        <li>Tip 10% in restaurants</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-icon">🏨</div>
+                <h3 class="guide-title">Accommodation</h3>
+                <div class="guide-content">
+                    <p><strong>Where to Stay:</strong></p>
+                    <ul>
+                        <li><strong>Luxury Hotels:</strong> Available in Addis and major cities</li>
+                        <li><strong>Mid-Range:</strong> Good value hotels in most towns</li>
+                        <li><strong>Budget:</strong> Guesthouses and hostels</li>
+                        <li><strong>Eco-Lodges:</strong> Near national parks</li>
+                        <li><strong>Book in advance:</strong> Especially during festivals</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-icon">🏛️</div>
+                <h3 class="guide-title">Cultural Etiquette</h3>
+                <div class="guide-content">
+                    <p><strong>Respect Local Customs:</strong></p>
+                    <ul>
+                        <li>Dress modestly, especially at religious sites</li>
+                        <li>Remove shoes before entering churches</li>
+                        <li>Accept food and drinks with right hand</li>
+                        <li>Don't point with your index finger</li>
+                        <li>Respect elders and religious leaders</li>
+                        <li>Ask before photographing ceremonies</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-icon">🆘</div>
+                <h3 class="guide-title">Health & Safety</h3>
+                <div class="guide-content">
+                    <p><strong>Stay Healthy:</strong></p>
+                    <ul>
+                        <li>Get travel insurance</li>
+                        <li>Vaccinations: Hepatitis A, Typhoid, Yellow Fever</li>
+                        <li>Malaria prophylaxis for lowland areas</li>
+                        <li>Avoid tap water, drink bottled</li>
+                        <li>Carry basic medications</li>
+                        <li>Emergency number: 911</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="destinations-preview">
+            <h3 style="text-align: center; margin-bottom: 1rem;">🌍 Popular Destinations</h3>
+            <div id="destinationsGrid" class="loading">
+                <i class="fas fa-spinner fa-spin"></i> Loading destinations...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDestinations() {
+            try {
+                const response = await fetch('/api/places/by-category');
+                const data = await response.json();
+                
+                const container = document.getElementById('destinationsGrid');
+                container.className = 'destinations-grid';
+                
+                let allPlaces = [];
+                Object.keys(data).forEach(category => {
+                    allPlaces = allPlaces.concat(data[category]);
+                });
+                
+                if (allPlaces.length === 0) {
+                    container.innerHTML = '<div style="text-align: center; color: #6c757d;">No destinations available yet.</div>';
+                    return;
+                }
+                
+                container.innerHTML = allPlaces.slice(0, 8).map(place => `
+                    <div class="destination-item" onclick="window.location.href='/destinations'">
+                        <div class="destination-icon">${place.category_icon}</div>
+                        <div class="destination-name">${place.name}</div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error('Error loading destinations:', error);
+                document.getElementById('destinationsGrid').innerHTML = 
+                    '<div style="text-align: center; color: #dc3545;">Error loading destinations.</div>';
+            }
+        }
+
+        // Load destinations when page loads
+        document.addEventListener('DOMContentLoaded', loadDestinations);
+    </script>
+</body>
+</html>
 
 <h2>Accommodation</h2>
 <p>Hotels, lodges and guest houses are available.</p>
