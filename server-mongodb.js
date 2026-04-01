@@ -303,6 +303,16 @@ app.get('/admin', isAuthenticated, async (req, res) => {
 });
 
 // API Routes
+app.get('/api/places', async (req, res) => {
+    try {
+        const places = await Place.find({});
+        res.json(places);
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        res.status(500).json({ error: 'Failed to fetch places' });
+    }
+});
+
 app.get('/api/places/by-category', async (req, res) => {
     try {
         const places = await Place.find({});
