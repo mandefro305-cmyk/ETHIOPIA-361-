@@ -244,8 +244,8 @@ async function loadDestinations() {
                         <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: white;"></i>
                     </div>
                 `}
-                <h3>${place.name}</h3>
-                <p class="place-description">
+                <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
+                <p class="place-description" data-en="${place.description ? place.description.substring(0, 80) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 80) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">
                     ${place.description ? place.description.substring(0, 80) + '...' : 'Discover this amazing destination in Ethiopia'}
                 </p>
             </div>

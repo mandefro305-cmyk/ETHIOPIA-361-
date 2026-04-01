@@ -13,15 +13,23 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Place Schema with Gallery Images
+// Place Schema with Gallery Images and Amharic Translations
 const placeSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
     },
+    name_am: {
+        type: String,
+        default: ''
+    },
     description: {
         type: String,
         required: true
+    },
+    description_am: {
+        type: String,
+        default: ''
     },
     category: {
         type: String,

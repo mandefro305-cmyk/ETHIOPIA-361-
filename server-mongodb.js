@@ -394,6 +394,8 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
         const { 
             name, 
             description, 
+            name_am,
+            description_am,
             image_url, 
             video_url,
             category,
@@ -449,7 +451,9 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
         // Create new place
         const newPlace = new Place({
             name,
+            name_am: name_am || '',
             description,
+            description_am: description_am || '',
             category: category || 'Historical & Cultural Sites',
             category_icon: (() => {
                 const icons = {
@@ -510,7 +514,7 @@ app.get('/admin/edit/:id', isAuthenticated, async (req, res) => {
 app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }]), async (req, res) => {
     try {
         const id = req.params.id;
-        const { name, description, image_url, video_url, deleted_images, delete_video } = req.body;
+        const { name, description, name_am, description_am, image_url, video_url, deleted_images, delete_video } = req.body;
         
         // Get current place
         const currentPlace = await Place.findById(id);
@@ -574,7 +578,9 @@ app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', m
         // Update place
         await Place.findByIdAndUpdate(id, {
             name,
+            name_am: name_am || '',
             description,
+            description_am: description_am || '',
             image_url: imagePath,
             video_url: videoPath,
             gallery_images: galleryImages
