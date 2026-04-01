@@ -1,257 +1,209 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destinations - Ethiopia 361°</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .destinations-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .page-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .page-title {
-            font-size: 3rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-        
-        .page-subtitle {
-            font-size: 1.2rem;
-            color: #6c757d;
-        }
-        
-        .destinations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .destination-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-        
-        .destination-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-        
-        .destination-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        
-        .destination-content {
-            padding: 1.5rem;
-        }
-        
-        .destination-category {
-            display: inline-block;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .destination-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 0.5rem;
-        }
-        
-        .destination-description {
-            color: #6c757d;
-            margin-bottom: 1rem;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        
-        .destination-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-        
-        .btn-guide {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background 0.3s ease;
-        }
-        
-        .btn-guide:hover {
-            background: #218838;
-        }
-        
-        .btn-details {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: background 0.3s ease;
-        }
-        
-        .btn-details:hover {
-            background: #5a6fd8;
-        }
-        
-        .back-nav {
-            margin-bottom: 2rem;
-        }
-        
-        .back-nav a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .back-nav a:hover {
-            text-decoration: underline;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #6c757d;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Destinations - Ethiopia 361°</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ai-chat.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></script>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="/">Ethiopia 361°</a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="/">Home</a></li>
-                <li><a href="/destinations" class="active">Destinations</a></li>
-                <li><a href="/categories">Categories</a></li>
-                <li><a href="/guide">Travel Guide</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <div class="destinations-container">
-        <div class="back-nav">
-            <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
-        </div>
+<header>
+<h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
 
-        <div class="page-header">
-            <h1 class="page-title">🌍 Explore Ethiopia's Destinations</h1>
-            <p class="page-subtitle">Discover amazing places across Ethiopia</p>
-        </div>
+<div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
 
-        <div id="destinationsContent" class="loading">
-            <i class="fas fa-spinner fa-spin"></i> Loading destinations...
-        </div>
+<nav class="desktop-nav">
+<a href="/">Home</a>
+<a href="/destinations" class="active">Destinations</a>
+<a href="/culture">Culture</a>
+<a href="/guide">Travel Guide</a>
+<a href="/gallery">Gallery</a>
+<a href="/blog">Blog</a>
+<a href="/contact">Contact</a>
+</nav>
+
+<nav class="mobile-nav" id="mobile-nav">
+<a href="/">Home</a>
+<a href="/destinations" class="active">Destinations</a>
+<a href="/culture">Culture</a>
+<a href="/guide">Travel Guide</a>
+<a href="/gallery">Gallery</a>
+<a href="/blog">Blog</a>
+<a href="/contact">Contact</a>
+</nav>
+
+<select id="language" onchange="changeLanguage()">
+<option value="en">English</option>
+<option value="am">አማርኛ</option>
+</select>
+
+</header>
+
+<section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="/videos/hero-background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay">
+        <h2 data-en="Explore Ethiopia's Destinations" data-am="የኢትዮጵያን መዳረሻዎችን ያግኙ">Explore Ethiopia's Destinations</h2>
+        <p data-en="Discover amazing places, ancient history, and breathtaking landscapes" data-am="የሚያምር ቦታዎች፣ ጥንታዊ ታሪክ እና የሚያስደንቅ መልክዮችን ያግኙ">Discover amazing places, ancient history, and breathtaking landscapes</p>
     </div>
-
-    <script>
-        async function loadDestinations() {
-            try {
-                const response = await fetch('/api/places/by-category');
-                const data = await response.json();
-                
-                const container = document.getElementById('destinationsContent');
-                container.className = 'destinations-grid';
-                
-                let allPlaces = [];
-                Object.keys(data).forEach(category => {
-                    allPlaces = allPlaces.concat(data[category]);
-                });
-                
-                if (allPlaces.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; padding: 2rem; color: #6c757d;">No destinations available yet. Check back soon!</div>';
-                    return;
-                }
-                
-                container.innerHTML = allPlaces.map(place => `
-                    <div class="destination-card" onclick="window.location.href='/place/${place._id}'">
-                        <img src="${place.image_url || '/img/placeholder.jpg'}" alt="${place.name}" class="destination-image">
-                        <div class="destination-content">
-                            <span class="destination-category">${place.category_icon} ${place.category}</span>
-                            <h3 class="destination-title">${place.name}</h3>
-                            <p class="destination-description">${place.description}</p>
-                            <div class="destination-actions">
-                                <button class="btn-guide" onclick="event.stopPropagation(); showTravelGuide('${place._id}')">
-                                    <i class="fas fa-map-signs"></i> Travel Guide
-                                </button>
-                                <a href="/place/${place._id}" class="btn-details" onclick="event.stopPropagation()">
-                                    <i class="fas fa-info-circle"></i> Details
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Error loading destinations:', error);
-                document.getElementById('destinationsContent').innerHTML = 
-                    '<div style="text-align: center; padding: 2rem; color: #dc3545;">Error loading destinations. Please try again later.</div>';
-            }
-        }
-
-        async function showTravelGuide(placeId) {
-            try {
-                const response = await fetch(`/api/places/${placeId}/travel-guide`);
-                const place = await response.json();
-                
-                alert(`🗺️ Travel Guide for ${place.name}\n\n` +
-                      `📅 Best Time: ${place.travel_guide.best_time_to_visit || 'N/A'}\n` +
-                      `🚗 How to Get There: ${place.travel_guide.how_to_get_there || 'N/A'}\n` +
-                      `🎒 What to Bring: ${place.travel_guide.what_to_bring || 'N/A'}\n` +
-                      `💡 Local Tips: ${place.travel_guide.local_tips || 'N/A'}\n` +
-                      `🎫 Entrance Fees: ${place.travel_guide.entrance_fees || 'N/A'}\n` +
-                      `🕐 Opening Hours: ${place.travel_guide.opening_hours || 'N/A'}\n` +
-                      `🏨 Accommodation: ${place.travel_guide.accommodation || 'N/A'}\n` +
-                      `📍 Nearby: ${place.travel_guide.nearby_attractions || 'N/A'}`);
-            } catch (error) {
-                console.error('Error loading travel guide:', error);
-                alert('Error loading travel guide. Please try again.');
-            }
-        }
-
-        // Load destinations when page loads
-        document.addEventListener('DOMContentLoaded', loadDestinations);
-    </script>
-</body>
-</html>
-
-<h2>Lake Tana</h2>
-<p>The largest lake in Ethiopia and source of the Blue Nile.</p>
-
-<h2>Entoto Park</h2>
-<p>Beautiful recreation park overlooking Addis Ababa.</p>
-
 </section>
+
+<section class="places-grid">
+<h2 data-en="All Destinations" data-am="ሁሉም መዳረሻዎች">All Destinations</h2>
+
+<!-- Stats Bar -->
+<div class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-number" id="totalPlaces">0</div>
+        <div class="stat-label" data-en="Total Places" data-am="ድምር ቦታዎች">Total Places</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number" id="placesWithImages">0</div>
+        <div class="stat-label" data-en="With Images" data-am="ከምስልክሎች ጋር">With Images</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number" id="placesWithVideos">0</div>
+        <div class="stat-label" data-en="With Videos" data-am="ከቪዲዮዎች ጋር">With Videos</div>
+    </div>
+    <div class="stat-item">
+        <div class="stat-number">361°</div>
+        <div class="stat-label" data-en="Experience" data-am="ተሞክሮ">Experience</div>
+    </div>
+</div>
+
+<div class="grid-container" id="destinationsContent">
+    <!-- Places will be loaded here -->
+</div>
+</section>
+
+<footer>
+<p>© 2026 Ethiopia 361°</p>
+</footer>
+
+<script src="js/language.js"></script>
+<script src="js/ai-chat.js"></script>
+<script>
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (mobileNav.classList.contains('active')) {
+        mobileNav.classList.remove('active');
+        menuBtn.classList.remove('active');
+    } else {
+        mobileNav.classList.add('active');
+        menuBtn.classList.add('active');
+    }
+}
+
+async function loadDestinations() {
+    try {
+        const response = await fetch('/api/places');
+        const places = await response.json();
+        
+        const container = document.getElementById('destinationsContent');
+        
+        // Update stats
+        document.getElementById('totalPlaces').textContent = places.length;
+        document.getElementById('placesWithImages').textContent = places.filter(p => p.image_url).length;
+        document.getElementById('placesWithVideos').textContent = places.filter(p => p.video_url).length;
+        
+        if (places.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                    <i class="fas fa-map-marked-alt" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <h3 data-en="No Destinations Yet" data-am="መዳረሻዎች ገና የሉም">No Destinations Yet</h3>
+                    <p data-en="Amazing Ethiopian destinations will be added soon!" data-am="የሚያምር የኢትዮጵያ መዳረሻዎች በቅርብ ይታከላሉ!">Amazing Ethiopian destinations will be added soon!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = places.map(place => `
+            <div class="card">
+                ${place.image_url ? `
+                    ${place.image_url.startsWith('/uploads/') 
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                    }
+                ` : `
+                    <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
+                        <i class="fas fa-image" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                `}
+                <h3>${place.name}</h3>
+                <p class="place-description">
+                    <span class="short-text">${place.description ? place.description.substring(0, 100) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
+                    <span class="full-text" style="display: none;">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
+                </p>
+                <div class="card-actions">
+                    <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                    ${place.video_url ? `
+                        <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
+                            <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
+                        </button>
+                    ` : ''}
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading destinations:', error);
+        document.getElementById('destinationsContent').innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                <h3 data-en="Unable to Load Destinations" data-am="መዳረሻዎችን መጫን አልተቻለሁ">Unable to Load Destinations</h3>
+                <p data-en="Please try again later." data-am="እባክዎን ቆይተው ይሞክሩ።">Please try again later.</p>
+            </div>
+        `;
+    }
+}
+
+function showVideo(videoUrl, placeName) {
+    if (videoUrl.startsWith('/uploads/')) {
+        // For uploaded videos
+        window.open(`/video-player?src=${encodeURIComponent(videoUrl)}&title=${encodeURIComponent(placeName)}`, '_blank', 'width=800,height=600');
+    } else {
+        // For YouTube/embedded videos
+        window.open(videoUrl, '_blank');
+    }
+}
+
+function toggleReadMore(button) {
+    const card = button.closest('.card');
+    const shortText = card.querySelector('.short-text');
+    const fullText = card.querySelector('.full-text');
+    
+    if (fullText.style.display === 'none') {
+        // Show full text
+        shortText.style.display = 'none';
+        fullText.style.display = 'inline';
+        button.textContent = button.getAttribute('data-am') === 'ተጨማሪ ያንብቡ' ? 'ቀንል' : 'Show Less';
+        button.classList.add('expanded');
+    } else {
+        // Show short text
+        shortText.style.display = 'inline';
+        fullText.style.display = 'none';
+        button.textContent = button.getAttribute('data-en') === 'Read More' ? 'Read More' : 'ተጨማሪ ያንብቡ';
+        button.classList.remove('expanded');
+    }
+}
+
+// Load destinations when page loads
+document.addEventListener('DOMContentLoaded', loadDestinations);
+</script>
 
 </body>
 </html>

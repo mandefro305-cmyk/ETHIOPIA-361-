@@ -1,348 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Travel Guide - Ethiopia 361°</title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        .guide-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
-        
-        .page-header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-        
-        .page-title {
-            font-size: 3rem;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-        }
-        
-        .page-subtitle {
-            font-size: 1.2rem;
-            color: #6c757d;
-        }
-        
-        .guide-sections {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .guide-card {
-            background: white;
-            border-radius: 15px;
-            padding: 2rem;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
-        }
-        
-        .guide-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        }
-        
-        .guide-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .guide-title {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #2c3e50;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
-        
-        .guide-content {
-            color: #6c757d;
-            line-height: 1.6;
-        }
-        
-        .guide-content ul {
-            margin: 1rem 0;
-            padding-left: 1.5rem;
-        }
-        
-        .guide-content li {
-            margin-bottom: 0.5rem;
-        }
-        
-        .destinations-preview {
-            margin-top: 3rem;
-            padding: 2rem;
-            background: #f8f9fa;
-            border-radius: 15px;
-        }
-        
-        .destinations-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-        
-        .destination-item {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .destination-item:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
-        }
-        
-        .destination-icon {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .destination-name {
-            font-weight: bold;
-            color: #2c3e50;
-        }
-        
-        .back-nav {
-            margin-bottom: 2rem;
-        }
-        
-        .back-nav a {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        
-        .back-nav a:hover {
-            text-decoration: underline;
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 2rem;
-            color: #6c757d;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Travel Guide - Ethiopia 361°</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ai-chat.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></script>
 </head>
+
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <a href="/">Ethiopia 361°</a>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="/">Home</a></li>
-                <li><a href="/destinations">Destinations</a></li>
-                <li><a href="/categories">Categories</a></li>
-                <li><a href="/guide" class="active">Travel Guide</a></li>
-                <li><a href="/contact">Contact</a></li>
-            </ul>
-        </div>
-    </nav>
 
-    <div class="guide-container">
-        <div class="back-nav">
-            <a href="/"><i class="fas fa-arrow-left"></i> Back to Home</a>
-        </div>
+<header>
+<h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
 
-        <div class="page-header">
-            <h1 class="page-title">🗺️ Complete Travel Guide</h1>
-            <p class="page-subtitle">Everything you need to know for your Ethiopia adventure</p>
-        </div>
+<div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
 
-        <div class="guide-sections">
-            <div class="guide-card">
-                <div class="guide-icon">📅</div>
-                <h3 class="guide-title">Best Time to Visit</h3>
-                <div class="guide-content">
-                    <p>Ethiopia's climate varies by region:</p>
-                    <ul>
-                        <li><strong>October - March:</strong> Dry season, ideal for most regions</li>
-                        <li><strong>September - November:</strong> Harvest season, green landscapes</li>
-                        <li><strong>March - May:</strong> Spring season, pleasant weather</li>
-                        <li><strong>June - August:</strong> Rainy season, lush green scenery</li>
-                    </ul>
-                    <p><strong>Tip:</strong> Avoid heavy rains in July-August for trekking.</p>
-                </div>
-            </div>
+<nav class="desktop-nav">
+<a href="/">Home</a>
+<a href="/destinations">Destinations</a>
+<a href="/culture">Culture</a>
+<a href="/guide" class="active">Travel Guide</a>
+<a href="/gallery">Gallery</a>
+<a href="/blog">Blog</a>
+<a href="/contact">Contact</a>
+</nav>
 
-            <div class="guide-card">
-                <div class="guide-icon">🚗</div>
-                <h3 class="guide-title">Transportation</h3>
-                <div class="guide-content">
-                    <p><strong>Getting Around Ethiopia:</strong></p>
-                    <ul>
-                        <li><strong>Flying:</strong> Ethiopian Airlines connects major cities daily</li>
-                        <li><strong>Buses:</strong> Comfortable long-distance buses between cities</li>
-                        <li><strong>Car Rental:</strong> 4WD recommended for rural areas</li>
-                        <li><strong>Taxis:</strong> Available in cities, agree on price first</li>
-                        <li><strong>Domestic Flights:</strong> Save time between distant destinations</li>
-                    </ul>
-                </div>
-            </div>
+<nav class="mobile-nav" id="mobile-nav">
+<a href="/">Home</a>
+<a href="/destinations">Destinations</a>
+<a href="/culture">Culture</a>
+<a href="/guide" class="active">Travel Guide</a>
+<a href="/gallery">Gallery</a>
+<a href="/blog">Blog</a>
+<a href="/contact">Contact</a>
+</nav>
 
-            <div class="guide-card">
-                <div class="guide-icon">🎒</div>
-                <h3 class="guide-title">What to Bring</h3>
-                <div class="guide-content">
-                    <p><strong>Essential Items:</strong></p>
-                    <ul>
-                        <li>Comfortable walking shoes</li>
-                        <li>Light layers for temperature changes</li>
-                        <li>Sun protection (hat, sunscreen, sunglasses)</li>
-                        <li>Camera and extra batteries</li>
-                        <li>First aid kit and personal medications</li>
-                        <li>Power adapter (Type E, 220V)</li>
-                        <li>Reusable water bottle</li>
-                    </ul>
-                </div>
-            </div>
+<select id="language" onchange="changeLanguage()">
+<option value="en">English</option>
+<option value="am">አማርኛ</option>
+</select>
 
-            <div class="guide-card">
-                <div class="guide-icon">🍽️</div>
-                <h3 class="guide-title">Food & Cuisine</h3>
-                <div class="guide-content">
-                    <p><strong>Must-Try Dishes:</strong></p>
-                    <ul>
-                        <li><strong>Injera:</strong> Sour flatbread, staple food</li>
-                        <li><strong>Doro Wat:</strong> Spicy chicken stew</li>
-                        <li><strong>Kitfo:</strong> Raw minced beef with spices</li>
-                        <li><strong>Tibs:</strong> Grilled meat or vegetables</li>
-                        <li><strong>Shiro:</strong> Chickpea stew</li>
-                        <li><strong>Ethiopian Coffee:</strong> Traditional ceremony</li>
-                    </ul>
-                </div>
-            </div>
+</header>
 
-            <div class="guide-card">
-                <div class="guide-icon">💡</div>
-                <h3 class="guide-title">Local Tips</h3>
-                <div class="guide-content">
-                    <p><strong>Important Advice:</strong></p>
-                    <ul>
-                        <li>Bargain politely in markets</li>
-                        <li>Ask permission before photographing people</li>
-                        <li>Learn basic Amharic phrases</li>
-                        <li>Respect local customs and dress codes</li>
-                        <li>Carry cash for rural areas</li>
-                        <li>Drink bottled water only</li>
-                        <li>Tip 10% in restaurants</li>
-                    </ul>
-                </div>
-            </div>
+<section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="/videos/hero-background.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <div class="hero-overlay">
+        <h2 data-en="Complete Travel Guide" data-am="ሙሉ የጉዞ መርህቆ">Complete Travel Guide</h2>
+        <p data-en="Everything you need to know for your Ethiopia adventure" data-am="ለኢትዮጵያ ጉዞዎ ያስፈልግዎት የሚሆነው ሁሉ">Everything you need to know for your Ethiopia adventure</p>
+    </div>
+</section>
 
-            <div class="guide-card">
-                <div class="guide-icon">🏨</div>
-                <h3 class="guide-title">Accommodation</h3>
-                <div class="guide-content">
-                    <p><strong>Where to Stay:</strong></p>
-                    <ul>
-                        <li><strong>Luxury Hotels:</strong> Available in Addis and major cities</li>
-                        <li><strong>Mid-Range:</strong> Good value hotels in most towns</li>
-                        <li><strong>Budget:</strong> Guesthouses and hostels</li>
-                        <li><strong>Eco-Lodges:</strong> Near national parks</li>
-                        <li><strong>Book in advance:</strong> Especially during festivals</li>
-                    </ul>
-                </div>
-            </div>
+<section class="places-grid">
+<h2 data-en="Essential Travel Information" data-am="አስፈላጊ የጉዞ መረጃ">Essential Travel Information</h2>
 
-            <div class="guide-card">
-                <div class="guide-icon">🏛️</div>
-                <h3 class="guide-title">Cultural Etiquette</h3>
-                <div class="guide-content">
-                    <p><strong>Respect Local Customs:</strong></p>
-                    <ul>
-                        <li>Dress modestly, especially at religious sites</li>
-                        <li>Remove shoes before entering churches</li>
-                        <li>Accept food and drinks with right hand</li>
-                        <li>Don't point with your index finger</li>
-                        <li>Respect elders and religious leaders</li>
-                        <li>Ask before photographing ceremonies</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="guide-card">
-                <div class="guide-icon">🆘</div>
-                <h3 class="guide-title">Health & Safety</h3>
-                <div class="guide-content">
-                    <p><strong>Stay Healthy:</strong></p>
-                    <ul>
-                        <li>Get travel insurance</li>
-                        <li>Vaccinations: Hepatitis A, Typhoid, Yellow Fever</li>
-                        <li>Malaria prophylaxis for lowland areas</li>
-                        <li>Avoid tap water, drink bottled</li>
-                        <li>Carry basic medications</li>
-                        <li>Emergency number: 911</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <div class="destinations-preview">
-            <h3 style="text-align: center; margin-bottom: 1rem;">🌍 Popular Destinations</h3>
-            <div id="destinationsGrid" class="loading">
-                <i class="fas fa-spinner fa-spin"></i> Loading destinations...
-            </div>
+<div class="grid-container">
+    <div class="card">
+        <h3><i class="fas fa-calendar-alt"></i> <span data-en="Best Time to Visit" data-am="የመጎብኛት ምርጥ ጊዜ">Best Time to Visit</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Ethiopia's climate varies by region. October - March is ideal for most regions with dry weather..." data-am="የኢትዮጵያ አየር አለፍ በክልል ይለያያል። ከጥቅምት እስከ መጋቢት በብዛት ክልሎች ለደረቅ የአየር ሁኔታ...">Ethiopia's climate varies by region. October - March is ideal for most regions with dry weather...</span>
+            <span class="full-text" style="display: none;" data-en="Ethiopia's climate varies by region. October - March is ideal for most regions with dry weather. September - November offers harvest season with green landscapes. March - May provides spring season with pleasant weather. June - August is rainy season with lush green scenery." data-am="የኢትዮጵያ አየር አለፍ በክልል ይለያያል። ከጥቅምት እስከ መጋቢት በብዛት ክልሎች ለደረቅ የአየር ሁኔታ ተስማሚ ነው። ከመስከረም እስከ ኅዳር የእርሻ ወቅት አረንጓዴ መልክዮችን ይሰጣል። ከጥቅምት እስከ ግንቦት የጸደይ ወቅት ከባድ የአየር ሁኔታን ይሰጣል። ከሰኔ እስከ ነሐሴ የጥሩ ወቅት አረንጓዴ መልክዮችን ይሰጣል።">Ethiopia's climate varies by region. October - March is ideal for most regions with dry weather. September - November offers harvest season with green landscapes. March - May provides spring season with pleasant weather. June - August is rainy season with lush green scenery.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
         </div>
     </div>
 
-    <script>
-        async function loadDestinations() {
-            try {
-                const response = await fetch('/api/places/by-category');
-                const data = await response.json();
-                
-                const container = document.getElementById('destinationsGrid');
-                container.className = 'destinations-grid';
-                
-                let allPlaces = [];
-                Object.keys(data).forEach(category => {
-                    allPlaces = allPlaces.concat(data[category]);
-                });
-                
-                if (allPlaces.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #6c757d;">No destinations available yet.</div>';
-                    return;
-                }
-                
-                container.innerHTML = allPlaces.slice(0, 8).map(place => `
-                    <div class="destination-item" onclick="window.location.href='/destinations'">
-                        <div class="destination-icon">${place.category_icon}</div>
-                        <div class="destination-name">${place.name}</div>
-                    </div>
-                `).join('');
-                
-            } catch (error) {
-                console.error('Error loading destinations:', error);
-                document.getElementById('destinationsGrid').innerHTML = 
-                    '<div style="text-align: center; color: #dc3545;">Error loading destinations.</div>';
-            }
-        }
+    <div class="card">
+        <h3><i class="fas fa-car"></i> <span data-en="Transportation" data-am="ትራንስፖርት">Transportation</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Getting around Ethiopia includes flying with Ethiopian Airlines, comfortable long-distance buses..." data-am="በኢትዮጵያ መዞር የኢትዮጵያ አየር መንገድ፣ ምቹ የሆኑ ረጅም ርቀት ባስዎችን ያካትታል...">Getting around Ethiopia includes flying with Ethiopian Airlines, comfortable long-distance buses...</span>
+            <span class="full-text" style="display: none;" data-en="Getting around Ethiopia includes flying with Ethiopian Airlines connecting major cities daily, comfortable long-distance buses between cities, 4WD car rentals recommended for rural areas, taxis available in cities (agree on price first), and domestic flights that save time between distant destinations." data-am="በኢትዮጵያ መዞር የኢትዮጵያ አየር መንገድ ዋና ዋና ከተሞችን የሚያገናኝ በየው ቀን በመብረር፣ በከተማዎች መካከል ምቹ የሆኑ ረጅም ርቀት ባስዎች፣ ለገጠር አካባቢዎች 4WD መኪና ኪራይ የሚመከር፣ በከተማዎች ውስጥ ታክሲዎች (ዋጋውን መፈረም)፣ እና በርቀት ያሉ መዳረሻዎች መካከል ጊዜን የሚቆጥቡ የአገር ውስጥ በረራዎችን ያካትታል።">Getting around Ethiopia includes flying with Ethiopian Airlines connecting major cities daily, comfortable long-distance buses between cities, 4WD car rentals recommended for rural areas, taxis available in cities (agree on price first), and domestic flights that save time between distant destinations.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
 
-        // Load destinations when page loads
-        document.addEventListener('DOMContentLoaded', loadDestinations);
-    </script>
-</body>
-</html>
+    <div class="card">
+        <h3><i class="fas fa-backpack"></i> <span data-en="What to Bring" data-am="ምን መያዣ ነው">What to Bring</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Essential items include comfortable walking shoes, light layers for temperature changes..." data-am="አስፈላጊ እቃዎች የሚመጡት ምቹ የሆኑ የመንገድ ጫማዎች፣ ለየትላተኛው ለውጥ ቀለሞች...">Essential items include comfortable walking shoes, light layers for temperature changes...</span>
+            <span class="full-text" style="display: none;" data-en="Essential items include comfortable walking shoes, light layers for temperature changes, sun protection (hat, sunscreen, sunglasses), camera and extra batteries, first aid kit and personal medications, power adapter (Type E, 220V), and reusable water bottle." data-am="አስፈላጊ እቃዎች የሚመጡት ምቹ የሆኑ የመንገድ ጫማዎች፣ ለየትላተኛው ለውጥ ቀለሞች፣ ከፀሐይ መከላከያ (ካፒ፣ ሱና፣ ናማ መነጽር)፣ ካሜራ እና ተጨማሪ ባትሪ፣ የመጀመሪያ እርዳታ ኪት እና የግል መድኃኒቶች፣ የኃይል አዳፒር (ዓይነት E, 220V)፣ እና እንደገና መጠቀሚያ ውሃ ጠርሙ።">Essential items include comfortable walking shoes, light layers for temperature changes, sun protection (hat, sunscreen, sunglasses), camera and extra batteries, first aid kit and personal medications, power adapter (Type E, 220V), and reusable water bottle.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
 
-<h2>Accommodation</h2>
-<p>Hotels, lodges and guest houses are available.</p>
+    <div class="card">
+        <h3><i class="fas fa-utensils"></i> <span data-en="Food & Cuisine" data-am="ምግብ እና ምግብ አዘገጃጀን">Food & Cuisine</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Must-try dishes include Injera (sour flatbread, staple food), Doro Wat (spicy chicken stew)..." data-am="የሚመግቡት ምግቦች እንጀራ (ጠባታ ዳቦ፣ ዋና ምግብ)፣ ዶሮ ዋት (በረማዊ ዶሮ ስጋ)...">Must-try dishes include Injera (sour flatbread, staple food), Doro Wat (spicy chicken stew)...</span>
+            <span class="full-text" style="display: none;" data-en="Must-try dishes include Injera (sour flatbread, staple food), Doro Wat (spicy chicken stew), Kitfo (raw minced beef with spices), Tibs (grilled meat or vegetables), Shiro (chickpea stew), and Ethiopian Coffee with traditional ceremony." data-am="የሚመግቡት ምግቦች እንጀራ (ጠባታ ዳቦ፣ ዋና ምግብ)፣ ዶሮ ዋት (በረማዊ ዶሮ ስጋ)፣ ክትፎ (ከሚሊዮን የተሰረቀ እንቁላል ስጋ)፣ ቲብስ (የተቀቀለ ስጋ ወይም አትክልቶች)፣ ሽሮ (የሽሮ ስጋ)፣ እና በባህላዊ ሥነ ሥርዓት የኢትዮጵያ ቡና።">Must-try dishes include Injera (sour flatbread, staple food), Doro Wat (spicy chicken stew), Kitfo (raw minced beef with spices), Tibs (grilled meat or vegetables), Shiro (chickpea stew), and Ethiopian Coffee with traditional ceremony.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3><i class="fas fa-lightbulb"></i> <span data-en="Local Tips" data-am="የአካባቢ ምክሮች">Local Tips</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Important advice includes bargaining politely in markets, asking permission before photographing people..." data-am="አስፈላጊ እርዳታ በገበያዎች በአደባባይ መ�ደር፣ ሰዎችን ከመንኳፍፍ በፊት ፍቀድ...">Important advice includes bargaining politely in markets, asking permission before photographing people...</span>
+            <span class="full-text" style="display: none;" data-en="Important advice includes bargaining politely in markets, asking permission before photographing people, learning basic Amharic phrases, respecting local customs and dress codes, carrying cash for rural areas, drinking bottled water only, and tipping 10% in restaurants." data-am="አስፈላጊ እርዳታ በገበያዎች በአደባባይ መ�ደር፣ ሰዎችን ከመንኳፍፍ በፊት ፍቀድ፣ መሰረታዊ አማርኛ ሐረግቶችን መማር፣ የአካባቢ ባህሎችን እና የመልበስ ኮዶችን መከበር፣ ለገጠር አካባቢዎች ገንዘብ መያዣ፣ የተዘጋጀ ውሃ ብቻ መጠጣት፣ እና በምግብ ቤቶች 10% መክፈል።">Important advice includes bargaining politely in markets, asking permission before photographing people, learning basic Amharic phrases, respecting local customs and dress codes, carrying cash for rural areas, drinking bottled water only, and tipping 10% in restaurants.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3><i class="fas fa-hotel"></i> <span data-en="Accommodation" data-am="ማረፊያ">Accommodation</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Where to stay includes luxury hotels available in Addis and major cities, good value hotels in most towns..." data-am="የመተኛት ቦታዎች በአዲስ አበባ እና በዋናዎቹ ከተሞች ውስጥ የሚገኙ የጥበብ ሆቴሎች...">Where to stay includes luxury hotels available in Addis and major cities, good value hotels in most towns...</span>
+            <span class="full-text" style="display: none;" data-en="Where to stay includes luxury hotels available in Addis and major cities, good value hotels in most towns, budget guesthouses and hostels, eco-lodges near national parks, and booking in advance especially during festivals." data-am="የመተኛት ቦታዎች በአዲስ አበባ እና በዋናዎቹ ከተሞች ውስጥ የሚገኙ የጥበብ ሆቴሎች፣ በብዛት ከተሞች ውስጥ ጥሩ ዋጋ ያላቸው ሆቴሎች፣ የበጀት እንግዳ ቤቶች እና ሆስተሎች፣ በብሔራዊ ፓሮቶች አቅራቢያ የሚገኙ ኢኮ-��ጅሎች፣ እና በበአሉበታዎች ወቅት በቅድሚያ መያዣ።">Where to stay includes luxury hotels available in Addis and major cities, good value hotels in most towns, budget guesthouses and hostels, eco-lodges near national parks, and booking in advance especially during festivals.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3><i class="fas fa-landmark"></i> <span data-en="Cultural Etiquette" data-am="የባህል ክብር">Cultural Etiquette</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Respect local customs includes dressing modestly especially at religious sites, removing shoes before entering churches..." data-am="የአካባቢ ባህሎችን መከበር በተለይ በሃይማኖታዊ ቦታዎች በአንደኛው መልክ መልበስ...">Respect local customs includes dressing modestly especially at religious sites, removing shoes before entering churches...</span>
+            <span class="full-text" style="display: none;" data-en="Respect local customs includes dressing modestly especially at religious sites, removing shoes before entering churches, accepting food and drinks with right hand, not pointing with index finger, respecting elders and religious leaders, and asking before photographing ceremonies." data-am="የአካባቢ ባህሎችን መከበር በተለይ በሃይማኖታዊ ቦታዎች በአንደኛው መልክ መልበስ፣ ወደ አብይቶች ከመግባት በፊት ጫማዎችን ማውጣት፣ ምግብና መጠጣትን በቀኝ እጅ መቀበል፣ በአማማይ ጣቶ መጠቅለል፣ አባቶችን እና የሃይማኖት መሪዎችን መከበር፣ እና ክብርተኞችን ከመንኳፍፍ በፊት መጠየቅ።">Respect local customs includes dressing modestly especially at religious sites, removing shoes before entering churches, accepting food and drinks with right hand, not pointing with index finger, respecting elders and religious leaders, and asking before photographing ceremonies.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3><i class="fas fa-heartbeat"></i> <span data-en="Health & Safety" data-am="ጤናና ደህንነት">Health & Safety</span></h3>
+        <p class="place-description">
+            <span class="short-text" data-en="Stay healthy includes getting travel insurance, vaccinations for Hepatitis A, Typhoid, Yellow Fever..." data-am="ጤንኛ መሆን የጉዞ ኢንሹራንስ መውሰድ፣ ለሄፓታይቲስ ኤ፣ ታይፎይድ፣ ቢሮ ፈቨር...">Stay healthy includes getting travel insurance, vaccinations for Hepatitis A, Typhoid, Yellow Fever...</span>
+            <span class="full-text" style="display: none;" data-en="Stay healthy includes getting travel insurance, vaccinations for Hepatitis A, Typhoid, Yellow Fever, malaria prophylaxis for lowland areas, avoiding tap water and drinking bottled, carrying basic medications, and emergency number is 911." data-am="ጤንኛ መሆን የጉዞ ኢንሹራንስ መውሰድ፣ ለሄፓታይቲስ ኤ፣ ታይፎይድ፣ ቢሮ ፈቨር ቫክሲኖች፣ ለዝቅተኛ አካባቢዎች ማላሪያ መድኃኒት፣ የኩሽና ውሃ መጠጣትና የተዘጋውን መጠጣት፣ መሰረታዊ መድኃኒቶች መያዣ፣ እና የአስቸኳይ ቁጥር 911።">Stay healthy includes getting travel insurance, vaccinations for Hepatitis A, Typhoid, Yellow Fever, malaria prophylaxis for lowland areas, avoiding tap water and drinking bottled, carrying basic medications, and emergency number is 911.</span>
+        </p>
+        <div class="card-actions">
+            <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+        </div>
+    </div>
+</div>
+
+<!-- Popular Destinations Section -->
+<div style="margin-top: 3rem;">
+    <h2 data-en="Popular Destinations" data-am="ተወዳጅ መዳረሻዎች">Popular Destinations</h2>
+    <div class="grid-container" id="destinationsGrid">
+        <!-- Destinations will be loaded here -->
+    </div>
+</div>
+
+<!-- Quick Tips -->
+<div class="card" style="margin-top: 2rem; background: linear-gradient(45deg, var(--secondary-color), #ff9800); color: white;">
+    <h3 style="color: white;"><i class="fas fa-lightbulb"></i> <span data-en="Quick Travel Tips" data-am="ፈጣን የጉዞ ምክሮች">Quick Travel Tips</span></h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem;">
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;" data-en="📍 Always carry a map" data-am="📍 ሁልጊዜ ካርታ ይያዙ">📍 Always carry a map</span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;" data-en="💰 Bring Ethiopian Birr cash" data-am="💰 የኢትዮጵያ ብር ገንዘብ ይዘው">💰 Bring Ethiopian Birr cash</span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;" data-en="📱 Download offline maps" data-am="📱 የኦፍላይን ካርታዎችን ያውርዱ">📱 Download offline maps</span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;" data-en="🌤️ Check weather forecasts" data-am="🌤️ የአየር ሁኔታ ትንበያዎችን ይመልከቱ">🌤️ Check weather forecasts</span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;" data-en="📷 Bring extra batteries" data-am="📷 ተጨማሪ ባትሪዎችን ይዘው">📷 Bring extra batteries</span>
+        <span style="background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 20px; font-size: 0.9rem;" data-en="🗣️ Learn basic Amharic" data-am="🗣️ መሰረታዊ አማርኛ ይማሩ">🗣️ Learn basic Amharic</span>
+    </div>
+</div>
 
 </section>
+
+<footer>
+<p>© 2026 Ethiopia 361°</p>
+</footer>
+
+<script src="js/language.js"></script>
+<script src="js/ai-chat.js"></script>
+<script>
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (mobileNav.classList.contains('active')) {
+        mobileNav.classList.remove('active');
+        menuBtn.classList.remove('active');
+    } else {
+        mobileNav.classList.add('active');
+        menuBtn.classList.add('active');
+    }
+}
+
+function toggleReadMore(button) {
+    const card = button.closest('.card');
+    const shortText = card.querySelector('.short-text');
+    const fullText = card.querySelector('.full-text');
+    
+    if (fullText.style.display === 'none') {
+        // Show full text
+        shortText.style.display = 'none';
+        fullText.style.display = 'inline';
+        button.textContent = button.getAttribute('data-am') === 'ተጨማሪ ያንብቡ' ? 'ቀንል' : 'Show Less';
+        button.classList.add('expanded');
+    } else {
+        // Show short text
+        shortText.style.display = 'inline';
+        fullText.style.display = 'none';
+        button.textContent = button.getAttribute('data-en') === 'Read More' ? 'Read More' : 'ተጨማሪ ያንብቡ';
+        button.classList.remove('expanded');
+    }
+}
+
+async function loadDestinations() {
+    try {
+        const response = await fetch('/api/places');
+        const places = await response.json();
+        
+        const container = document.getElementById('destinationsGrid');
+        
+        if (places.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
+                    <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <p data-en="No destinations available yet." data-am="መዳረሻዎች ገና የሉም።">No destinations available yet.</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = places.slice(0, 6).map(place => `
+            <div class="card" onclick="window.location.href='/place/${place.id}'" style="cursor: pointer;">
+                ${place.image_url ? `
+                    ${place.image_url.startsWith('/uploads/') 
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                    }
+                ` : `
+                    <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
+                        <i class="fas fa-map-marker-alt" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                `}
+                <h3>${place.name}</h3>
+                <p class="place-description">
+                    ${place.description ? place.description.substring(0, 80) + '...' : 'Discover this amazing destination in Ethiopia'}
+                </p>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading destinations:', error);
+        document.getElementById('destinationsGrid').innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; color: #e74c3c;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                <p data-en="Unable to load destinations." data-am="መዳረሻዎችን መጫን አልተቻለሁ።">Unable to load destinations.</p>
+            </div>
+        `;
+    }
+}
+
+// Load destinations when page loads
+document.addEventListener('DOMContentLoaded', loadDestinations);
+</script>
 
 </body>
 </html>

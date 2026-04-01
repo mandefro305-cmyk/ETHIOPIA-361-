@@ -114,6 +114,11 @@ header {
   color: var(--secondary-color);
 }
 
+.desktop-nav a.active, .mobile-nav a.active {
+  color: var(--secondary-color);
+  font-weight: 600;
+}
+
 header h1 {
   margin: 0;
   font-size: 1.8rem;
@@ -312,6 +317,37 @@ footer {
   text-align: center;
   padding: 20px;
   margin-top: 40px;
+}
+
+/* Stats Bar */
+.stats-bar {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 30px;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.stat-item {
+  text-align: center;
+  min-width: 120px;
+}
+
+.stat-number {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 5px;
+}
+
+.stat-label {
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  font-weight: 500;
 }
 
 /* Mobile Responsiveness */

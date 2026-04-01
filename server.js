@@ -70,6 +70,20 @@ function isAuthenticated(req, res, next) {
 }
 
 // ----------------------------------------------------
+// API Routes
+// ----------------------------------------------------
+
+app.get('/api/places', (req, res) => {
+    db.all("SELECT * FROM places ORDER BY name", [], (err, rows) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json(rows);
+    });
+});
+
+// ----------------------------------------------------
 // Frontend Routes
 // ----------------------------------------------------
 
