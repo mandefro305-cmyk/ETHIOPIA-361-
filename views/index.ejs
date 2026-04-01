@@ -62,12 +62,16 @@
     </div>
 </section>
 
-<section class="places-grid" id="placesGrid">
+<section class="places-grid">
 <h2 data-en="Top Destinations" data-am="ከፍተኛ መዳረሻዎች">Top Destinations</h2>
-<div class="grid-container">
-    <script>
-    // Load top 10 places for homepage
-    async function loadPlaces() {
+<div class="grid-container" id="placesGrid">
+    <!-- Places will be loaded here -->
+</div>
+</section>
+
+<script>
+// Load top 10 places for homepage
+async function loadPlaces() {
     try {
         const response = await fetch('/api/places');
         const allPlaces = await response.json();
@@ -133,10 +137,10 @@
         `;
     }
 }
-loadPlaces();
-    </script>
-</div>
-</section>
+
+// Load places when page loads
+document.addEventListener('DOMContentLoaded', loadPlaces);
+</script>
 
 <!-- Explore More Section -->
 <section style="padding: 3rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(0,77,64,0.05), rgba(0,128,128,0.05));">
