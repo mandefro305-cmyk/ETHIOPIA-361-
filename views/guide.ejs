@@ -264,7 +264,199 @@ async function loadDestinations() {
 
 // Load destinations when page loads
 document.addEventListener('DOMContentLoaded', loadDestinations);
+
+let allPlaces = [];
+
+// Load travel guides from database
+async function loadTravelGuides() {
+    try {
+        const response = await fetch('/api/places');
+        allPlaces = await response.json();
+        displayTravelGuides(allPlaces);
+    } catch (error) {
+        console.error('Error loading travel guides:', error);
+        document.getElementById('travelGuidesContainer').innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                <h3 data-en="Unable to Load Travel Guides" data-am="የጉዞ መርህቆን መጫን አልተቻለሁ">Unable to Load Travel Guides</h3>
+                <p data-en="Please try again later" data-am="እባኮላ በኋላ ይሞክሉ">Please try again later</p>
+            </div>
+        `;
+    }
+}
+
+// Display travel guides for each place
+function displayTravelGuides(places) {
+    const container = document.getElementById('travelGuidesContainer');
+    
+    if (places.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-map-marked-alt" style="font-size: 4rem; color: #888; margin-bottom: 1rem;"></i>
+                <h3 data-en="No Travel Guides Available" data-am="የጉዞ መርህቆ ገና የሉም">No Travel Guides Available</h3>
+                <p data-en="Check back soon for travel guides" data-am="ለምክም የጉዞ መርህቆን ይመልከቱ">Check back soon for travel guides</p>
+            </div>
+        `;
+        return;
+    }
+
+    let html = '';
+    places.forEach(place => {
+        const travelGuide = place.travel_guide || {};
+        
+        html += `
+            <div class="card">
+                ${place.image_url ? `
+                    ${place.image_url.startsWith('/uploads/') 
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                    }
+                ` : `
+                    <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
+                        <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                `}
+                <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
+                <p data-en="Travel Guide" data-am="የጉዞ መርህቆ" style="color: var(--secondary-color); font-weight: 600; margin-bottom: 1rem;">Travel Guide</p>
+                
+                <div class="travel-guide-info" style="display: grid; gap: 1rem;">
+                    ${travelGuide.best_time_to_visit ? `
+                        <div class="guide-item">
+                            <i class="fas fa-calendar-alt" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="Best Time to Visit:" data-am="የሚጥ ጊዜያ:">Best Time to Visit:</strong>
+                            <span data-en="${travelGuide.best_time_to_visit}" data-am="${travelGuide.best_time_to_visit_am || travelGuide.best_time_to_visit}">${travelGuide.best_time_to_visit}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.how_to_get_there ? `
+                        <div class="guide-item">
+                            <i class="fas fa-route" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="How to Get There:" data-am="እንዴ መድረም:">How to Get There:</strong>
+                            <span data-en="${travelGuide.how_to_get_there}" data-am="${travelGuide.how_to_get_there_am || travelGuide.how_to_get_there}">${travelGuide.how_to_get_there}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.what_to_bring ? `
+                        <div class="guide-item">
+                            <i class="fas fa-backpack" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="What to Bring:" data-am="ምን ይውሰው:">What to Bring:</strong>
+                            <span data-en="${travelGuide.what_to_bring}" data-am="${travelGuide.what_to_bring_am || travelGuide.what_to_bring}">${travelGuide.what_to_bring}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.local_tips ? `
+                        <div class="guide-item">
+                            <i class="fas fa-lightbulb" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="Local Tips:" data-am="የአካባ አሳሉ:">Local Tips:</strong>
+                            <span data-en="${travelGuide.local_tips}" data-am="${travelGuide.local_tips_am || travelGuide.local_tips}">${travelGuide.local_tips}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.entrance_fees ? `
+                        <div class="guide-item">
+                            <i class="fas fa-ticket-alt" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="Entrance Fees:" data-am="የግቢያ ክፍያ:">Entrance Fees:</strong>
+                            <span data-en="${travelGuide.entrance_fees}" data-am="${travelGuide.entrance_fees_am || travelGuide.entrance_fees}">${travelGuide.entrance_fees}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.opening_hours ? `
+                        <div class="guide-item">
+                            <i class="fas fa-clock" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="Opening Hours:" data-am="የመክፍክታ ሰዓታ:">Opening Hours:</strong>
+                            <span data-en="${travelGuide.opening_hours}" data-am="${travelGuide.opening_hours_am || travelGuide.opening_hours}">${travelGuide.opening_hours}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.accommodation ? `
+                        <div class="guide-item">
+                            <i class="fas fa-bed" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="Accommodation:" data-am="እንግ:">Accommodation:</strong>
+                            <span data-en="${travelGuide.accommodation}" data-am="${travelGuide.accommodation_am || travelGuide.accommodation}">${travelGuide.accommodation}</span>
+                        </div>
+                    ` : ''}
+                    
+                    ${travelGuide.nearby_attractions ? `
+                        <div class="guide-item">
+                            <i class="fas fa-map-marked" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <strong data-en="Nearby Attractions:" data-am="አቅር መስልከቶች:">Nearby Attractions:</strong>
+                            <span data-en="${travelGuide.nearby_attractions}" data-am="${travelGuide.nearby_attractions_am || travelGuide.nearby_attractions}">${travelGuide.nearby_attractions}</span>
+                        </div>
+                    ` : ''}
+                </div>
+                
+                <div class="card-actions" style="margin-top: 1.5rem;">
+                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Full Details" data-am="ሙሉኣ ዝርዝሮችን ይመልከቱ">View Full Details</a>
+                    ${place.video_url ? `
+                        <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
+                            <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
+                        </button>
+                    ` : ''}
+                    ${place.description_pdf ? `
+                        <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
+                            <i class="fas fa-file-pdf"></i> <span data-en="Download PDF Guide" data-am="PDF መርህቆን ያውርዱ">Download PDF Guide</span>
+                        </a>
+                    ` : ''}
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+// Load travel guides on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadTravelGuides();
+});
+
+function toggleMobileMenu() {
+    const nav = document.getElementById('mobile-nav');
+    nav.classList.toggle('active');
+}
+
+// Show video modal
+function showVideo(videoUrl, placeName) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.8); z-index: 1000; display: flex; 
+        align-items: center; justify-content: center;
+    `;
+    
+    modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 800px; width: 90%;">
+            <h3 style="margin-bottom: 1rem;">${placeName}</h3>
+            <iframe src="${videoUrl}" style="width: 100%; height: 400px; border: none; border-radius: 8px;"></iframe>
+            <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 1rem; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
 </script>
 
-</body>
-</html>
+<style>
+.guide-item {
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.guide-item strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+}
+
+.guide-item span {
+    color: #666;
+    line-height: 1.5;
+}
+
+.travel-guide-info {
+    margin-bottom: 1.5rem;
+}
+</style>

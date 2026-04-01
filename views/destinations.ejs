@@ -51,164 +51,286 @@
 <section class="hero">
     <video autoplay muted loop playsinline class="hero-video">
         <source src="/videos/hero-background.mp4" type="video/mp4">
-        Your browser does not support the video tag.
+        Your browser does not support video tag.
     </video>
     <div class="hero-overlay">
-        <h2 data-en="Explore Ethiopia's Destinations" data-am="የኢትዮጵያን መዳረሻዎችን ያግኙ">Explore Ethiopia's Destinations</h2>
-        <p data-en="Discover amazing places, ancient history, and breathtaking landscapes" data-am="የሚያምር ቦታዎች፣ ጥንታዊ ታሪክ እና የሚያስደንቅ መልክዮችን ያግኙ">Discover amazing places, ancient history, and breathtaking landscapes</p>
+        <h2 data-en="Explore Ethiopian Destinations" data-am="የኢትዮጵያ መዳረሻዎችን ያስሱ">Explore Ethiopian Destinations</h2>
+        <p data-en="Discover amazing places across Ethiopia" data-am="በኢትዮጵያ ውስጥ ያለው የሚያምር ቦታዎችን ያግኙ">Discover amazing places across Ethiopia</p>
     </div>
 </section>
 
+<!-- Search Bar -->
+<section style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <div class="search-container" style="position: relative;">
+        <input type="text" id="searchInput" placeholder="Search destinations..." data-en-placeholder="Search destinations..." data-am-placeholder="መዳረሻዎችን ይፈለ..." style="width: 100%; padding: 15px 20px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.3s ease;">
+        <i class="fas fa-search" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="categories-section" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+    <h2 data-en="Browse by Category" data-am="በምድግ ይዝርዱ" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">Browse by Category</h2>
+    <div class="category-filters" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+        <button class="category-btn active" data-category="all" data-en="All" data-am="ሁሉን">All</button>
+        <button class="category-btn" data-category="Historical & Cultural Sites" data-en="Historical" data-am="ታሪክ፣">Historical</button>
+        <button class="category-btn" data-category="Nature & Mountains" data-en="Nature" data-am="ተፈሪ">Nature</button>
+        <button class="category-btn" data-category="Lakes & Water Attractions" data-en="Lakes" data-am="ሀይቆዎች">Lakes</button>
+        <button class="category-btn" data-category="Cities & Urban Tourism" data-en="Cities" data-am="ከተማዎች">Cities</button>
+        <button class="category-btn" data-category="Unique & Adventure Destinations" data-en="Adventure" data-am="የጉዞ ተልእክ">Adventure</button>
+    </div>
+</section>
+
+<!-- Destinations Grid -->
 <section class="places-grid">
-<h2 data-en="All Destinations" data-am="ሁሉም መዳረሻዎች">All Destinations</h2>
-
-<!-- Stats Bar -->
-<div class="stats-bar">
-    <div class="stat-item">
-        <div class="stat-number" id="totalPlaces">0</div>
-        <div class="stat-label" data-en="Total Places" data-am="ድምር ቦታዎች">Total Places</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-number" id="placesWithImages">0</div>
-        <div class="stat-label" data-en="With Images" data-am="ከምስልክሎች ጋር">With Images</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-number" id="placesWithVideos">0</div>
-        <div class="stat-label" data-en="With Videos" data-am="ከቪዲዮዎች ጋር">With Videos</div>
-    </div>
-    <div class="stat-item">
-        <div class="stat-number">361°</div>
-        <div class="stat-label" data-en="Experience" data-am="ተሞክሮ">Experience</div>
-    </div>
-</div>
-
 <div class="grid-container" id="destinationsContent">
-    <!-- Places will be loaded here -->
+    <!-- Destinations will be loaded here -->
 </div>
 </section>
 
-<footer>
-<p>© 2026 Ethiopia 361°</p>
-</footer>
-
-<script src="js/language.js"></script>
-<script src="js/ai-chat.js"></script>
+<script src="/js/language.js"></script>
 <script>
-function toggleMobileMenu() {
-    const mobileNav = document.getElementById('mobile-nav');
-    const menuBtn = document.querySelector('.mobile-menu-btn');
-    
-    if (mobileNav.classList.contains('active')) {
-        mobileNav.classList.remove('active');
-        menuBtn.classList.remove('active');
-    } else {
-        mobileNav.classList.add('active');
-        menuBtn.classList.add('active');
-    }
-}
+let allPlaces = [];
+let currentCategory = 'all';
 
+// Load destinations from database
 async function loadDestinations() {
     try {
         const response = await fetch('/api/places');
-        const places = await response.json();
-        
-        const container = document.getElementById('destinationsContent');
-        
-        // Update stats
-        document.getElementById('totalPlaces').textContent = places.length;
-        document.getElementById('placesWithImages').textContent = places.filter(p => p.image_url).length;
-        document.getElementById('placesWithVideos').textContent = places.filter(p => p.video_url).length;
-        
-        if (places.length === 0) {
-            container.innerHTML = `
-                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                    <i class="fas fa-map-marked-alt" style="font-size: 4rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
-                    <h3 data-en="No Destinations Yet" data-am="መዳረሻዎች ገና የሉም">No Destinations Yet</h3>
-                    <p data-en="Amazing Ethiopian destinations will be added soon!" data-am="የሚያምር የኢትዮጵያ መዳረሻዎች በቅርብ ይታከላሉ!">Amazing Ethiopian destinations will be added soon!</p>
-                </div>
-            `;
-            return;
-        }
-        
-        container.innerHTML = places.map(place => `
-            <div class="card">
-                ${place.image_url ? `
-                    ${place.image_url.startsWith('/uploads/') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
-                    }
-                ` : `
-                    <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
-                        <i class="fas fa-image" style="font-size: 3rem; color: white;"></i>
-                    </div>
-                `}
-                <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
-                <p class="place-description">
-                    <span class="short-text" data-en="${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 150) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
-                    <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
-                </p>
-                <div class="card-actions">
-                    <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
-                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
-                    ${place.video_url ? `
-                        <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
-                            <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
-                        </button>
-                    ` : ''}
-                    ${place.description_pdf ? `
-                        <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
-                            <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
-                        </a>
-                    ` : ''}
-                </div>
-            </div>
-        `).join('');
-        
+        allPlaces = await response.json();
+        displayDestinations(allPlaces);
     } catch (error) {
         console.error('Error loading destinations:', error);
         document.getElementById('destinationsContent').innerHTML = `
             <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 1rem;"></i>
                 <h3 data-en="Unable to Load Destinations" data-am="መዳረሻዎችን መጫን አልተቻለሁ">Unable to Load Destinations</h3>
-                <p data-en="Please try again later." data-am="እባክዎን ቆይተው ይሞክሩ።">Please try again later.</p>
+                <p data-en="Please try again later" data-am="እባኮላ በኋላ ይሞክሉ">Please try again later</p>
             </div>
         `;
     }
 }
 
-function showVideo(videoUrl, placeName) {
-    if (videoUrl.startsWith('/uploads/')) {
-        // For uploaded videos
-        window.open(`/video-player?src=${encodeURIComponent(videoUrl)}&title=${encodeURIComponent(placeName)}`, '_blank', 'width=800,height=600');
-    } else {
-        // For YouTube/embedded videos
-        window.open(videoUrl, '_blank');
+// Display destinations with filtering
+function displayDestinations(places) {
+    const container = document.getElementById('destinationsContent');
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    
+    // Filter by category and search
+    let filteredPlaces = places.filter(place => {
+        const matchesCategory = currentCategory === 'all' || place.category === currentCategory;
+        const matchesSearch = !searchTerm || 
+            place.name.toLowerCase().includes(searchTerm) ||
+            (place.name_am && place.name_am.toLowerCase().includes(searchTerm)) ||
+            place.description.toLowerCase().includes(searchTerm) ||
+            (place.description_am && place.description_am.toLowerCase().includes(searchTerm));
+        return matchesCategory && matchesSearch;
+    });
+
+    if (filteredPlaces.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-search" style="font-size: 4rem; color: #888; margin-bottom: 1rem;"></i>
+                <h3 data-en="No Destinations Found" data-am="ምንም መዳረሻ አልተገኘ">No Destinations Found</h3>
+                <p data-en="Try adjusting your filters" data-am="ማጣልዎችን ይቀይሩ">Try adjusting your filters</p>
+            </div>
+        `;
+        return;
     }
+
+    // Group by category
+    const groupedPlaces = {};
+    filteredPlaces.forEach(place => {
+        if (!groupedPlaces[place.category]) {
+            groupedPlaces[place.category] = [];
+        }
+        groupedPlaces[place.category].push(place);
+    });
+
+    // Display grouped places
+    let html = '';
+    Object.keys(groupedPlaces).forEach(category => {
+        html += `
+            <div class="category-section" style="margin-bottom: 3rem;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>${getCategoryIcon(category)}</span>
+                    <span data-en="${category}" data-am="${getCategoryAmharic(category)}">${category}</span>
+                </h3>
+                <div class="grid-container">
+        `;
+        
+        groupedPlaces[category].forEach(place => {
+            html += `
+                <div class="card">
+                    ${place.image_url ? `
+                        ${place.image_url.startsWith('/uploads/') 
+                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
+                            : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                        }
+                    ` : `
+                        <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
+                            <i class="fas fa-image" style="font-size: 3rem; color: white;"></i>
+                        </div>
+                    `}
+                    <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
+                    <p class="place-description">
+                        <span class="short-text" data-en="${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 150) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
+                        <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
+                    </p>
+                    <div class="card-actions">
+                        <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+                        <a href="/place/${place.id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                        ${place.video_url ? `
+                            <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
+                                <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
+                            </button>
+                        ` : ''}
+                        ${place.description_pdf ? `
+                            <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
+                                <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
+                            </a>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        
+        html += `
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
 }
 
+// Helper functions
+function getCategoryIcon(category) {
+    const icons = {
+        'Historical & Cultural Sites': '🏛️',
+        'Nature & Mountains': '🌄',
+        'Unique & Adventure Destinations': '🌋',
+        'Lakes & Water Attractions': '🌊',
+        'Cities & Urban Tourism': '🏙️',
+        'Relaxation & Resort Areas': '🌿'
+    };
+    return icons[category] || '📍';
+}
+
+function getCategoryAmharic(category) {
+    const amharic = {
+        'Historical & Cultural Sites': 'ታሪክ፣ እና የባህልነት ቦታዎች',
+        'Nature & Mountains': 'ተፈሪ እና ተራሮች',
+        'Unique & Adventure Destinations': 'የተለየ እና የጉዞ መዳረሻዎች',
+        'Lakes & Water Attractions': 'ሀይቆዎች እና የውሃሳት መስልከቶች',
+        'Cities & Urban Tourism': 'ከተማዎች እና የከተማ ቱራርኛ',
+        'Relaxation & Resort Areas': '��ዝናት እና የምርርባ ቦታዎች'
+    };
+    return amharic[category] || category;
+}
+
+// Toggle read more
 function toggleReadMore(button) {
     const card = button.closest('.card');
     const shortText = card.querySelector('.short-text');
     const fullText = card.querySelector('.full-text');
     
-    if (fullText.style.display === 'none') {
-        // Show full text
-        shortText.style.display = 'none';
-        fullText.style.display = 'inline';
-        button.textContent = button.getAttribute('data-am') === 'ተጨማሪ ያንብቡ' ? 'ቀንል' : 'Show Less';
-        button.classList.add('expanded');
-    } else {
-        // Show short text
+    if (shortText.style.display === 'none') {
         shortText.style.display = 'inline';
         fullText.style.display = 'none';
-        button.textContent = button.getAttribute('data-en') === 'Read More' ? 'Read More' : 'ተጨማሪ ያንብቡ';
-        button.classList.remove('expanded');
+        button.innerHTML = button.getAttribute('data-en') === 'Read More' ? 'Read More' : 'ተጨማሪ ያንብቡ';
+    } else {
+        shortText.style.display = 'none';
+        fullText.style.display = 'inline';
+        button.innerHTML = button.getAttribute('data-en') === 'Read More' ? 'Read Less' : 'ተነባይ ያንብቡ';
     }
 }
 
-// Load destinations when page loads
-document.addEventListener('DOMContentLoaded', loadDestinations);
+// Show video modal
+function showVideo(videoUrl, placeName) {
+    const modal = document.createElement('div');
+    modal.style.cssText = `
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0,0,0,0.8); z-index: 1000; display: flex; 
+        align-items: center; justify-content: center;
+    `;
+    
+    modal.innerHTML = `
+        <div style="background: white; padding: 2rem; border-radius: 12px; max-width: 800px; width: 90%;">
+            <h3 style="margin-bottom: 1rem;">${placeName}</h3>
+            <iframe src="${videoUrl}" style="width: 100%; height: 400px; border: none; border-radius: 8px;"></iframe>
+            <button onclick="this.parentElement.parentElement.remove()" style="margin-top: 1rem; padding: 10px 20px; background: var(--primary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">Close</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadDestinations();
+    
+    // Search functionality
+    document.getElementById('searchInput').addEventListener('input', function() {
+        displayDestinations(allPlaces);
+    });
+    
+    // Category filter buttons
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentCategory = this.getAttribute('data-category');
+            displayDestinations(allPlaces);
+        });
+    });
+});
+
+function toggleMobileMenu() {
+    const nav = document.getElementById('mobile-nav');
+    nav.classList.toggle('active');
+}
 </script>
+
+<style>
+.category-btn {
+    padding: 12px 24px;
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: var(--primary-color);
+}
+
+.category-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.category-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.category-section {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 2rem;
+}
+
+.search-container input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0,77,64,0.1);
+}
+</style>
+
+<footer>
+<p> 2026 Ethiopia 361°</p>
+</footer>
+
+<script src="js/language.js"></script>
+<script src="js/ai-chat.js"></script>
 
 </body>
 </html>
