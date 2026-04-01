@@ -100,8 +100,13 @@ let currentCategory = 'all';
 async function loadDestinations() {
     try {
         const response = await fetch('/api/places');
-        allPlaces = await response.json();
-        displayDestinations(allPlaces);
+        const allPlaces = await response.json();
+        
+        // Skip first 10 places (shown on homepage) and show the rest
+        const places = allPlaces.slice(10);
+        
+        allPlaces = places;
+        displayDestinations(places);
     } catch (error) {
         console.error('Error loading destinations:', error);
         document.getElementById('destinationsContent').innerHTML = `

@@ -62,38 +62,91 @@
     </div>
 </section>
 
-<section class="places-grid">
+<section class="places-grid" id="placesGrid">
 <h2 data-en="Top Destinations" data-am="ከፍተኛ መዳረሻዎች">Top Destinations</h2>
 <div class="grid-container">
-    <% if(locals.places && places.length > 0) { %>
-        <% places.forEach(place => { %>
+    <script>
+    // Load top 10 places for homepage
+    async function loadPlaces() {
+    try {
+        const response = await fetch('/api/places');
+        const allPlaces = await response.json();
+        
+        // Get only first 10 places for homepage
+        const places = allPlaces.slice(0, 10);
+        
+        const container = document.getElementById('placesGrid');
+        
+        if (places.length === 0) {
+            container.innerHTML = `
+                <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                    <i class="fas fa-map-marked-alt" style="font-size: 4rem; color: #888; margin-bottom: 1rem;"></i>
+                    <h3 data-en="No Destinations Available" data-am="መዳረሻዎች ገና የሉም">No Destinations Available</h3>
+                    <p data-en="Check back soon for amazing Ethiopian destinations" data-am="ለምክም የሚያምር የኢትዮጵያ መዳረሻዎችን ይመልከቱ">Check back soon for amazing Ethiopian destinations</p>
+                </div>
+            `;
+            return;
+        }
+        
+        container.innerHTML = places.map(place => `
             <div class="card">
-                <% if(place.image_url) { %>
-                    <% if(place.image_url.startsWith('/uploads/')) { %>
-                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-img">
-                    <% } else { %>
-                        <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-img">
-                    <% } %>
-                <% } %>
-                <h3 data-en="<%= place.name %>" data-am="<%= place.name_am || place.name %>"><%= place.name %></h3>
+                ${place.image_url ? `
+                    ${place.image_url.startsWith('/uploads/') 
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                    }
+                ` : `
+                    <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
+                        <i class="fas fa-image" style="font-size: 3rem; color: white;"></i>
+                    </div>
+                `}
+                <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
                 <p class="place-description">
-                    <span class="short-text" data-en="<%= place.description ? place.description.substring(0, 100) + '...' : 'Discover this amazing destination in Ethiopia' %>" data-am="<%= place.description_am ? place.description_am.substring(0, 100) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ' %>"><%= place.description ? place.description.substring(0, 100) + '...' : 'Discover this amazing destination in Ethiopia' %></span>
-                    <span class="full-text" style="display: none;" data-en="<%= place.description || 'Discover this amazing destination in Ethiopia' %>" data-am="<%= place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ' %>"><%= place.description || 'Discover this amazing destination in Ethiopia' %></span>
+                    <span class="short-text" data-en="${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 150) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
+                    <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
                 </p>
                 <div class="card-actions">
                     <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
-                    <a href="/place/<%= place.id %>" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                    ${place.video_url ? `
+                        <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
+                            <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
+                        </button>
+                    ` : ''}
+                    ${place.description_pdf ? `
+                        <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
+                            <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
+                        </a>
+                    ` : ''}
                 </div>
             </div>
-        <% }) %>
-    <% } else { %>
-        <p>No places added yet. Check back soon!</p>
-    <% } %>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading places:', error);
+        document.getElementById('placesGrid').innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                <h3 data-en="Unable to Load Destinations" data-am="መዳረሻዎችን መጫን አልተቻለሁ">Unable to Load Destinations</h3>
+                <p data-en="Please try again later" data-am="እባኮላ በኋላ ይሞክሉ">Please try again later</p>
+            </div>
+        `;
+    }
+}
+loadPlaces();
+    </script>
 </div>
 </section>
 
+<!-- Explore More Section -->
+<section style="padding: 3rem 2rem; text-align: center; background: linear-gradient(135deg, rgba(0,77,64,0.05), rgba(0,128,128,0.05));">
+    <h2 data-en="Discover More Destinations" data-am="ተጨማሪ መዳረሻዎችን ያግኙ" style="color: var(--primary-color); margin-bottom: 1rem;">Discover More Destinations</h2>
+    <p data-en="Explore our complete collection of Ethiopian destinations organized by category" data-am="የኢትዮጵያን ሙሉ መዳረሻዎችን በምድብ ይመለከቱ" style="font-size: 1.1rem; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto;">Explore our complete collection of Ethiopian destinations organized by category</p>
+    <a href="/destinations" class="nav-cta" data-en="View All Destinations" data-am="ሁሉንን መዳረሻዎችን ይመልከቱ" style="display: inline-block; text-decoration: none; padding: 1rem 2.5rem; font-size: 1.1rem;">View All Destinations</a>
+</section>
+
 <footer>
-<p>© 2026 Ethiopia 361°</p>
+<p> 2026 Ethiopia 361°</p>
 </footer>
 
 <script src="js/language.js"></script>
