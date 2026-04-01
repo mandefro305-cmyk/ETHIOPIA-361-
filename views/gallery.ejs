@@ -1,20 +1,356 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Gallery</title>
+<meta charset="UTF-8">
+<title>Gallery - Ethiopia 361°</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ai-chat.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></script>
 </head>
+
 <body>
 
 <header>
-<h1>Photo Gallery</h1>
+<h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+
+<div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
+
+<nav class="desktop-nav">
+<a href="/" data-en="Home" data-am="ቤት">Home</a>
+<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+<a href="/culture" data-en="Culture" data-am="ባህል">Culture</a>
+<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+<a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+<a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+</nav>
+
+<nav class="mobile-nav" id="mobile-nav">
+<a href="/" data-en="Home" data-am="ቤት">Home</a>
+<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+<a href="/culture" data-en="Culture" data-am="ባህል">Culture</a>
+<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+<a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+<a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+</nav>
+
+<div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
+
+<select id="language" onchange="changeLanguage()">
+<option value="en">English</option>
+<option value="am">አማርኛ</option>
+</select>
+
 </header>
 
-<section class="gallery">
-<img src="images/lalibela.jpg">
-<img src="images/simien.jpg">
-<img src="images/danakil.jpg">
+<section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="/videos/hero-background.mp4" type="video/mp4">
+        Your browser does not support video tag.
+    </video>
+    <div class="hero-overlay">
+        <h2 data-en="Ethiopia in Pictures" data-am="ኢትዮጵያ በምስልክዮች">Ethiopia in Pictures</h2>
+        <p data-en="Explore the beauty of Ethiopia through our collection" data-am="የኢትዮጵያን ውበት በስብሰታችን ያስሱ">Explore the beauty of Ethiopia through our collection</p>
+    </div>
 </section>
+
+<!-- Gallery Filter Section -->
+<section class="gallery-filters" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
+    <h2 data-en="Browse Gallery by Destination" data-am="በመዳረሻ ጋለሪን ይዝርዱ" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">Browse Gallery by Destination</h2>
+    <div class="filter-buttons" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
+        <button class="filter-btn active" data-filter="all" data-en="All Places" data-am="ሁሉን">All Places</button>
+        <button class="filter-btn" data-filter="Historical & Cultural Sites" data-en="Historical" data-am="ታሪክ">Historical</button>
+        <button class="filter-btn" data-filter="Nature & Mountains" data-en="Nature" data-am="ተፈሪ">Nature</button>
+        <button class="filter-btn" data-filter="Lakes & Water Attractions" data-en="Lakes" data-am="ሀይቆች">Lakes</button>
+        <button class="filter-btn" data-filter="Cities & Urban Tourism" data-en="Cities" data-am="ከተማዎች">Cities</button>
+        <button class="filter-btn" data-filter="Unique & Adventure Destinations" data-en="Adventure" data-am="የጉዞ">Adventure</button>
+    </div>
+</section>
+
+<!-- Gallery Grid -->
+<section class="gallery-container" style="padding: 2rem; max-width: 1400px; margin: 0 auto;">
+    <div class="gallery-grid" id="galleryContent">
+        <!-- Gallery images will be loaded here -->
+    </div>
+</section>
+
+<!-- Image Modal -->
+<div id="imageModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); cursor: pointer;">
+    <span class="close-modal" style="position: absolute; top: 20px; right: 45px; color: white; font-size: 60px; font-weight: bold; cursor: pointer;">&times;</span>
+    <div class="modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%;">
+        <img id="modalImage" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
+        <div id="modalCaption" style="color: white; text-align: center; margin-top: 1rem; font-size: 1.2rem;"></div>
+    </div>
+</div>
+
+<script src="/js/language.js"></script>
+<script>
+let allPlaces = [];
+let currentFilter = 'all';
+
+// Load gallery from database
+async function loadGallery() {
+    try {
+        const response = await fetch('/api/places');
+        allPlaces = await response.json();
+        displayGallery(allPlaces);
+    } catch (error) {
+        console.error('Error loading gallery:', error);
+        document.getElementById('galleryContent').innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+                <h3 data-en="Unable to Load Gallery" data-am="ጋለሪን መጫን አልተቻለሁ">Unable to Load Gallery</h3>
+                <p data-en="Please try again later" data-am="እባኮላ በኋላ ይሞክሉ">Please try again later</p>
+            </div>
+        `;
+    }
+}
+
+// Display gallery with filtering
+function displayGallery(places) {
+    const container = document.getElementById('galleryContent');
+    
+    // Filter places
+    let filteredPlaces = places.filter(place => {
+        return currentFilter === 'all' || place.category === currentFilter;
+    });
+
+    if (filteredPlaces.length === 0) {
+        container.innerHTML = `
+            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-images" style="font-size: 4rem; color: #888; margin-bottom: 1rem;"></i>
+                <h3 data-en="No Images Found" data-am="ምንም ምስልክት አልተገኘ">No Images Found</h3>
+                <p data-en="Try adjusting your filters" data-am="ማጣልዎችን ይቀይሩ">Try adjusting your filters</p>
+            </div>
+        `;
+        return;
+    }
+
+    // Create gallery HTML
+    let html = '';
+    filteredPlaces.forEach(place => {
+        const placeName = place.name_am || place.name;
+        const placeDescription = place.description_am || place.description;
+        
+        // Get all images for this place
+        const images = [];
+        
+        // Add main image
+        if (place.image_url) {
+            images.push({
+                url: place.image_url.startsWith('/uploads/') ? place.image_url : '/img/' + place.image_url,
+                caption: placeName,
+                description: placeDescription
+            });
+        }
+        
+        // Add gallery images
+        if (place.gallery_images && place.gallery_images.length > 0) {
+            place.gallery_images.forEach(img => {
+                images.push({
+                    url: img.startsWith('/uploads/') ? img : '/img/' + img,
+                    caption: placeName,
+                    description: placeDescription
+                });
+            });
+        }
+        
+        // If no images, add placeholder
+        if (images.length === 0) {
+            images.push({
+                url: null,
+                caption: placeName,
+                description: placeDescription,
+                isPlaceholder: true
+            });
+        }
+        
+        // Create place section
+        html += `
+            <div class="place-gallery-section" style="margin-bottom: 3rem;">
+                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span>${getCategoryIcon(place.category)}</span>
+                    <span data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</span>
+                    <span style="font-size: 0.9rem; color: #666;">(${images.length} images)</span>
+                </h3>
+                <div class="place-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+        `;
+        
+        // Add images for this place
+        images.forEach((img, index) => {
+            if (img.isPlaceholder) {
+                html += `
+                    <div class="gallery-item placeholder" style="aspect-ratio: 16/9; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; border-radius: 12px; cursor: default;">
+                        <div style="text-align: center; color: white;">
+                            <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p data-en="No images available" data-am="ምስልክት የሉም">No images available</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="gallery-item" onclick="openModal('${img.url}', '${img.caption}', '${img.description}')" style="aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; cursor: pointer; position: relative; transition: all 0.3s ease;">
+                        <img src="${img.url}" alt="${img.caption}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                        <div class="image-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 1rem;">
+                            <h4 data-en="${img.caption}" data-am="${img.caption}">${img.caption}</h4>
+                            <p style="font-size: 0.9rem; opacity: 0.9;">${img.description ? img.description.substring(0, 100) + '...' : ''}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+        
+        html += `
+                </div>
+                <div style="text-align: center; margin-top: 1.5rem;">
+                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Full Details" data-am="ሙሉኣ ዝርዝሮችን ይመልከቱ">View Full Details</a>
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+    
+    // Add hover effects to gallery items
+    document.querySelectorAll('.gallery-item:not(.placeholder)').forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.querySelector('img').style.transform = 'scale(1.1)';
+        });
+        item.addEventListener('mouseleave', function() {
+            this.querySelector('img').style.transform = 'scale(1)';
+        });
+    });
+}
+
+// Helper function
+function getCategoryIcon(category) {
+    const icons = {
+        'Historical & Cultural Sites': '🏛️',
+        'Nature & Mountains': '🌄',
+        'Unique & Adventure Destinations': '🌋',
+        'Lakes & Water Attractions': '🌊',
+        'Cities & Urban Tourism': '🏙️',
+        'Relaxation & Resort Areas': '🌿'
+    };
+    return icons[category] || '📍';
+}
+
+// Modal functions
+function openModal(imageSrc, caption, description) {
+    const modal = document.getElementById('imageModal');
+    const modalImg = document.getElementById('modalImage');
+    const modalCaption = document.getElementById('modalCaption');
+    
+    modal.style.display = 'block';
+    modalImg.src = imageSrc;
+    modalCaption.innerHTML = `<h3>${caption}</h3><p>${description || ''}</p>`;
+}
+
+// Close modal
+document.addEventListener('click', function(event) {
+    const modal = document.getElementById('imageModal');
+    if (event.target === modal || event.target.classList.contains('close-modal')) {
+        modal.style.display = 'none';
+    }
+});
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    loadGallery();
+    
+    // Filter buttons
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            currentFilter = this.getAttribute('data-filter');
+            displayGallery(allPlaces);
+        });
+    });
+});
+
+function toggleMobileMenu() {
+    const nav = document.getElementById('mobile-nav');
+    nav.classList.toggle('active');
+}
+</script>
+
+<style>
+.filter-btn {
+    padding: 12px 24px;
+    background: white;
+    border: 2px solid var(--primary-color);
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    color: var(--primary-color);
+}
+
+.filter-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+.gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.place-gallery-section {
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 2rem;
+}
+
+.gallery-item {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+}
+
+.image-overlay {
+    transition: all 0.3s ease;
+}
+
+.gallery-item:hover .image-overlay {
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+}
+
+.close-modal:hover {
+    color: #bbb;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .gallery-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .place-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
 
 </body>
 </html>

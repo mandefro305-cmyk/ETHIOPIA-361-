@@ -112,13 +112,29 @@ header h1 {
   border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 
-.mobile-nav a:hover {
-  background-color: rgba(255,255,255,0.1);
-  color: var(--secondary-color);
+/* Mobile Menu Enhancement */
+.mobile-menu-btn {
+    background: rgba(255,255,255,0.1);
+    border: 2px solid rgba(255,255,255,0.2);
+    border-radius: 12px;
+    padding: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.mobile-nav a:first-child {
-  border-top: 1px solid rgba(255,255,255,0.1);
+.mobile-menu-btn span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background: linear-gradient(90deg, #00ff88, #00ccff);
+    margin: 5px 0;
+    border-radius: 3px;
+    transition: all 0.3s ease;
+}
+
+.mobile-menu-btn:hover span {
+    background: linear-gradient(90deg, #00ff88, #ffffff);
+    box-shadow: 0 0 10px rgba(0,255,128,0.5);
 }
 
 /* Navigation Styles */
