@@ -327,6 +327,38 @@ app.get('/api/places/:id/travel-guide', async (req, res) => {
     }
 });
 
+// AI Chat API endpoint
+app.post('/api/chat', async (req, res) => {
+    try {
+        const { message, conversationHistory } = req.body;
+        console.log('AI chat request:', message);
+        
+        // Simple AI response for Ethiopia tourism
+        let response = '';
+        
+        if (message.toLowerCase().includes('hello') || message.toLowerCase().includes('hi')) {
+            response = "Hello! Welcome to Ethiopia 361°! I'm your AI assistant for Ethiopian tourism. How can I help you explore Ethiopia today?";
+        } else if (message.toLowerCase().includes('lalibela')) {
+            response = "Lalibela is famous for its rock-hewn churches from the 12th century. It's a UNESCO World Heritage site and one of Ethiopia's most amazing destinations! Would you like to know more about visiting Lalibela?";
+        } else if (message.toLowerCase().includes('addis') || message.toLowerCase().includes('addis ababa')) {
+            response = "Addis Ababa is Ethiopia's vibrant capital city! It offers great museums, restaurants, and the Mercato market. It's the perfect starting point for your Ethiopian adventure. What interests you most about Addis?";
+        } else if (message.toLowerCase().includes('best time')) {
+            response = "The best time to visit Ethiopia is generally from October to March during the dry season. However, different regions have optimal times. What specific destinations are you interested in?";
+        } else if (message.toLowerCase().includes('food') || message.toLowerCase().includes('cuisine')) {
+            response = "Ethiopian cuisine is amazing! Don't miss injera with doro wat (spicy chicken stew), kitfo (raw beef), and shiro. Ethiopian coffee ceremonies are also a must-try experience!";
+        } else if (message.toLowerCase().includes('transport') || message.toLowerCase().includes('travel')) {
+            response = "Ethiopia has domestic flights, buses, and private car options. Ethiopian Airlines connects major cities, while buses are great for budget travel. For remote areas, 4WD vehicles are recommended.";
+        } else {
+            response = "That's interesting! Ethiopia has so much to offer - from historical sites like Lalibela and Axum to natural wonders like the Simien Mountains and Danakil Depression. What specific aspect of Ethiopian tourism would you like to know about?";
+        }
+        
+        res.json({ response });
+    } catch (error) {
+        console.error('AI chat error:', error);
+        res.status(500).json({ error: 'AI service unavailable' });
+    }
+});
+
 // Categories Page
 app.get('/categories', (req, res) => {
     res.render('categories');
