@@ -248,7 +248,17 @@
         <img src="https://picsum.photos/seed/<%= place.name %>/800/400.jpg" alt="<%= place.name %>" class="place-image">
     <% } %>
     
-    <p><%= place.description %></p>
+    <% if(place && place.description) { %>
+        <div class="description-section">
+            <h3 data-en="About This Place" data-am="ስለዚህ ቦታ">About This Place</h3>
+            <p><%= place.description %></p>
+        </div>
+    <% } else { %>
+        <div class="description-section">
+            <h3 data-en="About This Place" data-am="ስለዚህ ቦታ">About This Place</h3>
+            <p data-en="Description coming soon..." data-am="መግለጫ በቅርብ ይመጣል...">Description coming soon...</p>
+        </div>
+    <% } %>
     
     <!-- Photo Gallery Section -->
     <div class="photo-gallery">

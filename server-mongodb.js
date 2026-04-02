@@ -242,6 +242,8 @@ app.get('/place/:id', async (req, res) => {
         
         const place = await Place.findById(objectId);
         console.log('Found place:', place ? place.name : 'null');
+        console.log('Place description:', place ? place.description : 'null');
+        console.log('Place data:', JSON.stringify(place, null, 2));
         
         if (!place) {
             console.log('Place not found with ID:', req.params.id);
@@ -749,6 +751,17 @@ app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', m
         console.error('Update error details:', error);
         console.error('Error stack:', error.stack);
         res.status(500).send('Error updating place: ' + error.message);
+    }
+});
+
+// Destinations Page
+app.get('/destinations', async (req, res) => {
+    try {
+        const places = await Place.find({});
+        res.render('destinations', { places });
+    } catch (error) {
+        console.error('Error fetching destinations:', error);
+        res.render('destinations', { places: [] });
     }
 });
 
