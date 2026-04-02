@@ -310,8 +310,9 @@
             }
             
             console.log('Place detail gallery images for <%= place.name %>:', galleryImages);
+            %>
             
-            galleryImages.forEach((imageSrc, index) => { %>
+            <% galleryImages.forEach((imageSrc, index) => { %>
                 <div class="gallery-item" onclick="openLightbox('<%= imageSrc %>')">
                     <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>" loading="lazy">
                     <div class="gallery-overlay">
