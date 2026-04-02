@@ -377,8 +377,9 @@ select#language option {
   min-height: 400px;
   overflow: hidden;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding-top: 2rem;
   color: white;
 }
 
