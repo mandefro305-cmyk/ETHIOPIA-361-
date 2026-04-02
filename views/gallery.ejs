@@ -77,7 +77,12 @@
 <!-- Gallery Grid -->
 <section class="gallery-container" style="padding: 2rem; max-width: 1400px; margin: 0 auto;">
     <div class="gallery-grid" id="galleryContent">
-        <!-- Gallery images will be loaded here -->
+        <!-- Loading spinner -->
+        <div id="galleryLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+            <p style="margin-top: 1rem; color: #888;" data-en="Loading gallery..." data-am="ጋለሪን በመጫን ላይ...">Loading gallery...</p>
+        </div>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
     </div>
     <div id="pagination" style="width: 100%;">
         <!-- Pagination controls will be added here -->
@@ -107,6 +112,9 @@ async function loadGallery() {
     try {
         const response = await fetch('/api/places');
         allPlaces = await response.json();
+        // Remove loader
+        const loader = document.getElementById('galleryLoader');
+        if (loader) loader.remove();
         displayGallery(allPlaces);
     } catch (error) {
         console.error('Error loading gallery:', error);
@@ -238,7 +246,7 @@ function displayGallery(places) {
             } else {
                 html += `
                     <div class="gallery-item" onclick="openModal('${img.url}', '${img.caption}', '${img.description}')" style="aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; cursor: pointer; position: relative; transition: all 0.3s ease;">
-                        <img src="${img.url}" alt="${img.caption}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onerror="this.src='https://picsum.photos/seed/${img.caption}/400/300.jpg';">
+                        <img src="${img.url}" alt="${img.caption}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onerror="this.src='https://picsum.photos/seed/${img.caption}/400/300.jpg';">
                         <div class="image-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 1rem;">
                             <h4 data-en="${img.caption}" data-am="${img.caption}">${img.caption}</h4>
                             <p style="font-size: 0.9rem; opacity: 0.9;">${img.description ? img.description.substring(0, 100) + '...' : ''}</p>

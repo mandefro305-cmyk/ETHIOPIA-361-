@@ -276,14 +276,14 @@
                 <div class="rank-badge"><%= index + 1 %></div>
                 <% if (place.image_url) { %>
                     <% if (place.image_url.startsWith('http')) { %>
-                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image">
+                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image" loading="lazy">
                     <% } else if (place.image_url.startsWith('/uploads/')) { %>
-                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image">
+                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image" loading="lazy">
                     <% } else { %>
-                        <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/400/300'">
+                        <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image" loading="lazy" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/400/300'">
                     <% } %>
                 <% } else { %>
-                    <img src="https://picsum.photos/seed/<%= place.name %>/400/300" alt="<%= place.name %>" class="place-rank-image">
+                    <img src="https://picsum.photos/seed/<%= place.name %>/400/300" alt="<%= place.name %>" class="place-rank-image" loading="lazy">
                 <% } %>
                 <div class="place-rank-content">
                     <h3><%= place.name %></h3>

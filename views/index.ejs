@@ -64,7 +64,12 @@
 <section class="places-grid">
 <h2 data-en="Top Destinations" data-am="ከፍተኛ መዳረሻዎች">Top Destinations</h2>
 <div class="grid-container" id="placesGrid">
-    <!-- Places will be loaded here -->
+    <!-- Loading spinner -->
+    <div id="placesLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p style="margin-top: 1rem; color: #888;" data-en="Loading destinations..." data-am="መዳረሻዎችን በመጫን ላይ...">Loading destinations...</p>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </div>
 </section>
 
@@ -75,10 +80,21 @@ async function loadPlaces() {
         const response = await fetch('/api/places');
         const allPlaces = await response.json();
         
-        // Get only first 10 places for homepage
-        const places = allPlaces.slice(0, 10);
+        // Deduplicate by place name and get first 10
+        const seen = new Set();
+        const uniquePlaces = allPlaces.filter(place => {
+            const key = place.name.toLowerCase().trim();
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        const places = uniquePlaces.slice(0, 10);
         
         const container = document.getElementById('placesGrid');
+        
+        // Hide loader
+        const loader = document.getElementById('placesLoader');
+        if (loader) loader.remove();
         
         if (places.length === 0) {
             container.innerHTML = `
@@ -95,13 +111,13 @@ async function loadPlaces() {
             <div class="destination-card">
                 ${place.image_url && place.image_url !== '' ? `
                     ${place.image_url.startsWith('http') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image">`
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image" loading="lazy">`
                         : place.image_url.startsWith('/uploads/') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="card-image" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image" loading="lazy">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="card-image" loading="lazy" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
                     }
                 ` : `
-                    <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="card-image">
+                    <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="card-image" loading="lazy">
                 `}
                 <div class="card-content">
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>

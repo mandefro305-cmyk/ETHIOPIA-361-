@@ -87,7 +87,12 @@
 <!-- Destinations Grid -->
 <section class="places-grid">
 <div class="grid-container" id="destinationsContent">
-    <!-- Destinations will be loaded here -->
+    <!-- Loading spinner -->
+    <div id="destinationsLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+        <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <p style="margin-top: 1rem; color: #888;" data-en="Loading destinations..." data-am="መዳረሻዎችን በመጫን ላይ...">Loading destinations...</p>
+    </div>
+    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 </div>
 <div id="pagination" style="width: 100%; display: flex; justify-content: center; margin-top: 2rem;">
     <!-- Pagination controls will be added here -->
@@ -111,6 +116,9 @@ async function loadDestinations() {
         
         // Show all places (removed slice that was skipping first 10)
         allPlaces = places;
+        // Remove loader
+        const loader = document.getElementById('destinationsLoader');
+        if (loader) loader.remove();
         displayDestinations(allPlaces);
     } catch (error) {
         console.error('Error loading destinations:', error);
@@ -187,13 +195,13 @@ function displayDestinations(places) {
                 <div class="card">
                     ${place.image_url ? `
                         ${place.image_url.startsWith('http') 
-                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
+                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img" loading="lazy">`
                             : place.image_url.startsWith('/uploads/') 
-                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
-                            : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
+                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img" loading="lazy">`
+                            : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img" loading="lazy" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
                         }
                     ` : `
-                        <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="place-img">
+                        <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="place-img" loading="lazy">
                     `}
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
                     <p class="place-description">

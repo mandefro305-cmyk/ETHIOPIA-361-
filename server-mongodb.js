@@ -889,6 +889,36 @@ app.post('/admin/delete/:id', isAuthenticated, async (req, res) => {
     }
 });
 
+// Dynamic Sitemap.xml for SEO
+app.get('/sitemap.xml', async (req, res) => {
+    try {
+        const places = await Place.find({});
+        const baseUrl = req.protocol + '://' + req.get('host');
+        
+        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+        
+        // Static pages
+        const staticPages = ['/', '/destinations', '/gallery', '/blog', '/guide', '/contact', '/categories'];
+        staticPages.forEach(page => {
+            xml += `  <url>\n    <loc>${baseUrl}${page}</loc>\n    <changefreq>weekly</changefreq>\n    <priority>${page === '/' ? '1.0' : '0.8'}</priority>\n  </url>\n`;
+        });
+        
+        // Dynamic place pages
+        places.forEach(place => {
+            xml += `  <url>\n    <loc>${baseUrl}/place/${place._id}</loc>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+        });
+        
+        xml += '</urlset>';
+        
+        res.header('Content-Type', 'application/xml');
+        res.send(xml);
+    } catch (error) {
+        console.error('Sitemap error:', error);
+        res.status(500).send('Error generating sitemap');
+    }
+});
+
 // Custom 404 handler - must be after all other routes
 app.use((req, res) => {
     res.status(404).render('404');

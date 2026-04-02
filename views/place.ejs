@@ -258,14 +258,14 @@
     
     <% if(place.image_url && place.image_url !== '') { %>
         <% if(place.image_url.startsWith('http')) { %>
-            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
+            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
         <% } else if(place.image_url.startsWith('/uploads/')) { %>
-            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
+            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
         <% } else { %>
-            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/800/400.jpg'">
+            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/800/400.jpg'">
         <% } %>
     <% } else { %>
-        <img src="https://picsum.photos/seed/<%= place.name %>/800/400.jpg" alt="<%= place.name %>" class="place-image">
+        <img src="https://picsum.photos/seed/<%= place.name %>/800/400.jpg" alt="<%= place.name %>" class="place-image" loading="lazy">
     <% } %>
     
     <% if(place && place.description) { %>
@@ -331,7 +331,7 @@
             
             galleryImages.forEach((imageSrc, index) => { %>
                 <div class="gallery-item" onclick="openLightbox('<%= imageSrc %>')">
-                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>">
+                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>" loading="lazy">
                     <div class="gallery-overlay">
                         <span class="view-icon">🔍</span>
                     </div>
