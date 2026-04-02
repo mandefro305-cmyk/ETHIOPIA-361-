@@ -28,7 +28,8 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 1rem;
 }
 
 header h1 {
@@ -44,6 +45,13 @@ header h1 {
     to { text-shadow: 0 2px 20px rgba(0,77,64,0.6), 0 0 30px rgba(0,255,128,0.4); }
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-shrink: 0;
+}
+
 .mobile-header {
     display: none;
 }
@@ -51,10 +59,10 @@ header h1 {
 .mobile-menu-btn {
     display: none;
     flex-direction: column;
-    background: rgba(255,255,255,0.1);
-    border: 2px solid rgba(255,255,255,0.2);
-    border-radius: 12px;
-    padding: 0.8rem;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.25);
+    border-radius: 8px;
+    padding: 0.5rem;
     cursor: pointer;
     transition: all 0.3s ease;
 }
@@ -188,13 +196,13 @@ header h1 {
 
 /* Dark Mode Toggle */
 .theme-toggle {
-    position: absolute;
-    top: 1.5rem;
-    right: 2rem;
+    position: relative;
+    top: auto;
+    right: auto;
     background: rgba(255,255,255,0.1);
     border: 2px solid rgba(255,255,255,0.2);
     border-radius: 50px;
-    width: 60px;
+    width: 40px;
     height: 30px;
     cursor: pointer;
     display: flex;
@@ -202,6 +210,7 @@ header h1 {
     justify-content: center;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
+    flex-shrink: 0;
 }
 
 .theme-toggle:hover {
@@ -240,8 +249,17 @@ body.dark-mode .theme-toggle.light::before {
 
 /* Enhanced Mobile Menu */
 @media (max-width: 768px) {
+    header {
+        padding: 10px 15px;
+        flex-wrap: nowrap;
+    }
+    
+    header h1 {
+        font-size: 1.2rem;
+    }
+    
     .desktop-nav {
-        display: none;
+        display: none !important;
     }
     
     .mobile-nav {
@@ -256,14 +274,23 @@ body.dark-mode .theme-toggle.light::before {
     .mobile-nav a {
         width: 100%;
         text-align: center;
-        padding: 1.5rem;
+        padding: 1.2rem;
         border-radius: 15px;
         font-size: 1.1rem;
     }
     
     .theme-toggle {
-        top: 1rem;
-        right: 1rem;
+        width: 35px;
+        height: 25px;
+    }
+    
+    .theme-toggle::before {
+        font-size: 1rem;
+    }
+    
+    select#language {
+        padding: 4px 6px;
+        font-size: 0.8rem;
     }
     
     .mobile-header {
@@ -272,13 +299,39 @@ body.dark-mode .theme-toggle.light::before {
     
     .mobile-menu-btn {
         display: flex;
+        padding: 0.5rem;
+    }
+    
+    .mobile-menu-btn span {
+        width: 22px;
+        height: 2px;
+        margin: 3px 0;
+    }
+    
+    .mobile-menu-btn.active span:nth-child(1) {
+        transform: rotate(45deg) translate(3px, 3px);
+    }
+    .mobile-menu-btn.active span:nth-child(2) {
+        opacity: 0;
+    }
+    .mobile-menu-btn.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(3px, -3px);
     }
 }
 
 select#language {
-  margin-top: 10px;
-  padding: 5px;
-  border-radius: 4px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: rgba(255,255,255,0.1);
+  color: white;
+  font-size: 0.85rem;
+  flex-shrink: 0;
+}
+
+select#language option {
+  background: #004d40;
+  color: white;
 }
 
 .hero {
@@ -341,7 +394,7 @@ select#language {
 
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
   padding: 2rem;
   max-width: 1400px;
@@ -682,40 +735,112 @@ footer {
 }
 @media (max-width: 768px) {
   .hero {
-    height: 60vh;
-    min-height: 300px;
+    height: 50vh;
+    min-height: 250px;
   }
 
   .hero-overlay {
-    padding: 20px;
+    padding: 15px;
+    width: 90%;
   }
   
   .hero h2 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
   }
   
   .hero p {
-    font-size: 1rem;
+    font-size: 0.9rem;
+  }
+  
+  .places-grid {
+    padding: 20px 10px;
+  }
+  
+  .places-grid h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
   }
   
   .grid-container {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 15px;
+    padding: 0 0.5rem;
   }
   
   .card {
     margin: 0 auto;
     max-width: 100%;
+    padding: 1rem;
+  }
+  
+  .card h3 {
+    font-size: 1.2rem;
   }
   
   .card-actions {
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
   }
   
   .btn-read-more, .btn-view-details {
     width: 100%;
     text-align: center;
+    margin-left: 0;
+  }
+  
+  .card-content {
+    padding: 1rem;
+  }
+  
+  .card-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .card-description {
+    font-size: 0.9rem;
+  }
+  
+  .destination-card:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* Extra small phones */
+@media (max-width: 400px) {
+  header {
+    padding: 8px 10px;
+  }
+  
+  header h1 {
+    font-size: 1rem;
+  }
+  
+  .hero {
+    height: 40vh;
+    min-height: 200px;
+  }
+  
+  .hero h2 {
+    font-size: 1.2rem;
+  }
+  
+  .hero p {
+    font-size: 0.8rem;
+  }
+  
+  .grid-container {
+    padding: 0 0.25rem;
+    gap: 12px;
+  }
+  
+  .card-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .nav-cta {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
   }
 }
 

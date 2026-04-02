@@ -11,44 +11,38 @@
 <body>
 
 <header>
-<h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
-
-<div class="mobile-header">
-    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-</div>
-
-<nav class="desktop-nav">
-<a href="/" data-en="Home" data-am="ቤት">Home</a>
-<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
-<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
-<a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
-<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
-<a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
-<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
-</nav>
-
-<nav class="mobile-nav" id="mobile-nav">
-<a href="/" data-en="Home" data-am="ቤት">Home</a>
-<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
-<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
-<a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
-<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
-<a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
-<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
-</nav>
-
-<div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
-
-<select id="language" onchange="changeLanguage()">
-<option value="en">English</option>
-<option value="am">አማርኛ</option>
-</select>
-
+    <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+    <nav class="desktop-nav">
+        <a href="/" data-en="Home" data-am="ቤት">Home</a>
+        <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+        <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+        <a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+        <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+        <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+        <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+    </nav>
+    <div class="header-right">
+        <div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+        </select>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
 </header>
+<nav class="mobile-nav" id="mobile-nav">
+    <a href="/" data-en="Home" data-am="ቤት">Home</a>
+    <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+    <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+    <a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+    <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+    <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+    <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+</nav>
 
 <section class="hero">
     <video autoplay muted loop playsinline class="hero-video">

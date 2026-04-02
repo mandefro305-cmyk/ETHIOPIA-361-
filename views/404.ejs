@@ -123,17 +123,26 @@
         <a href="/blog" data-en="Top 10" data-am="ምርጥ 10">Top 10</a>
         <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
     </nav>
-    <div class="mobile-header">
-        <button class="menu-btn" onclick="toggleMobileMenu()">☰</button>
+    <div class="header-right">
+        <div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="am">አማርኛ</option>
+        </select>
+        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
     </div>
 </header>
 <nav class="mobile-nav" id="mobile-nav">
-    <a href="/">Home</a>
-    <a href="/destinations">Destinations</a>
-    <a href="/guide">Travel Guide</a>
-    <a href="/gallery">Gallery</a>
-    <a href="/blog">Top 10</a>
-    <a href="/contact">Contact</a>
+    <a href="/" data-en="Home" data-am="ቤት">Home</a>
+    <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+    <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+    <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+    <a href="/blog" data-en="Top 10" data-am="ምርጥ 10">Top 10</a>
+    <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
 </nav>
 
 <div class="not-found-container">
