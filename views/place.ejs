@@ -6,6 +6,7 @@
 <title><%= place.name %> - Ethiopia 361°</title>
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/ai-chat.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></script>
 <style>
     .place-detail {
         max-width: 800px;
@@ -175,24 +176,26 @@
 </div>
 
 <nav class="desktop-nav">
-<a href="/">Home</a>
-<a href="/destinations">Destinations</a>
-<a href="/culture">Culture</a>
-<a href="/guide">Travel Guide</a>
-<a href="/gallery">Gallery</a>
-<a href="/blog">Blog</a>
-<a href="/contact">Contact</a>
+<a href="/" data-en="Home" data-am="ቤት">Home</a>
+<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+<a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+<a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
 </nav>
 
 <nav class="mobile-nav" id="mobile-nav">
-<a href="/">Home</a>
-<a href="/destinations">Destinations</a>
-<a href="/culture">Culture</a>
-<a href="/guide">Travel Guide</a>
-<a href="/gallery">Gallery</a>
-<a href="/blog">Blog</a>
-<a href="/contact">Contact</a>
+<a href="/" data-en="Home" data-am="ቤት">Home</a>
+<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+<a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+<a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
 </nav>
+
+<div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
 
 <select id="language" onchange="changeLanguage()">
 <option value="en">English</option>
@@ -200,6 +203,17 @@
 </select>
 
 </header>
+
+<section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="/videos/hero-background.mp4" type="video/mp4">
+        Your browser does not support video tag.
+    </video>
+    <div class="hero-overlay">
+        <h2 data-en="<%= place.name %>" data-am="<%= place.name_am || place.name %>"><%= place.name %></h2>
+        <p data-en="Discover this amazing destination in Ethiopia" data-am="ይህንን የሚያምር የኢትዮጵያን መዳረሻዎች">Discover this amazing destination in Ethiopia</p>
+    </div>
+</section>
 
 <div class="place-detail">
     <a href="/" class="back-btn">&larr; Back to Destinations</a>
@@ -212,7 +226,9 @@
             <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
         <% } %>
     <% } %>
-
+    
+    <p><%= place.description %></p>
+    
     <!-- Photo Gallery Section -->
     <div class="photo-gallery">
         <h3 data-en="Photo Gallery" data-am="ፎቶ ጋለሪ">Photo Gallery</h3>
@@ -241,20 +257,18 @@
                 }
                 
                 // Add placeholder images if still not enough
-                if(galleryImages.length < 6) {
-                    const placeholders = [
-                        '/img/lalibela2.jpg',
-                        '/img/lalibela3.jpg', 
-                        '/img/lalibela4.jpg',
-                        '/img/lalibela5.jpg',
-                        '/img/lalibela6.jpg'
-                    ];
-                    
-                    // Add enough placeholders to reach 6 images total
-                    const needed = 6 - galleryImages.length;
-                    for(let i = 0; i < needed && i < placeholders.length; i++) {
-                        galleryImages.push(placeholders[i]);
-                    }
+                const placeholders = [
+                    '/img/lalibela2.jpg',
+                    '/img/lalibela3.jpg', 
+                    '/img/lalibela4.jpg',
+                    '/img/lalibela5.jpg',
+                    '/img/lalibela6.jpg'
+                ];
+                
+                // Add enough placeholders to reach 6 images total
+                const needed = 6 - galleryImages.length;
+                for(let i = 0; i < needed && i < placeholders.length; i++) {
+                    galleryImages.push(placeholders[i]);
                 }
             }
             
@@ -268,7 +282,7 @@
             <% }); %>
         </div>
     </div>
-
+    
     <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <div class="lightbox-content">
@@ -276,15 +290,13 @@
             <span class="close-lightbox">&times;</span>
         </div>
     </div>
-
-    <p><%= place.description %></p>
     
     <% if(place.video_url) { %>
         <div class="video-container">
             <% if(place.video_url.startsWith('/uploads/')) { %>
                 <video controls>
                     <source src="<%= place.video_url %>" type="video/mp4">
-                    Your browser does not support the video tag.
+                    Your browser does not support video tag.
                 </video>
             <% } else if(place.video_url.includes('youtube.com') || place.video_url.includes('youtu.be')) { %>
                 <% 
@@ -292,10 +304,10 @@
                 let embedUrl = place.video_url;
                 if (embedUrl.includes('watch?v=')) {
                     const videoId = embedUrl.split('watch?v=')[1].split('&')[0];
-                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
                 } else if (embedUrl.includes('youtu.be/')) {
                     const videoId = embedUrl.split('youtu.be/')[1].split('?')[0];
-                    embedUrl = `https://www.youtube.com/embed/${videoId}`;
+                    embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}`;
                 }
                 %>
                 <iframe src="<%= embedUrl %>" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -307,7 +319,7 @@
 </div>
 
 <footer>
-<p>© 2026 Ethiopia 361°</p>
+<p> 2026 Ethiopia 361°</p>
 </footer>
 
 <script src="/js/language.js"></script>
