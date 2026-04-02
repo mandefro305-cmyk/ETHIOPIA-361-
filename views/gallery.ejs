@@ -144,8 +144,16 @@ function displayGallery(places) {
         
         // Add main image
         if (place.image_url) {
+            let imageUrl = place.image_url;
+            if (place.image_url.startsWith('http')) {
+                imageUrl = place.image_url;
+            } else if (place.image_url.startsWith('/uploads/')) {
+                imageUrl = place.image_url;
+            } else {
+                imageUrl = '/img/' + place.image_url;
+            }
             images.push({
-                url: place.image_url.startsWith('/uploads/') ? place.image_url : '/img/' + place.image_url,
+                url: imageUrl,
                 caption: placeName,
                 description: placeDescription
             });
@@ -153,9 +161,28 @@ function displayGallery(places) {
         
         // Add gallery images
         if (place.gallery_images && place.gallery_images.length > 0) {
-            place.gallery_images.forEach(img => {
+            let galleryImages = [];
+            if (typeof place.gallery_images === 'string') {
+                try {
+                    galleryImages = JSON.parse(place.gallery_images);
+                } catch (e) {
+                    galleryImages = [];
+                }
+            } else {
+                galleryImages = place.gallery_images;
+            }
+            
+            galleryImages.forEach(img => {
+                let imageUrl = img;
+                if (img.startsWith('http')) {
+                    imageUrl = img;
+                } else if (img.startsWith('/uploads/')) {
+                    imageUrl = img;
+                } else {
+                    imageUrl = '/img/' + img;
+                }
                 images.push({
-                    url: img.startsWith('/uploads/') ? img : '/img/' + img,
+                    url: imageUrl,
                     caption: placeName,
                     description: placeDescription
                 });
@@ -165,7 +192,7 @@ function displayGallery(places) {
         // If no images, add placeholder
         if (images.length === 0) {
             images.push({
-                url: null,
+                url: `https://picsum.photos/seed/${placeName}/400/300.jpg`,
                 caption: placeName,
                 description: placeDescription,
                 isPlaceholder: true
@@ -197,7 +224,7 @@ function displayGallery(places) {
             } else {
                 html += `
                     <div class="gallery-item" onclick="openModal('${img.url}', '${img.caption}', '${img.description}')" style="aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; cursor: pointer; position: relative; transition: all 0.3s ease;">
-                        <img src="${img.url}" alt="${img.caption}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                        <img src="${img.url}" alt="${img.caption}" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onerror="this.src='https://picsum.photos/seed/${img.caption}/400/300.jpg';">
                         <div class="image-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 1rem;">
                             <h4 data-en="${img.caption}" data-am="${img.caption}">${img.caption}</h4>
                             <p style="font-size: 0.9rem; opacity: 0.9;">${img.description ? img.description.substring(0, 100) + '...' : ''}</p>
