@@ -10,26 +10,22 @@
 <style>
     .place-detail {
         max-width: 800px;
-        margin: 40px auto;
-        padding: 20px;
+        margin: 2rem auto;
+        padding: 2rem;
         background: white;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         border-radius: 8px;
     }
+    
     .video-container {
         position: relative;
-        padding-bottom: 56.25%; /* 16:9 aspect ratio */
+        padding-bottom: 56.25%;
         height: 0;
         overflow: hidden;
         margin-top: 20px;
     }
-    .video-container video {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
+    
+    .video-container video,
     .video-container iframe {
         position: absolute;
         top: 0;
@@ -37,6 +33,7 @@
         width: 100%;
         height: 100%;
     }
+    
     .place-image {
         width: 100%;
         max-height: 400px;
@@ -50,7 +47,7 @@
     }
     
     .photo-gallery h3 {
-        color: #004d40;
+        color: var(--primary-color, #004d40);
         margin-bottom: 20px;
         font-size: 1.5rem;
     }
@@ -93,7 +90,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 77, 64, 0.7);
+        background: rgba(0,77,64,0.7);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -117,7 +114,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.9);
+        background: rgba(0,0,0,0.9);
         z-index: 1000;
         align-items: center;
         justify-content: center;
@@ -152,12 +149,31 @@
     .close-lightbox:hover {
         transform: scale(1.2);
     }
+    
     .back-btn {
         display: inline-block;
         margin-bottom: 20px;
-        color: #004d40;
+        color: var(--primary-color, #004d40);
         text-decoration: none;
         font-weight: bold;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+        .place-detail {
+            padding: 1rem;
+            margin: 1rem;
+        }
+        
+        .gallery-grid {
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .lightbox-content {
+            max-width: 95%;
+            max-height: 95%;
+        }
     }
 </style>
 </head>
