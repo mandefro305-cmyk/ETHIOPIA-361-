@@ -60,13 +60,13 @@
 <section class="gallery-filters">
     <h2 data-en="Photo Gallery" data-am="የፎቶ ጋለሪ">Photo Gallery</h2>
     <p class="gallery-subtitle" data-en="Click on a destination to explore its photos" data-am="ፎቶዎቹን ለማየት መዳረሻ ላይ ጠቅ ያድርጉ">Click on a destination to explore its photos</p>
-    <div class="filter-buttons">
-        <button class="filter-btn active" onclick="filterGallery('all', this)" data-en="All" data-am="ሁሉን">All</button>
-        <button class="filter-btn" onclick="filterGallery('Historical & Cultural Sites', this)" data-en="Historical" data-am="ታሪክ">Historical</button>
-        <button class="filter-btn" onclick="filterGallery('Nature & Mountains', this)" data-en="Nature" data-am="ተፈሪ">Nature</button>
-        <button class="filter-btn" onclick="filterGallery('Lakes & Water Attractions', this)" data-en="Lakes" data-am="ሀይቆች">Lakes</button>
-        <button class="filter-btn" onclick="filterGallery('Cities & Urban Tourism', this)" data-en="Cities" data-am="ከተማዎች">Cities</button>
-        <button class="filter-btn" onclick="filterGallery('Unique & Adventure Destinations', this)" data-en="Adventure" data-am="የጉዞ">Adventure</button>
+    <div class="filter-buttons" id="filterButtons">
+        <button class="filter-btn active" data-filter="all" data-en="All" data-am="ሁሉን">All</button>
+        <button class="filter-btn" data-filter="historical" data-en="Historical" data-am="ታሪክ">Historical</button>
+        <button class="filter-btn" data-filter="nature" data-en="Nature" data-am="ተፈሪ">Nature</button>
+        <button class="filter-btn" data-filter="lakes" data-en="Lakes" data-am="ሀይቆች">Lakes</button>
+        <button class="filter-btn" data-filter="cities" data-en="Cities" data-am="ከተማዎች">Cities</button>
+        <button class="filter-btn" data-filter="adventure" data-en="Adventure" data-am="የጉዞ">Adventure</button>
     </div>
 </section>
 
@@ -165,7 +165,12 @@ function getCategoryIcon(category) {
 
 function displayPlaceCards(places) {
     const container = document.getElementById('galleryContent');
-    const filtered = places.filter(p => currentFilter === 'all' || p.category === currentFilter);
+    console.log('Filter:', currentFilter, 'Total places:', places.length);
+    console.log('Categories in data:', [...new Set(places.map(p => p.category))]);
+    const filtered = places.filter(p => {
+        if (currentFilter === 'all') return true;
+        return p.category && p.category.toLowerCase() === currentFilter.toLowerCase();
+    });
 
     if (filtered.length === 0) {
         container.innerHTML = `
@@ -258,15 +263,28 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeViewer();
 });
 
-function filterGallery(category, btn) {
-    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    currentFilter = category;
-    displayPlaceCards(allPlaces);
-}
+// Category mapping for filter buttons
+const categoryMap = {
+    'all': 'all',
+    'historical': 'Historical & Cultural Sites',
+    'nature': 'Nature & Mountains',
+    'lakes': 'Lakes & Water Attractions',
+    'cities': 'Cities & Urban Tourism',
+    'adventure': 'Unique & Adventure Destinations'
+};
 
 document.addEventListener('DOMContentLoaded', function() {
     loadGallery();
+
+    document.getElementById('filterButtons').addEventListener('click', function(e) {
+        var btn = e.target.closest('.filter-btn');
+        if (!btn) return;
+        var key = btn.getAttribute('data-filter');
+        document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        currentFilter = categoryMap[key] || 'all';
+        displayPlaceCards(allPlaces);
+    });
 });
 
 function toggleMobileMenu() {
