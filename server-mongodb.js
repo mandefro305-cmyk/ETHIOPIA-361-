@@ -302,6 +302,78 @@ app.get('/admin', isAuthenticated, async (req, res) => {
     }
 });
 
+// Email sending endpoint
+app.post('/send-email', async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+        
+        // Create nodemailer transporter
+        const nodemailer = require('nodemailer');
+        
+        // Configure transporter (using Gmail for example)
+        const transporter = nodemailer.createTransporter({
+            service: 'gmail',
+            auth: {
+                user: 'kademandefro@gmail.com',
+                pass: 'your-app-password' // Use app-specific password for Gmail
+            }
+        });
+        
+        // Email options
+        const mailOptions = {
+            from: email,
+            to: 'kademandefro@gmail.com',
+            subject: `Ethiopia 361° Contact: ${subject}`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <div style="background: linear-gradient(135deg, #004d40, #00695c); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0;">
+                        <h1 style="margin: 0; font-size: 2rem;">Ethiopia 361°</h1>
+                        <p style="margin: 10px 0 0 0; opacity: 0.9;">New Contact Form Submission</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 30px; border: 1px solid #e0e0e0; border-radius: 0 0 10px 10px;">
+                        <h2 style="color: #004d40; margin-bottom: 20px;">Contact Details</h2>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <strong style="color: #333;">Name:</strong>
+                            <p style="margin: 5px 0; color: #666;">${name}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <strong style="color: #333;">Email:</strong>
+                            <p style="margin: 5px 0; color: #666;">${email}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <strong style="color: #333;">Subject:</strong>
+                            <p style="margin: 5px 0; color: #666;">${subject}</p>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <strong style="color: #333;">Message:</strong>
+                            <p style="margin: 5px 0; color: #666; line-height: 1.6;">${message}</p>
+                        </div>
+                        
+                        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e0e0e0; text-align: center; color: #999; font-size: 0.9rem;">
+                            <p>This message was sent from the Ethiopia 361° website contact form.</p>
+                            <p>Sent on: ${new Date().toLocaleString()}</p>
+                        </div>
+                    </div>
+                </div>
+            `
+        };
+        
+        // Send email
+        await transporter.sendMail(mailOptions);
+        
+        res.json({ success: true, message: 'Email sent successfully' });
+        
+    } catch (error) {
+        console.error('Error sending email:', error);
+        res.status(500).json({ success: false, message: 'Failed to send email' });
+    }
+});
+
 // API Routes
 app.get('/api/places', async (req, res) => {
     try {

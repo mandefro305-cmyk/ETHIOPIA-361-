@@ -1,25 +1,310 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Contact</title>
+<meta charset="UTF-8">
+<title>Contact - Ethiopia 361°</title>
 <link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/ai-chat.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"></script>
 </head>
+
 <body>
 
 <header>
-<h1>Contact Us</h1>
+<h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+
+<div class="mobile-header">
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</div>
+
+<nav class="desktop-nav">
+<a href="/" data-en="Home" data-am="ቤት">Home</a>
+<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+<a href="/culture" data-en="Culture" data-am="ባህል">Culture</a>
+<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+<a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+<a href="/contact" class="active" data-en="Contact" data-am="ይድረሹ">Contact</a>
+<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+</nav>
+
+<nav class="mobile-nav" id="mobile-nav">
+<a href="/" data-en="Home" data-am="ቤት">Home</a>
+<a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+<a href="/culture" data-en="Culture" data-am="ባህል">Culture</a>
+<a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+<a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+<a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+<a href="/contact" class="active" data-en="Contact" data-am="ይድረሹ">Contact</a>
+<a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+</nav>
+
+<div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
+
+<select id="language" onchange="changeLanguage()">
+<option value="en">English</option>
+<option value="am">አማርኛ</option>
+</select>
+
 </header>
 
-<section>
-
-<form>
-<input type="text" placeholder="Your Name"><br>
-<input type="email" placeholder="Your Email"><br>
-<textarea placeholder="Message"></textarea><br>
-<button>Send</button>
-</form>
-
+<section class="hero">
+    <video autoplay muted loop playsinline class="hero-video">
+        <source src="/videos/hero-background.mp4" type="video/mp4">
+        Your browser does not support video tag.
+    </video>
+    <div class="hero-overlay">
+        <h2 data-en="Get in Touch" data-am="ይግኙን">Get in Touch</h2>
+        <p data-en="We'd love to hear from you about your Ethiopian travel experience" data-am="ስለ የኢትዮጵያ ጉዞ ተሞክሮዎ እንገኝዎ">We'd love to hear from you about your Ethiopian travel experience</p>
+    </div>
 </section>
+
+<section class="contact-container" style="padding: 4rem 2rem; max-width: 1200px; margin: 0 auto;">
+    <div class="contact-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start;">
+        
+        <!-- Contact Information -->
+        <div class="contact-info">
+            <h2 data-en="Contact Information" data-am="የሚገኙበት መረጃዎች" style="color: var(--primary-color); margin-bottom: 2rem;">Contact Information</h2>
+            
+            <div class="info-card" style="background: white; padding: 2rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 1.5rem; transition: all 0.3s ease;">
+                <div class="info-item" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="info-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--primary-color), #00695c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h4 data-en="Email" data-am="ኢሜይል" style="margin: 0; color: #333;">Email</h4>
+                        <p data-en="kademandefro@gmail.com" data-am="kademandefro@gmail.com" style="margin: 0; color: #666;">kademandefro@gmail.com</p>
+                    </div>
+                </div>
+                
+                <div class="info-item" style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div class="info-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, var(--secondary-color), #f39c12); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <div>
+                        <h4 data-en="Phone" data-am="ስልክ" style="margin: 0; color: #333;">Phone</h4>
+                        <p data-en="+251 9XX XXX XXX" data-am="+251 9XX XXX XXX" style="margin: 0; color: #666;">+251 9XX XXX XXX</p>
+                    </div>
+                </div>
+                
+                <div class="info-item" style="display: flex; align-items: center; gap: 1rem;">
+                    <div class="info-icon" style="width: 50px; height: 50px; background: linear-gradient(135deg, #e74c3c, #c0392b); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.2rem;">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <div>
+                        <h4 data-en="Location" data-am="አካል" style="margin: 0; color: #333;">Location</h4>
+                        <p data-en="Addis Ababa, Ethiopia" data-am="አዲስ አባባ, ኢትዮጵያ" style="margin: 0; color: #666;">Addis Ababa, Ethiopia</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-links" style="text-align: center; padding: 2rem;">
+                <h3 data-en="Follow Us" data-am="ይከተሉን" style="color: var(--primary-color); margin-bottom: 1rem;">Follow Us</h3>
+                <div class="social-icons" style="display: flex; justify-content: center; gap: 1rem;">
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #1877f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease;">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #1da1f2; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease;">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #25d366; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease;">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="#" class="social-icon" style="width: 40px; height: 40px; background: #e1306c; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.3s ease;">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Contact Form -->
+        <div class="contact-form-section">
+            <h2 data-en="Send us a Message" data-am="መልእክት ይላኩን" style="color: var(--primary-color); margin-bottom: 2rem;">Send us a Message</h2>
+            
+            <div id="formMessage" style="display: none; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center;"></div>
+            
+            <form id="contactForm" class="modern-contact-form" style="background: white; padding: 2.5rem; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="name" data-en="Your Name" data-am="ስምዎ" style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 500;">Your Name</label>
+                    <input type="text" id="name" name="name" required style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="email" data-en="Your Email" data-am="ኢሜይልዎ" style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 500;">Your Email</label>
+                    <input type="email" id="email" name="email" required style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="subject" data-en="Subject" data-am="ርዕስ" style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 500;">Subject</label>
+                    <input type="text" id="subject" name="subject" required style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; transition: all 0.3s ease;">
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="message" data-en="Message" data-am="መልእክት" style="display: block; margin-bottom: 0.5rem; color: #333; font-weight: 500;">Message</label>
+                    <textarea id="message" name="message" rows="5" required style="width: 100%; padding: 1rem; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 1rem; resize: vertical; transition: all 0.3s ease;"></textarea>
+                </div>
+                
+                <button type="submit" class="submit-btn" style="width: 100%; padding: 1.2rem; background: linear-gradient(135deg, var(--primary-color), #00695c); color: white; border: none; border-radius: 8px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+                    <i class="fas fa-paper-plane"></i>
+                    <span data-en="Send Message" data-am="መልእክት ላክ">Send Message</span>
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Success Modal -->
+<div id="successModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center;">
+    <div class="modal-content" style="background: white; padding: 3rem; border-radius: 16px; max-width: 500px; text-align: center; position: relative;">
+        <div class="success-icon" style="width: 80px; height: 80px; background: linear-gradient(135deg, #27ae60, #2ecc71); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem; color: white; font-size: 2rem;">
+            <i class="fas fa-check"></i>
+        </div>
+        <h3 data-en="Message Sent Successfully!" data-am="መልእክት ተልኳኽ!" style="color: var(--primary-color); margin-bottom: 1rem;">Message Sent Successfully!</h3>
+        <p data-en="Thank you for contacting us. We'll get back to you soon." data-am="ስለ መግኛችዎ እናመሰግናለን። በቅርበት እንመለስዎታለን።" style="color: #666; margin-bottom: 2rem;">Thank you for contacting us. We'll get back to you soon.</p>
+        <button onclick="closeModal()" class="close-modal-btn" style="padding: 1rem 2rem; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer;">
+            <span data-en="Close" data-am="ዝጋ">Close</span>
+        </button>
+    </div>
+</div>
+
+<script src="/js/language.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('contactForm');
+    const formMessage = document.getElementById('formMessage');
+    const successModal = document.getElementById('successModal');
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const formData = {
+            name: document.getElementById('name').value,
+            email: document.getElementById('email').value,
+            subject: document.getElementById('subject').value,
+            message: document.getElementById('message').value
+        };
+        
+        // Show loading state
+        const submitBtn = form.querySelector('.submit-btn');
+        const originalBtnContent = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span data-en="Sending..." data-am="በመላክ ላይ...">Sending...</span>';
+        submitBtn.disabled = true;
+        
+        try {
+            const response = await fetch('/send-email', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+            
+            if (response.ok) {
+                // Show success modal
+                successModal.style.display = 'flex';
+                form.reset();
+            } else {
+                throw new Error('Failed to send message');
+            }
+        } catch (error) {
+            // Show error message
+            formMessage.style.display = 'block';
+            formMessage.style.background = '#f8d7da';
+            formMessage.style.color = '#721c24';
+            formMessage.innerHTML = '<i class="fas fa-exclamation-circle"></i> <span data-en="Failed to send message. Please try again." data-am="መልእክት መላክ አልተቻለሁ። እባኮላ በኋላ ይሞክሉ።">Failed to send message. Please try again.</span>';
+        } finally {
+            // Restore button
+            submitBtn.innerHTML = originalBtnContent;
+            submitBtn.disabled = false;
+        }
+    });
+    
+    // Form field animations
+    const inputs = form.querySelectorAll('input, textarea');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.borderColor = 'var(--primary-color)';
+            this.style.boxShadow = '0 0 0 3px rgba(0,77,64,0.1)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.borderColor = '#e0e0e0';
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // Social icon hover effects
+    const socialIcons = document.querySelectorAll('.social-icon');
+    socialIcons.forEach(icon => {
+        icon.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-3px) scale(1.1)';
+        });
+        
+        icon.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+    });
+});
+
+function closeModal() {
+    document.getElementById('successModal').style.display = 'none';
+}
+
+function toggleMobileMenu() {
+    const nav = document.getElementById('mobile-nav');
+    nav.classList.toggle('active');
+}
+</script>
+
+<style>
+.info-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+}
+
+.info-icon:hover {
+    transform: scale(1.1);
+}
+
+.social-icon:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.modern-contact-form input:focus,
+.modern-contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0,77,64,0.1);
+}
+
+.submit-btn:hover {
+    background: linear-gradient(135deg, #00695c, #004d40);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0,77,64,0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .contact-form-section,
+    .contact-info {
+        order: 2;
+    }
+    
+    .contact-info {
+        order: 1;
+    }
+}
+</style>
 
 </body>
 </html>
