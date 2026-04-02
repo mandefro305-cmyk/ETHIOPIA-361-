@@ -61,12 +61,12 @@
     <h2 data-en="Photo Gallery" data-am="የፎቶ ጋለሪ">Photo Gallery</h2>
     <p class="gallery-subtitle" data-en="Click on a destination to explore its photos" data-am="ፎቶዎቹን ለማየት መዳረሻ ላይ ጠቅ ያድርጉ">Click on a destination to explore its photos</p>
     <div class="filter-buttons">
-        <button class="filter-btn active" data-filter="all" data-en="All" data-am="ሁሉን">All</button>
-        <button class="filter-btn" data-filter="Historical & Cultural Sites" data-en="Historical" data-am="ታሪክ">Historical</button>
-        <button class="filter-btn" data-filter="Nature & Mountains" data-en="Nature" data-am="ተፈሪ">Nature</button>
-        <button class="filter-btn" data-filter="Lakes & Water Attractions" data-en="Lakes" data-am="ሀይቆች">Lakes</button>
-        <button class="filter-btn" data-filter="Cities & Urban Tourism" data-en="Cities" data-am="ከተማዎች">Cities</button>
-        <button class="filter-btn" data-filter="Unique & Adventure Destinations" data-en="Adventure" data-am="የጉዞ">Adventure</button>
+        <button class="filter-btn active" onclick="filterGallery('all', this)" data-en="All" data-am="ሁሉን">All</button>
+        <button class="filter-btn" onclick="filterGallery('Historical & Cultural Sites', this)" data-en="Historical" data-am="ታሪክ">Historical</button>
+        <button class="filter-btn" onclick="filterGallery('Nature & Mountains', this)" data-en="Nature" data-am="ተፈሪ">Nature</button>
+        <button class="filter-btn" onclick="filterGallery('Lakes & Water Attractions', this)" data-en="Lakes" data-am="ሀይቆች">Lakes</button>
+        <button class="filter-btn" onclick="filterGallery('Cities & Urban Tourism', this)" data-en="Cities" data-am="ከተማዎች">Cities</button>
+        <button class="filter-btn" onclick="filterGallery('Unique & Adventure Destinations', this)" data-en="Adventure" data-am="የጉዞ">Adventure</button>
     </div>
 </section>
 
@@ -99,8 +99,6 @@
 </div>
 <div id="photoViewerOverlay" class="photo-viewer-overlay" onclick="closeViewer()"></div>
 
-<script src="/js/language.js"></script>
-<script src="/js/ai-chat.js"></script>
 <script>
 let allPlaces = [];
 let currentFilter = 'all';
@@ -260,16 +258,15 @@ document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeViewer();
 });
 
+function filterGallery(category, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    currentFilter = category;
+    displayPlaceCards(allPlaces);
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     loadGallery();
-    document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
-            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-            currentFilter = this.getAttribute('data-filter');
-            displayPlaceCards(allPlaces);
-        });
-    });
 });
 
 function toggleMobileMenu() {
@@ -279,6 +276,8 @@ function toggleMobileMenu() {
     if (btn) btn.classList.toggle('active');
 }
 </script>
+<script src="/js/language.js"></script>
+<script src="/js/ai-chat.js"></script>
 
 <style>
 /* Gallery Filters */
