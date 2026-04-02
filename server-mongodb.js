@@ -765,6 +765,26 @@ app.get('/destinations', async (req, res) => {
     }
 });
 
+// Contact Page
+app.get('/contact', (req, res) => {
+    res.render('contact');
+});
+
+// Guide Page
+app.get('/guide', (req, res) => {
+    res.render('guide');
+});
+
+// Gallery Page
+app.get('/gallery', (req, res) => {
+    res.render('gallery');
+});
+
+// Blog Page
+app.get('/blog', (req, res) => {
+    res.render('blog');
+});
+
 // Admin Delete Place
 app.post('/admin/delete/:id', isAuthenticated, async (req, res) => {
     try {
