@@ -79,6 +79,9 @@
     <div class="gallery-grid" id="galleryContent">
         <!-- Gallery images will be loaded here -->
     </div>
+    <div id="pagination" style="width: 100%;">
+        <!-- Pagination controls will be added here -->
+    </div>
 </section>
 
 <!-- Image Modal -->
@@ -92,6 +95,9 @@
 
 <script src="/js/language.js"></script>
 <script>
+// Gallery state
+let currentPage = 1;
+const placesPerPage = 4;
 let allPlaces = [];
 let currentFilter = 'all';
 
@@ -130,12 +136,19 @@ function displayGallery(places) {
                 <p data-en="Try adjusting your filters" data-am="ማጣልዎችን ይቀይሩ">Try adjusting your filters</p>
             </div>
         `;
+        document.getElementById('pagination').innerHTML = '';
         return;
     }
 
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredPlaces.length / placesPerPage);
+    const startIndex = (currentPage - 1) * placesPerPage;
+    const endIndex = startIndex + placesPerPage;
+    const paginatedPlaces = filteredPlaces.slice(startIndex, endIndex);
+
     // Create gallery HTML
     let html = '';
-    filteredPlaces.forEach(place => {
+    paginatedPlaces.forEach(place => {
         const placeName = place.name_am || place.name;
         const placeDescription = place.description_am || place.description;
         
@@ -245,6 +258,32 @@ function displayGallery(places) {
 
     container.innerHTML = html;
     
+    // Add pagination controls
+    if (totalPages > 1) {
+        const paginationHtml = `
+            <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem;">
+                <button onclick="changePage(${currentPage - 1})" 
+                        class="pagination-btn" 
+                        ${currentPage === 1 ? 'disabled' : ''}
+                        data-en="Previous" data-am="ቀደም">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span class="page-info" style="font-weight: bold; color: var(--primary);">
+                    Page ${currentPage} of ${totalPages}
+                </span>
+                <button onclick="changePage(${currentPage + 1})" 
+                        class="pagination-btn" 
+                        ${currentPage === totalPages ? 'disabled' : ''}
+                        data-en="Next" data-am="ይቀጥሉ">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+        document.getElementById('pagination').innerHTML = paginationHtml;
+    } else {
+        document.getElementById('pagination').innerHTML = '';
+    }
+    
     // Add hover effects to gallery items
     document.querySelectorAll('.gallery-item:not(.placeholder)').forEach(item => {
         item.addEventListener('mouseenter', function() {
@@ -254,6 +293,17 @@ function displayGallery(places) {
             this.querySelector('img').style.transform = 'scale(1)';
         });
     });
+}
+
+// Change page function
+function changePage(page) {
+    const totalPages = Math.ceil(allPlaces.length / placesPerPage);
+    if (page >= 1 && page <= totalPages) {
+        currentPage = page;
+        displayGallery(allPlaces);
+        // Scroll to top of gallery
+        document.getElementById('galleryContent').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 // Helper function
@@ -374,6 +424,45 @@ function toggleMobileMenu() {
     .place-gallery-grid {
         grid-template-columns: 1fr;
     }
+}
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.pagination-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+}
+
+.pagination-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-info {
+    font-weight: bold;
+    color: var(--primary);
+    font-size: 1.1rem;
 }
 </style>
 

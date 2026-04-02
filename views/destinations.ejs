@@ -89,12 +89,17 @@
 <div class="grid-container" id="destinationsContent">
     <!-- Destinations will be loaded here -->
 </div>
+<div id="pagination" style="width: 100%; display: flex; justify-content: center; margin-top: 2rem;">
+    <!-- Pagination controls will be added here -->
+</div>
 </section>
 
 <script src="/js/language.js"></script>
 <script>
 let allPlaces = [];
 let currentCategory = 'all';
+let currentPage = 1;
+const placesPerPage = 4;
 
 // Load destinations from database
 async function loadDestinations() {
@@ -123,12 +128,15 @@ async function loadDestinations() {
 function displayDestinations(places) {
     const container = document.getElementById('destinationsContent');
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const currentCategory = document.querySelector('.category-btn.active').getAttribute('data-category');
     
-    // Filter by category and search
+    // Filter places
     let filteredPlaces = places.filter(place => {
-        const matchesCategory = currentCategory === 'all' || place.category === currentCategory;
+        const matchesCategory = currentCategory === 'all' || 
+            place.category.toLowerCase().includes(currentCategory.toLowerCase()) ||
+            currentCategory.toLowerCase().includes(place.category.toLowerCase());
         const matchesSearch = !searchTerm || 
-            place.name.toLowerCase().includes(searchTerm) ||
+            place.name.toLowerCase().includes(searchTerm) || 
             (place.name_am && place.name_am.toLowerCase().includes(searchTerm)) ||
             place.description.toLowerCase().includes(searchTerm) ||
             (place.description_am && place.description_am.toLowerCase().includes(searchTerm));
@@ -143,12 +151,19 @@ function displayDestinations(places) {
                 <p data-en="Try adjusting your filters" data-am="ማጣልዎችን ይቀይሩ">Try adjusting your filters</p>
             </div>
         `;
+        document.getElementById('pagination').innerHTML = '';
         return;
     }
 
+    // Calculate pagination
+    const totalPages = Math.ceil(filteredPlaces.length / placesPerPage);
+    const startIndex = (currentPage - 1) * placesPerPage;
+    const endIndex = startIndex + placesPerPage;
+    const paginatedPlaces = filteredPlaces.slice(startIndex, endIndex);
+
     // Group by category
     const groupedPlaces = {};
-    filteredPlaces.forEach(place => {
+    paginatedPlaces.forEach(place => {
         if (!groupedPlaces[place.category]) {
             groupedPlaces[place.category] = [];
         }
@@ -210,6 +225,43 @@ function displayDestinations(places) {
     });
 
     container.innerHTML = html;
+    
+    // Add pagination controls
+    if (totalPages > 1) {
+        const paginationHtml = `
+            <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 1rem;">
+                <button onclick="changePage(${currentPage - 1})" 
+                        class="pagination-btn" 
+                        ${currentPage === 1 ? 'disabled' : ''}
+                        data-en="Previous" data-am="ቀደም">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <span class="page-info" style="font-weight: bold; color: var(--primary);">
+                    Page ${currentPage} of ${totalPages}
+                </span>
+                <button onclick="changePage(${currentPage + 1})" 
+                        class="pagination-btn" 
+                        ${currentPage === totalPages ? 'disabled' : ''}
+                        data-en="Next" data-am="ይቀጥሉ">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        `;
+        document.getElementById('pagination').innerHTML = paginationHtml;
+    } else {
+        document.getElementById('pagination').innerHTML = '';
+    }
+}
+
+// Change page function
+function changePage(page) {
+    const totalPages = Math.ceil(allPlaces.length / placesPerPage);
+    if (page >= 1 && page <= totalPages) {
+        currentPage = page;
+        displayDestinations(allPlaces);
+        // Scroll to top of destinations
+        document.getElementById('destinationsContent').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
 }
 
 // Helper functions
@@ -296,6 +348,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Search functionality
     document.getElementById('searchInput').addEventListener('input', function() {
+        currentPage = 1; // Reset to first page when searching
         displayDestinations(allPlaces);
     });
     
@@ -305,6 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             currentCategory = this.getAttribute('data-category');
+            currentPage = 1; // Reset to first page when filtering
             displayDestinations(allPlaces);
         });
     });
@@ -347,6 +401,45 @@ function toggleMobileMenu() {
 .search-container input:focus {
     border-color: var(--primary-color);
     box-shadow: 0 0 0 3px rgba(0,77,64,0.1);
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.pagination-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.pagination-btn:hover:not(:disabled) {
+    background: #00695c;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,77,64,0.3);
+}
+
+.pagination-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.page-info {
+    font-weight: bold;
+    color: var(--primary-color);
+    font-size: 1.1rem;
 }
 </style>
 
