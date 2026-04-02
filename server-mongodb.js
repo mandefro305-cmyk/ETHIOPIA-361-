@@ -225,7 +225,22 @@ app.get('/', async (req, res) => {
 app.get('/place/:id', async (req, res) => {
     try {
         console.log('Place details requested for ID:', req.params.id);
-        const place = await Place.findById(req.params.id);
+        
+        // Validate ObjectId format
+        const { ObjectId } = require('mongodb');
+        let objectId;
+        
+        try {
+            objectId = new ObjectId(req.params.id);
+        } catch (idError) {
+            console.log('Invalid ObjectId format:', req.params.id);
+            return res.status(400).render('error', { 
+                message: 'Invalid Place ID',
+                error: 'The place ID format is invalid.'
+            });
+        }
+        
+        const place = await Place.findById(objectId);
         console.log('Found place:', place ? place.name : 'null');
         
         if (!place) {
