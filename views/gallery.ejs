@@ -109,6 +109,12 @@ async function loadGallery() {
     try {
         const response = await fetch('/api/places');
         allPlaces = await response.json();
+        console.log('=== GALLERY DEBUG ===');
+        console.log('Total places from API:', allPlaces.length);
+        allPlaces.forEach(function(p) {
+            console.log('Place:', p.name, '| image_url:', p.image_url, '| gallery_images:', p.gallery_images);
+        });
+        console.log('=== END DEBUG ===');
         const loader = document.getElementById('galleryLoader');
         if (loader) loader.remove();
         displayPlaceCards(allPlaces);
@@ -118,6 +124,7 @@ async function loadGallery() {
             <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
                 <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c; margin-bottom: 1rem;"></i>
                 <h3 data-en="Unable to Load Gallery" data-am="ጋለሪን መጫን አልተቻለሁ">Unable to Load Gallery</h3>
+                <p style="color:#888;">${error.message}</p>
             </div>`;
     }
 }
@@ -188,23 +195,10 @@ function displayPlaceCards(places) {
         return;
     }
 
-    // Only show places that have real images
-    var placesWithImages = filtered.filter(function(p) { return getPlaceImages(p).length > 0; });
-
-    if (placesWithImages.length === 0) {
-        container.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                <i class="fas fa-images" style="font-size: 3rem; color: #888; margin-bottom: 1rem;"></i>
-                <h3 data-en="No Photos Available" data-am="ፎቶዎች አልተገኙም">No Photos Available</h3>
-            </div>`;
-        window._filteredPlaces = placesWithImages;
-        return;
-    }
-
     let html = '';
-    placesWithImages.forEach((place, idx) => {
+    filtered.forEach((place, idx) => {
         const images = getPlaceImages(place);
-        const coverImg = images[0];
+        const coverImg = images.length > 0 ? images[0] : '';
         const imgCount = images.length;
         html += `
             <div class="gallery-place-card" onclick="openViewer(${idx})">
@@ -222,7 +216,7 @@ function displayPlaceCards(places) {
     container.innerHTML = html;
 
     // Store filtered for viewer access
-    window._filteredPlaces = placesWithImages;
+    window._filteredPlaces = filtered;
 }
 
 function openViewer(placeIdx) {

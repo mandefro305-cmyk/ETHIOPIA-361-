@@ -393,6 +393,22 @@ app.post('/send-email', async (req, res) => {
     }
 });
 
+// Debug endpoint - check what images are stored in DB
+app.get('/api/debug/images', async (req, res) => {
+    try {
+        const places = await Place.find({}, 'name image_url gallery_images');
+        const debug = places.map(p => ({
+            name: p.name,
+            image_url: p.image_url,
+            gallery_images: p.gallery_images,
+            gallery_count: p.gallery_images ? p.gallery_images.length : 0
+        }));
+        res.json(debug);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // API Routes
 app.get('/api/places', async (req, res) => {
     try {
@@ -646,7 +662,14 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
         // Handle additional images for gallery
         let additionalImages = [];
         if (req.files && req.files.additional_images) {
+            console.log('Additional images received:', req.files.additional_images.length);
+            req.files.additional_images.forEach((file, i) => {
+                console.log(`  File ${i+1}: ${file.originalname} -> ${file.filename} (${file.size} bytes)`);
+            });
             additionalImages = req.files.additional_images.map(file => '/uploads/images/' + file.filename);
+            console.log('Additional image paths:', additionalImages);
+        } else {
+            console.log('No additional images in request. req.files keys:', req.files ? Object.keys(req.files) : 'no files');
         }
         
         // Handle PDF upload

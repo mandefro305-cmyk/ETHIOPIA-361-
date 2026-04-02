@@ -16,9 +16,9 @@ tourism.db
 *.sqlite
 *.sqlite3
 
-# Upload directories
-uploads/
-public/uploads/
+# Upload directories - keep tracked so images deploy
+# uploads/
+# public/uploads/
 
 # Environment variables
 .env
