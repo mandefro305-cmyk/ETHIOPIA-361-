@@ -249,14 +249,14 @@
     <% } %>
     
     <% if(place && place.description) { %>
-        <div class="description-section">
-            <h3 data-en="About This Place" data-am="ስለዚህ ቦታ">About This Place</h3>
-            <p><%= place.description %></p>
+        <div class="description-section" style="margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary-color, #004d40);">
+            <h3 data-en="About This Place" data-am="ስለዚህ ቦታ" style="color: var(--primary-color, #004d40); margin-bottom: 1rem;">About This Place</h3>
+            <p style="color: #333; line-height: 1.6; font-size: 1.1rem; margin: 0;"><%= place.description %></p>
         </div>
     <% } else { %>
-        <div class="description-section">
-            <h3 data-en="About This Place" data-am="ስለዚህ ቦታ">About This Place</h3>
-            <p data-en="Description coming soon..." data-am="መግለጫ በቅርብ ይመጣል...">Description coming soon...</p>
+        <div class="description-section" style="margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ccc;">
+            <h3 data-en="About This Place" data-am="ስለዚህ ቦታ" style="color: #666; margin-bottom: 1rem;">About This Place</h3>
+            <p data-en="Description coming soon..." data-am="መግለጫ በቅርብ ይመጣል..." style="color: #666; font-style: italic;">Description coming soon...</p>
         </div>
     <% } %>
     
