@@ -226,21 +226,8 @@ app.get('/place/:id', async (req, res) => {
     try {
         console.log('Place details requested for ID:', req.params.id);
         
-        // Validate ObjectId format
-        const { ObjectId } = require('mongodb');
-        let objectId;
-        
-        try {
-            objectId = new ObjectId(req.params.id);
-        } catch (idError) {
-            console.log('Invalid ObjectId format:', req.params.id);
-            return res.status(400).render('error', { 
-                message: 'Invalid Place ID',
-                error: 'The place ID format is invalid.'
-            });
-        }
-        
-        const place = await Place.findById(objectId);
+        // Try to find the place directly with the string ID (Mongoose handles this)
+        const place = await Place.findById(req.params.id);
         console.log('Found place:', place ? place.name : 'null');
         console.log('Place description:', place ? place.description : 'null');
         console.log('Place data:', JSON.stringify(place, null, 2));
