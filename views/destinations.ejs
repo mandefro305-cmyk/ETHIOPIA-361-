@@ -74,11 +74,13 @@
     <h2 data-en="Browse by Category" data-am="በምድግ ይዝርዱ" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">Browse by Category</h2>
     <div class="category-filters" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
         <button class="category-btn active" data-category="all" data-en="All" data-am="ሁሉን">All</button>
-        <button class="category-btn" data-category="Historical & Cultural Sites" data-en="Historical" data-am="ታሪክ፣">Historical</button>
-        <button class="category-btn" data-category="Nature & Mountains" data-en="Nature" data-am="ተፈሪ">Nature</button>
-        <button class="category-btn" data-category="Lakes & Water Attractions" data-en="Lakes" data-am="ሀይቆዎች">Lakes</button>
-        <button class="category-btn" data-category="Cities & Urban Tourism" data-en="Cities" data-am="ከተማዎች">Cities</button>
-        <button class="category-btn" data-category="Unique & Adventure Destinations" data-en="Adventure" data-am="የጉዞ ተልእክ">Adventure</button>
+        <button class="category-btn" data-category="Historical" data-en="Historical" data-am="ታሪክ">Historical</button>
+        <button class="category-btn" data-category="Nature" data-en="Nature" data-am="ተፈሪ">Nature</button>
+        <button class="category-btn" data-category="Lakes" data-en="Lakes" data-am="ሀይቆዎች">Lakes</button>
+        <button class="category-btn" data-category="Cities" data-en="Cities" data-am="ከተማዎች">Cities</button>
+        <button class="category-btn" data-category="Adventure" data-en="Adventure" data-am="የጉዞ">Adventure</button>
+        <button class="category-btn" data-category="Cultural" data-en="Cultural" data-am="ባህል">Cultural</button>
+        <button class="category-btn" data-category="Religious" data-en="Religious" data-am="ሃይማኖት">Religious</button>
     </div>
 </section>
 
@@ -213,26 +215,42 @@ function displayDestinations(places) {
 // Helper functions
 function getCategoryIcon(category) {
     const icons = {
+        'Historical': '🏛️',
         'Historical & Cultural Sites': '🏛️',
+        'Nature': '🌄',
         'Nature & Mountains': '🌄',
+        'Adventure': '🌋',
         'Unique & Adventure Destinations': '🌋',
+        'Lakes': '🌊',
         'Lakes & Water Attractions': '🌊',
+        'Cities': '🏙️',
         'Cities & Urban Tourism': '🏙️',
-        'Relaxation & Resort Areas': '🌿'
+        'Relaxation': '🌿',
+        'Relaxation & Resort Areas': '🌿',
+        'Cultural': '🏛️',
+        'Religious': '⛪'
     };
-    return icons[category] || '📍';
+    return icons[category] || icons[category.replace(/ &.*/, '')] || '📍';
 }
 
 function getCategoryAmharic(category) {
     const amharic = {
+        'Historical': 'ታሪካዊ',
         'Historical & Cultural Sites': 'ታሪክ፣ እና የባህልነት ቦታዎች',
+        'Nature': 'ተፈሪ',
         'Nature & Mountains': 'ተፈሪ እና ተራሮች',
+        'Adventure': 'ጉዞ',
         'Unique & Adventure Destinations': 'የተለየ እና የጉዞ መዳረሻዎች',
+        'Lakes': 'ሀይቆች',
         'Lakes & Water Attractions': 'ሀይቆዎች እና የውሃሳት መስልከቶች',
+        'Cities': 'ከተማዎች',
         'Cities & Urban Tourism': 'ከተማዎች እና የከተማ ቱራርኛ',
-        'Relaxation & Resort Areas': '��ዝናት እና የምርርባ ቦታዎች'
+        'Relaxation': 'መዝናት',
+        'Relaxation & Resort Areas': 'መዝናት እና የምርርባ ቦታዎች',
+        'Cultural': 'ባህላዊ',
+        'Religious': 'ሃይማኖታዊ'
     };
-    return amharic[category] || category;
+    return amharic[category] || amharic[category.replace(/ &.*/, '')] || category;
 }
 
 // Toggle read more
