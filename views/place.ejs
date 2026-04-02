@@ -236,12 +236,16 @@
     <a href="/" class="back-btn">&larr; Back to Destinations</a>
     <h2><%= place.name %></h2>
     
-    <% if(place.image_url) { %>
-        <% if(place.image_url.startsWith('/uploads/')) { %>
+    <% if(place.image_url && place.image_url !== '') { %>
+        <% if(place.image_url.startsWith('http')) { %>
+            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
+        <% } else if(place.image_url.startsWith('/uploads/')) { %>
             <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
         <% } else { %>
-            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image">
+            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/800/400.jpg'">
         <% } %>
+    <% } else { %>
+        <img src="https://picsum.photos/seed/<%= place.name %>/800/400.jpg" alt="<%= place.name %>" class="place-image">
     <% } %>
     
     <p><%= place.description %></p>

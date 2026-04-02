@@ -92,18 +92,15 @@ async function loadPlaces() {
         
         container.innerHTML = places.map(place => `
             <div class="destination-card">
-                ${place.image_url ? `
-                    ${place.image_url.startsWith('/uploads/') 
+                ${place.image_url && place.image_url !== '' ? `
+                    ${place.image_url.startsWith('http') 
                         ? `<img src="${place.image_url}" alt="${place.name}" class="card-image">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="card-image">`
+                        : place.image_url.startsWith('/uploads/') 
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="card-image" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
                     }
                 ` : `
-                    <div class="card-header-gradient">
-                        <div class="gradient-content">
-                            <i class="fas fa-image"></i>
-                            <span data-en="No Image Available" data-am="ምስልክት የለም">No Image Available</span>
-                        </div>
-                    </div>
+                    <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="card-image">
                 `}
                 <div class="card-content">
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
