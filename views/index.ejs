@@ -111,7 +111,7 @@ async function loadPlaces() {
                 </div>
                 <div class="card-actions">
                     <button class="card-btn btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
-                    <a href="/place/${place.id}" class="card-btn btn-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                    <a href="/place/${place._id}" class="card-btn btn-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
                     ${place.video_url ? `
                         <button class="card-btn btn-video" onclick="showVideo('${place.video_url}', '${place.name}')">
                             <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>

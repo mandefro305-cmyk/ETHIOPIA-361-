@@ -224,12 +224,26 @@ app.get('/', async (req, res) => {
 
 app.get('/place/:id', async (req, res) => {
     try {
+        console.log('Place details requested for ID:', req.params.id);
         const place = await Place.findById(req.params.id);
-        if (!place) return res.status(404).send("Place not found");
+        console.log('Found place:', place ? place.name : 'null');
+        
+        if (!place) {
+            console.log('Place not found with ID:', req.params.id);
+            return res.status(404).render('error', { 
+                message: 'Place not found',
+                error: 'The requested place could not be found in our database.'
+            });
+        }
+        
+        console.log('Rendering place details for:', place.name);
         res.render('place', { place });
     } catch (error) {
         console.error('Place detail error:', error);
-        res.status(500).send('Error loading place');
+        res.status(500).render('error', { 
+            message: 'Error loading place',
+            error: error.message
+        });
     }
 });
 

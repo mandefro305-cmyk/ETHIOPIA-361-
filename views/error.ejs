@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error - Ethiopia 361°</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <header>
+        <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+        <nav class="desktop-nav">
+            <a href="/" data-en="Home" data-am="ቤት">Home</a>
+            <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+            <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+            <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+            <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+            <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+            <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+        </nav>
+    </header>
+
+    <main style="max-width: 800px; margin: 2rem auto; padding: 2rem; text-align: center;">
+        <div style="background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+            <h2 style="color: #e74c3c; margin-bottom: 1rem;">
+                <i class="fas fa-exclamation-triangle"></i> <%= message %>
+            </h2>
+            <p style="color: #666; margin-bottom: 2rem;"><%= error %></p>
+            <a href="/" class="nav-cta" style="display: inline-block; text-decoration: none;">
+                <i class="fas fa-home"></i> Return to Home
+            </a>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026 Ethiopia 361°</p>
+    </footer>
+</body>
+</html>
