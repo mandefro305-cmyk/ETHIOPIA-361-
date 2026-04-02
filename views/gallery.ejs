@@ -206,18 +206,27 @@ function displayPlaceCards(places) {
 }
 
 function openViewer(placeIdx) {
-    const places = window._filteredPlaces;
-    const place = places[placeIdx];
+    var places = window._filteredPlaces;
+    if (!places || !places[placeIdx]) { console.error('No place at index', placeIdx); return; }
+    var place = places[placeIdx];
     viewerImages = getPlaceImages(place);
     viewerIndex = 0;
+    console.log('Opening viewer for:', place.name, 'Images:', viewerImages.length, viewerImages);
 
     document.getElementById('viewerTitle').textContent = place.name;
+
+    // Show/hide nav buttons based on image count
+    var hasMultiple = viewerImages.length > 1;
+    document.querySelector('.viewer-prev').style.display = hasMultiple ? '' : 'none';
+    document.querySelector('.viewer-next').style.display = hasMultiple ? '' : 'none';
+
     updateViewer();
     buildThumbnails();
 
     document.getElementById('photoViewer').classList.add('active');
     document.getElementById('photoViewerOverlay').classList.add('active');
     document.body.style.overflow = 'hidden';
+    initSwipe();
 }
 
 function closeViewer() {
@@ -227,24 +236,31 @@ function closeViewer() {
 }
 
 function updateViewer() {
-    const img = document.getElementById('viewerImage');
-    img.src = viewerImages[viewerIndex];
-    img.onerror = function() { this.src = 'https://picsum.photos/seed/fallback/600/400'; };
+    var img = document.getElementById('viewerImage');
+    var newSrc = viewerImages[viewerIndex];
+    console.log('Showing image', viewerIndex + 1, 'of', viewerImages.length, ':', newSrc);
+    img.onerror = function() {
+        this.onerror = null;
+        this.src = 'https://picsum.photos/seed/place' + viewerIndex + Date.now() + '/600/400';
+    };
+    img.src = newSrc;
     document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
-    
-    document.querySelectorAll('.viewer-thumb').forEach((t, i) => {
+
+    document.querySelectorAll('.viewer-thumb').forEach(function(t, i) {
         t.classList.toggle('active', i === viewerIndex);
     });
 }
 
 function buildThumbnails() {
-    const container = document.getElementById('viewerThumbs');
-    container.innerHTML = viewerImages.map((img, i) =>
-        `<img class="viewer-thumb ${i === 0 ? 'active' : ''}" src="${img}" alt="Thumb ${i+1}" onclick="goToPhoto(${i})" onerror="this.src='https://picsum.photos/seed/thumb${i}/100/70'">`
-    ).join('');
+    var container = document.getElementById('viewerThumbs');
+    if (viewerImages.length <= 1) { container.innerHTML = ''; return; }
+    container.innerHTML = viewerImages.map(function(src, i) {
+        return '<img class="viewer-thumb ' + (i === 0 ? 'active' : '') + '" src="' + src + '" alt="Thumb ' + (i+1) + '" onclick="goToPhoto(' + i + ')" onerror="this.onerror=null;this.src=\'https://picsum.photos/seed/t' + i + '/100/70\'">';
+    }).join('');
 }
 
 function navigatePhoto(dir) {
+    if (viewerImages.length <= 1) return;
     viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
     updateViewer();
 }
@@ -252,6 +268,21 @@ function navigatePhoto(dir) {
 function goToPhoto(idx) {
     viewerIndex = idx;
     updateViewer();
+}
+
+// Swipe support for mobile
+var touchStartX = 0;
+var touchEndX = 0;
+function initSwipe() {
+    var body = document.querySelector('.photo-viewer-body');
+    body.ontouchstart = function(e) { touchStartX = e.changedTouches[0].screenX; };
+    body.ontouchend = function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        var diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+            navigatePhoto(diff > 0 ? 1 : -1);
+        }
+    };
 }
 
 // Keyboard navigation
@@ -591,8 +622,10 @@ function toggleMobileMenu() {
         max-height: 45vh;
     }
     .viewer-nav {
-        padding: 0.5rem;
-        font-size: 1.2rem;
+        padding: 1rem 0.75rem;
+        font-size: 1.4rem;
+        min-width: 44px;
+        min-height: 44px;
     }
     .viewer-thumb {
         width: 45px;
