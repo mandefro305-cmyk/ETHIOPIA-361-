@@ -782,6 +782,7 @@ app.get('/gallery', (req, res) => {
 
 // Blog Page
 app.get('/blog', (req, res) => {
+    console.log('Blog page requested - deployed: 2026-04-02-09-02');
     res.render('blog');
 });
 
