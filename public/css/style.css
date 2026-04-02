@@ -9,7 +9,11 @@ body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: var(--bg-light);
+  background: #eef2f0;
+  background-image: 
+    radial-gradient(ellipse at 20% 50%, rgba(0,77,64,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(255,193,7,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(0,128,128,0.03) 0%, transparent 50%);
   color: var(--text-dark);
   line-height: 1.6;
 }
@@ -247,6 +251,39 @@ body.dark-mode .theme-toggle.light::before {
     content: '☀️';
 }
 
+body.dark-mode .places-grid {
+    background: linear-gradient(180deg, #111 0%, #0a0a0a 100%);
+}
+
+body.dark-mode .card,
+body.dark-mode .destination-card {
+    background: #1e1e1e;
+    border-color: rgba(255,255,255,0.06);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+body.dark-mode .card h3,
+body.dark-mode .destination-card h3,
+body.dark-mode .card-content h3 {
+    color: #4dd0c8;
+}
+
+body.dark-mode .card p,
+body.dark-mode .card-description,
+body.dark-mode .short-text,
+body.dark-mode .full-text {
+    color: #ccc;
+}
+
+body.dark-mode .stats-bar {
+    background: #1e1e1e;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+body.dark-mode footer {
+    background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #1a1a2e 100%);
+}
+
 /* Enhanced Mobile Menu */
 @media (max-width: 768px) {
     header {
@@ -384,6 +421,12 @@ select#language option {
   text-align: center;
   margin-bottom: 30px;
   color: var(--primary-color);
+}
+
+.places-grid {
+  background: linear-gradient(180deg, #f8faf9 0%, #eef2f0 100%);
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
 }
 
 .grid-container {
@@ -529,11 +572,12 @@ select#language option {
 }
 
 footer {
-  background: #222;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   color: white;
   text-align: center;
-  padding: 20px;
-  margin-top: 40px;
+  padding: 2.5rem 1.5rem;
+  margin-top: 0;
+  border-top: 3px solid var(--secondary-color);
 }
 
 /* Stats Bar */
@@ -572,11 +616,12 @@ footer {
     background: white;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     transform: translateY(0);
     scale: 1;
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 .destination-card:hover {
