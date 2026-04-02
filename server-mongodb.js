@@ -701,12 +701,35 @@ app.post('/admin/delete/:id', isAuthenticated, async (req, res) => {
 });
 
 // Other routes (keep existing ones)
-app.get('/destinations', (req, res) => res.render('destinations'));
-app.get('/culture', (req, res) => res.render('culture'));
-app.get('/guide', (req, res) => res.render('guide'));
-app.get('/gallery', (req, res) => res.render('gallery'));
-app.get('/blog', (req, res) => res.render('blog'));
-app.get('/contact', (req, res) => res.render('contact'));
+app.get('/', async (req, res) => {
+    try {
+        const places = await Place.find({});
+        res.render('index', { places });
+    } catch (error) {
+        console.error('Error fetching places:', error);
+        res.render('index', { places: [] });
+    }
+});
+
+app.get('/destinations', async (req, res) => {
+    res.render('destinations');
+});
+
+app.get('/guide', async (req, res) => {
+    res.render('guide');
+});
+
+app.get('/gallery', async (req, res) => {
+    res.render('gallery');
+});
+
+app.get('/blog', async (req, res) => {
+    res.render('blog');
+});
+
+app.get('/contact', async (req, res) => {
+    res.render('contact');
+});
 
 // Start server
 const PORT = process.env.PORT || 3000;

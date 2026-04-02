@@ -450,23 +450,177 @@
             }
             
             .header h2 {
-                font-size: 2rem;
+                font-size: 1.5rem;
             }
             
-            .stats-container {
+            .header-actions {
+                justify-content: center;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 1rem;
+            }
+            
+            .stat-card {
+                padding: 1rem;
+            }
+            
+            .stat-card h3 {
+                font-size: 1.2rem;
+            }
+            
+            .add-place-form {
+                padding: 1.5rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1rem;
+            }
+            
+            .form-group label {
+                font-size: 0.9rem;
+                margin-bottom: 0.3rem;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 0.8rem;
+                font-size: 0.9rem;
+            }
+            
+            .form-group textarea {
+                min-height: 100px;
+            }
+            
+            .btn {
+                padding: 0.8rem 1.5rem;
+                font-size: 0.9rem;
+            }
+            
+            .places-grid {
                 grid-template-columns: 1fr;
+            }
+            
+            .place-card {
+                padding: 1rem;
+            }
+            
+            .place-card h3 {
+                font-size: 1.1rem;
+            }
+            
+            .place-card p {
+                font-size: 0.85rem;
+            }
+            
+            .place-actions {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .place-actions a,
+            .place-actions button {
+                width: 100%;
+                text-align: center;
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+            
+            .image-preview {
+                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+                gap: 0.5rem;
+            }
+            
+            .image-preview-item {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .image-preview-item img {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .remove-image {
+                width: 20px;
+                height: 20px;
+                font-size: 0.8rem;
+                line-height: 1;
             }
             
             .table-container {
                 font-size: 0.8rem;
+                overflow-x: auto;
             }
             
             th, td {
                 padding: 0.5rem;
             }
+        }
+        
+        @media (max-width: 480px) {
+            .admin-container {
+                padding: 0.5rem;
+            }
             
-            .action-buttons {
-                flex-direction: column;
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.8rem;
+            }
+            
+            .stat-card {
+                padding: 0.8rem;
+            }
+            
+            .stat-card h3 {
+                font-size: 1rem;
+            }
+            
+            .add-place-form {
+                padding: 1rem;
+            }
+            
+            .form-group {
+                margin-bottom: 0.8rem;
+            }
+            
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                padding: 0.6rem;
+                font-size: 0.85rem;
+            }
+            
+            .btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+            
+            .image-preview {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.4rem;
+            }
+            
+            .image-preview-item {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .image-preview-item img {
+                width: 40px;
+                height: 40px;
+            }
+        }
+        
+        @media (max-width: 320px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .image-preview {
+                grid-template-columns: 1fr;
             }
         }
     </style>
