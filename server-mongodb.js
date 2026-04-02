@@ -49,7 +49,8 @@ const storage = multer.diskStorage({
         }
     },
     filename: function (req, file, cb) {
-        cb(null, Date.now() + path.extname(file.originalname));
+        var uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, uniqueSuffix + '-' + file.originalname.replace(/\s+/g, '_'));
     }
 });
 
@@ -592,7 +593,7 @@ app.get('/places', async (req, res) => {
 });
 
 // Admin Add Place
-app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }, { name: 'description_pdf', maxCount: 1 }]), async (req, res) => {
+app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 20 }, { name: 'description_pdf', maxCount: 1 }]), async (req, res) => {
     try {
         console.log('Add place request received');
         console.log('Request body:', req.body);
@@ -725,7 +726,7 @@ app.get('/admin/edit/:id', isAuthenticated, async (req, res) => {
 });
 
 // Admin Update Place
-app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }]), async (req, res) => {
+app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 20 }]), async (req, res) => {
     try {
         const id = req.params.id;
         const { 

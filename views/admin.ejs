@@ -16,9 +16,9 @@
             additionalImagesInput.addEventListener('change', function(e) {
                 const files = Array.from(e.target.files);
                 
-                // Limit to 5 additional images (plus 1 main = 6 total)
-                if (files.length > 5) {
-                    alert('You can only upload up to 5 additional images (6 total including main image). Please select fewer images.');
+                // Limit to 20 additional images
+                if (files.length > 20) {
+                    alert('You can only upload up to 20 additional images. Please select fewer images.');
                     e.target.value = ''; // Clear the selection
                     return;
                 }
@@ -819,7 +819,7 @@
                             <i class="fas fa-images"></i> Additional Images (Gallery)
                         </label>
                         <input type="file" id="additional_images" name="additional_images" accept="image/*" multiple>
-                        <small>Select up to 5 additional images for photo gallery (Max 50MB each) - Total: 6 images including main image</small>
+                        <small>Select up to 20 additional images for photo gallery (Max 50MB each)</small>
                         <div id="image-preview" class="image-preview-container"></div>
                     </div>
                     
