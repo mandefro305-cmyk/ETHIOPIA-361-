@@ -57,10 +57,11 @@
 </section>
 
 <!-- Gallery Filter Section -->
-<section class="gallery-filters" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
-    <h2 data-en="Browse Gallery by Destination" data-am="በመዳረሻ ጋለሪን ይዝርዱ" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">Browse Gallery by Destination</h2>
-    <div class="filter-buttons" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
-        <button class="filter-btn active" data-filter="all" data-en="All Places" data-am="ሁሉን">All Places</button>
+<section class="gallery-filters">
+    <h2 data-en="Photo Gallery" data-am="የፎቶ ጋለሪ">Photo Gallery</h2>
+    <p class="gallery-subtitle" data-en="Click on a destination to explore its photos" data-am="ፎቶዎቹን ለማየት መዳረሻ ላይ ጠቅ ያድርጉ">Click on a destination to explore its photos</p>
+    <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all" data-en="All" data-am="ሁሉን">All</button>
         <button class="filter-btn" data-filter="Historical & Cultural Sites" data-en="Historical" data-am="ታሪክ">Historical</button>
         <button class="filter-btn" data-filter="Nature & Mountains" data-en="Nature" data-am="ተፈሪ">Nature</button>
         <button class="filter-btn" data-filter="Lakes & Water Attractions" data-en="Lakes" data-am="ሀይቆች">Lakes</button>
@@ -69,248 +70,89 @@
     </div>
 </section>
 
-<!-- Gallery Grid -->
-<section class="gallery-container" style="padding: 2rem; max-width: 1400px; margin: 0 auto;">
-    <div class="gallery-grid" id="galleryContent">
-        <!-- Loading spinner -->
+<!-- Place Cards Grid -->
+<section class="gallery-container">
+    <div class="gallery-places-grid" id="galleryContent">
         <div id="galleryLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
             <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
             <p style="margin-top: 1rem; color: #888;" data-en="Loading gallery..." data-am="ጋለሪን በመጫን ላይ...">Loading gallery...</p>
         </div>
         <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
     </div>
-    <div id="pagination" style="width: 100%;">
-        <!-- Pagination controls will be added here -->
-    </div>
 </section>
 
-<!-- Image Modal -->
-<div id="imageModal" class="modal" style="display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); cursor: pointer;">
-    <span class="close-modal" style="position: absolute; top: 20px; right: 45px; color: white; font-size: 60px; font-weight: bold; cursor: pointer;">&times;</span>
-    <div class="modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 90%; max-height: 90%;">
-        <img id="modalImage" style="width: 100%; height: auto; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.8);">
-        <div id="modalCaption" style="color: white; text-align: center; margin-top: 1rem; font-size: 1.2rem;"></div>
+<!-- Photo Viewer Modal -->
+<div id="photoViewer" class="photo-viewer">
+    <div class="photo-viewer-header">
+        <h3 id="viewerTitle"></h3>
+        <button class="viewer-close" onclick="closeViewer()"><i class="fas fa-times"></i></button>
     </div>
+    <div class="photo-viewer-body">
+        <button class="viewer-nav viewer-prev" onclick="navigatePhoto(-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="photo-viewer-main">
+            <img id="viewerImage" src="" alt="" loading="lazy">
+        </div>
+        <button class="viewer-nav viewer-next" onclick="navigatePhoto(1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="photo-viewer-thumbs" id="viewerThumbs"></div>
+    <div class="photo-viewer-counter" id="viewerCounter"></div>
 </div>
+<div id="photoViewerOverlay" class="photo-viewer-overlay" onclick="closeViewer()"></div>
 
 <script src="/js/language.js"></script>
 <script src="/js/ai-chat.js"></script>
 <script>
-// Gallery state
-let currentPage = 1;
-const placesPerPage = 4;
 let allPlaces = [];
 let currentFilter = 'all';
+let viewerImages = [];
+let viewerIndex = 0;
 
-// Load gallery from database
 async function loadGallery() {
     try {
         const response = await fetch('/api/places');
         allPlaces = await response.json();
-        // Remove loader
         const loader = document.getElementById('galleryLoader');
         if (loader) loader.remove();
-        displayGallery(allPlaces);
+        displayPlaceCards(allPlaces);
     } catch (error) {
         console.error('Error loading gallery:', error);
         document.getElementById('galleryContent').innerHTML = `
-            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                <i class="fas fa-exclamation-triangle" style="font-size: 4rem; color: #e74c3c; margin-bottom: 1rem;"></i>
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-exclamation-triangle" style="font-size: 3rem; color: #e74c3c; margin-bottom: 1rem;"></i>
                 <h3 data-en="Unable to Load Gallery" data-am="ጋለሪን መጫን አልተቻለሁ">Unable to Load Gallery</h3>
-                <p data-en="Please try again later" data-am="እባኮላ በኋላ ይሞክሉ">Please try again later</p>
-            </div>
-        `;
+            </div>`;
     }
 }
 
-// Display gallery with filtering
-function displayGallery(places) {
-    const container = document.getElementById('galleryContent');
-    
-    // Filter places
-    let filteredPlaces = places.filter(place => {
-        return currentFilter === 'all' || place.category === currentFilter;
-    });
-
-    if (filteredPlaces.length === 0) {
-        container.innerHTML = `
-            <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                <i class="fas fa-images" style="font-size: 4rem; color: #888; margin-bottom: 1rem;"></i>
-                <h3 data-en="No Images Found" data-am="ምንም ምስልክት አልተገኘ">No Images Found</h3>
-                <p data-en="Try adjusting your filters" data-am="ማጣልዎችን ይቀይሩ">Try adjusting your filters</p>
-            </div>
-        `;
-        document.getElementById('pagination').innerHTML = '';
-        return;
-    }
-
-    // Calculate pagination
-    const totalPages = Math.ceil(filteredPlaces.length / placesPerPage);
-    const startIndex = (currentPage - 1) * placesPerPage;
-    const endIndex = startIndex + placesPerPage;
-    const paginatedPlaces = filteredPlaces.slice(startIndex, endIndex);
-
-    // Create gallery HTML
-    let html = '';
-    paginatedPlaces.forEach(place => {
-        const placeName = place.name_am || place.name;
-        const placeDescription = place.description_am || place.description;
-        
-        // Get all images for this place
-        const images = [];
-        
-        // Add main image
-        if (place.image_url) {
-            let imageUrl = place.image_url;
-            if (place.image_url.startsWith('http')) {
-                imageUrl = place.image_url;
-            } else if (place.image_url.startsWith('/uploads/')) {
-                imageUrl = place.image_url;
-            } else {
-                imageUrl = '/img/' + place.image_url;
-            }
-            images.push({
-                url: imageUrl,
-                caption: placeName,
-                description: placeDescription
-            });
-        }
-        
-        // Add gallery images
-        if (place.gallery_images && place.gallery_images.length > 0) {
-            let galleryImages = [];
-            if (typeof place.gallery_images === 'string') {
-                try {
-                    galleryImages = JSON.parse(place.gallery_images);
-                } catch (e) {
-                    galleryImages = [];
-                }
-            } else {
-                galleryImages = place.gallery_images;
-            }
-            
-            galleryImages.forEach(img => {
-                let imageUrl = img;
-                if (img.startsWith('http')) {
-                    imageUrl = img;
-                } else if (img.startsWith('/uploads/')) {
-                    imageUrl = img;
-                } else {
-                    imageUrl = '/img/' + img;
-                }
-                images.push({
-                    url: imageUrl,
-                    caption: placeName,
-                    description: placeDescription
-                });
-            });
-        }
-        
-        // If no images, add placeholder
-        if (images.length === 0) {
-            images.push({
-                url: `https://picsum.photos/seed/${placeName}/400/300.jpg`,
-                caption: placeName,
-                description: placeDescription,
-                isPlaceholder: true
-            });
-        }
-        
-        // Create place section
-        html += `
-            <div class="place-gallery-section" style="margin-bottom: 3rem;">
-                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <span>${getCategoryIcon(place.category)}</span>
-                    <span data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</span>
-                    <span style="font-size: 0.9rem; color: #666;">(${images.length} images)</span>
-                </h3>
-                <div class="place-gallery-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
-        `;
-        
-        // Add images for this place
-        images.forEach((img, index) => {
-            if (img.isPlaceholder) {
-                html += `
-                    <div class="gallery-item placeholder" style="aspect-ratio: 16/9; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; border-radius: 12px; cursor: default;">
-                        <div style="text-align: center; color: white;">
-                            <i class="fas fa-image" style="font-size: 3rem; margin-bottom: 1rem;"></i>
-                            <p data-en="No images available" data-am="ምስልክት የሉም">No images available</p>
-                        </div>
-                    </div>
-                `;
-            } else {
-                html += `
-                    <div class="gallery-item" onclick="openModal('${img.url}', '${img.caption}', '${img.description}')" style="aspect-ratio: 16/9; overflow: hidden; border-radius: 12px; cursor: pointer; position: relative; transition: all 0.3s ease;">
-                        <img src="${img.url}" alt="${img.caption}" loading="lazy" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;" onerror="this.src='https://picsum.photos/seed/${img.caption}/400/300.jpg';">
-                        <div class="image-overlay" style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(to top, rgba(0,0,0,0.8), transparent); color: white; padding: 1rem;">
-                            <h4 data-en="${img.caption}" data-am="${img.caption}">${img.caption}</h4>
-                            <p style="font-size: 0.9rem; opacity: 0.9;">${img.description ? img.description.substring(0, 100) + '...' : ''}</p>
-                        </div>
-                    </div>
-                `;
-            }
-        });
-        
-        html += `
-                </div>
-                <div style="text-align: center; margin-top: 1.5rem;">
-                    <a href="/place/${place._id}" class="btn-view-details" data-en="View Full Details" data-am="ሙሉኣ ዝርዝሮችን ይመልከቱ">View Full Details</a>
-                </div>
-            </div>
-        `;
-    });
-
-    container.innerHTML = html;
-    
-    // Add pagination controls
-    if (totalPages > 1) {
-        const paginationHtml = `
-            <div class="pagination-controls" style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-top: 2rem;">
-                <button onclick="changePage(${currentPage - 1})" 
-                        class="pagination-btn" 
-                        ${currentPage === 1 ? 'disabled' : ''}
-                        data-en="Previous" data-am="ቀደም">
-                    <i class="fas fa-chevron-left"></i> Previous
-                </button>
-                <span class="page-info" style="font-weight: bold; color: var(--primary);">
-                    Page ${currentPage} of ${totalPages}
-                </span>
-                <button onclick="changePage(${currentPage + 1})" 
-                        class="pagination-btn" 
-                        ${currentPage === totalPages ? 'disabled' : ''}
-                        data-en="Next" data-am="ይቀጥሉ">
-                    Next <i class="fas fa-chevron-right"></i>
-                </button>
-            </div>
-        `;
-        document.getElementById('pagination').innerHTML = paginationHtml;
-    } else {
-        document.getElementById('pagination').innerHTML = '';
-    }
-    
-    // Add hover effects to gallery items
-    document.querySelectorAll('.gallery-item:not(.placeholder)').forEach(item => {
-        item.addEventListener('mouseenter', function() {
-            this.querySelector('img').style.transform = 'scale(1.1)';
-        });
-        item.addEventListener('mouseleave', function() {
-            this.querySelector('img').style.transform = 'scale(1)';
-        });
-    });
+function getImageUrl(img) {
+    if (!img) return null;
+    if (img.startsWith('http') || img.startsWith('/uploads/')) return img;
+    return '/img/' + img;
 }
 
-// Change page function
-function changePage(page) {
-    const totalPages = Math.ceil(allPlaces.length / placesPerPage);
-    if (page >= 1 && page <= totalPages) {
-        currentPage = page;
-        displayGallery(allPlaces);
-        // Scroll to top of gallery
-        document.getElementById('galleryContent').scrollIntoView({ behavior: 'smooth', block: 'start' });
+function getPlaceImages(place) {
+    const images = [];
+    if (place.image_url) {
+        images.push(getImageUrl(place.image_url));
     }
+    if (place.gallery_images && place.gallery_images.length > 0) {
+        let galleryImgs = [];
+        if (typeof place.gallery_images === 'string') {
+            try { galleryImgs = JSON.parse(place.gallery_images); } catch (e) { galleryImgs = []; }
+        } else {
+            galleryImgs = place.gallery_images;
+        }
+        galleryImgs.forEach(img => {
+            const url = getImageUrl(img);
+            if (url) images.push(url);
+        });
+    }
+    if (images.length === 0) {
+        images.push('https://picsum.photos/seed/' + encodeURIComponent(place.name) + '/600/400');
+    }
+    return images;
 }
 
-// Helper function
 function getCategoryIcon(category) {
     const icons = {
         'Historical & Cultural Sites': '🏛️',
@@ -323,49 +165,146 @@ function getCategoryIcon(category) {
     return icons[category] || '📍';
 }
 
-// Modal functions
-function openModal(imageSrc, caption, description) {
-    const modal = document.getElementById('imageModal');
-    const modalImg = document.getElementById('modalImage');
-    const modalCaption = document.getElementById('modalCaption');
-    
-    modal.style.display = 'block';
-    modalImg.src = imageSrc;
-    modalCaption.innerHTML = `<h3>${caption}</h3><p>${description || ''}</p>`;
+function displayPlaceCards(places) {
+    const container = document.getElementById('galleryContent');
+    const filtered = places.filter(p => currentFilter === 'all' || p.category === currentFilter);
+
+    if (filtered.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-images" style="font-size: 3rem; color: #888; margin-bottom: 1rem;"></i>
+                <h3 data-en="No Places Found" data-am="ምንም ቦታ አልተገኘም">No Places Found</h3>
+            </div>`;
+        return;
+    }
+
+    let html = '';
+    filtered.forEach((place, idx) => {
+        const images = getPlaceImages(place);
+        const coverImg = images[0];
+        const imgCount = images.length;
+        html += `
+            <div class="gallery-place-card" onclick="openViewer(${idx})">
+                <div class="gallery-card-img">
+                    <img src="${coverImg}" alt="${place.name}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(place.name)}/600/400'">
+                    <div class="gallery-card-badge">${getCategoryIcon(place.category)}</div>
+                    <div class="gallery-card-count"><i class="fas fa-images"></i> ${imgCount}</div>
+                </div>
+                <div class="gallery-card-info">
+                    <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
+                    <p class="gallery-card-cat">${place.category || 'Destination'}</p>
+                </div>
+            </div>`;
+    });
+    container.innerHTML = html;
+
+    // Store filtered for viewer access
+    window._filteredPlaces = filtered;
 }
 
-// Close modal
-document.addEventListener('click', function(event) {
-    const modal = document.getElementById('imageModal');
-    if (event.target === modal || event.target.classList.contains('close-modal')) {
-        modal.style.display = 'none';
-    }
+function openViewer(placeIdx) {
+    const places = window._filteredPlaces;
+    const place = places[placeIdx];
+    viewerImages = getPlaceImages(place);
+    viewerIndex = 0;
+
+    document.getElementById('viewerTitle').textContent = place.name;
+    updateViewer();
+    buildThumbnails();
+
+    document.getElementById('photoViewer').classList.add('active');
+    document.getElementById('photoViewerOverlay').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeViewer() {
+    document.getElementById('photoViewer').classList.remove('active');
+    document.getElementById('photoViewerOverlay').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+function updateViewer() {
+    const img = document.getElementById('viewerImage');
+    img.src = viewerImages[viewerIndex];
+    img.onerror = function() { this.src = 'https://picsum.photos/seed/fallback/600/400'; };
+    document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
+    
+    document.querySelectorAll('.viewer-thumb').forEach((t, i) => {
+        t.classList.toggle('active', i === viewerIndex);
+    });
+}
+
+function buildThumbnails() {
+    const container = document.getElementById('viewerThumbs');
+    container.innerHTML = viewerImages.map((img, i) =>
+        `<img class="viewer-thumb ${i === 0 ? 'active' : ''}" src="${img}" alt="Thumb ${i+1}" onclick="goToPhoto(${i})" onerror="this.src='https://picsum.photos/seed/thumb${i}/100/70'">`
+    ).join('');
+}
+
+function navigatePhoto(dir) {
+    viewerIndex = (viewerIndex + dir + viewerImages.length) % viewerImages.length;
+    updateViewer();
+}
+
+function goToPhoto(idx) {
+    viewerIndex = idx;
+    updateViewer();
+}
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    const viewer = document.getElementById('photoViewer');
+    if (!viewer.classList.contains('active')) return;
+    if (e.key === 'ArrowLeft') navigatePhoto(-1);
+    if (e.key === 'ArrowRight') navigatePhoto(1);
+    if (e.key === 'Escape') closeViewer();
 });
 
-// Event listeners
 document.addEventListener('DOMContentLoaded', function() {
     loadGallery();
-    
-    // Filter buttons
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             currentFilter = this.getAttribute('data-filter');
-            displayGallery(allPlaces);
+            displayPlaceCards(allPlaces);
         });
     });
 });
 
 function toggleMobileMenu() {
     const nav = document.getElementById('mobile-nav');
+    const btn = document.querySelector('.mobile-menu-btn');
     nav.classList.toggle('active');
+    if (btn) btn.classList.toggle('active');
 }
 </script>
 
 <style>
+/* Gallery Filters */
+.gallery-filters {
+    padding: 2rem 1.5rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+.gallery-filters h2 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    font-size: 2rem;
+}
+.gallery-subtitle {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
 .filter-btn {
-    padding: 12px 24px;
+    padding: 10px 20px;
     background: white;
     border: 2px solid var(--primary-color);
     border-radius: 25px;
@@ -373,100 +312,292 @@ function toggleMobileMenu() {
     font-weight: 500;
     transition: all 0.3s ease;
     color: var(--primary-color);
+    font-size: 0.9rem;
 }
-
 .filter-btn:hover {
     background: var(--primary-color);
     color: white;
     transform: translateY(-2px);
 }
-
 .filter-btn.active {
     background: var(--primary-color);
     color: white;
 }
 
-.gallery-grid {
+/* Gallery Container */
+.gallery-container {
+    padding: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+/* Place Cards Grid */
+.gallery-places-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
-.place-gallery-section {
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 2rem;
-}
-
-.gallery-item {
-    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+.gallery-place-card {
+    border-radius: 16px;
+    overflow: hidden;
+    background: white;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    cursor: pointer;
     transition: all 0.3s ease;
 }
-
-.gallery-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+.gallery-place-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+.gallery-card-img {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+}
+.gallery-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+.gallery-place-card:hover .gallery-card-img img {
+    transform: scale(1.08);
+}
+.gallery-card-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+}
+.gallery-card-count {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.gallery-card-info {
+    padding: 1rem 1.2rem;
+}
+.gallery-card-info h3 {
+    color: var(--primary-color);
+    font-size: 1.15rem;
+    margin: 0 0 0.3rem;
+}
+.gallery-card-cat {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0;
 }
 
-.image-overlay {
-    transition: all 0.3s ease;
+/* Photo Viewer Overlay */
+.photo-viewer-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.85);
+    z-index: 2000;
+}
+.photo-viewer-overlay.active {
+    display: block;
 }
 
-.gallery-item:hover .image-overlay {
-    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+/* Photo Viewer Panel */
+.photo-viewer {
+    display: none;
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 900px;
+    max-height: 90vh;
+    background: #1a1a1a;
+    border-radius: 16px;
+    z-index: 2001;
+    overflow: hidden;
+    flex-direction: column;
+}
+.photo-viewer.active {
+    display: flex;
 }
 
-.close-modal:hover {
-    color: #bbb;
+.photo-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(0,77,64,0.95);
+    color: white;
+}
+.photo-viewer-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+.viewer-close {
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.viewer-close:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.photo-viewer-body {
+    display: flex;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    min-height: 0;
+    background: #111;
+}
+
+.photo-viewer-main {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    min-height: 300px;
+    max-height: 55vh;
+}
+.photo-viewer-main img {
+    max-width: 100%;
+    max-height: 55vh;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.viewer-nav {
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    padding: 1rem 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+}
+.viewer-nav:hover {
+    background: rgba(255,255,255,0.25);
+}
+
+.photo-viewer-thumbs {
+    display: flex;
+    gap: 8px;
+    padding: 0.75rem 1rem;
+    overflow-x: auto;
+    background: #1a1a1a;
+    justify-content: center;
+    flex-wrap: nowrap;
+}
+.viewer-thumb {
+    width: 60px;
+    height: 45px;
+    object-fit: cover;
+    border-radius: 6px;
+    cursor: pointer;
+    opacity: 0.5;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+    border: 2px solid transparent;
+}
+.viewer-thumb:hover {
+    opacity: 0.8;
+}
+.viewer-thumb.active {
+    opacity: 1;
+    border-color: var(--primary-color);
+}
+
+.photo-viewer-counter {
+    text-align: center;
+    color: #aaa;
+    font-size: 0.85rem;
+    padding: 0.5rem 0 0.75rem;
+    background: #1a1a1a;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .gallery-grid {
-        grid-template-columns: 1fr;
+    .gallery-places-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
     }
-    
-    .place-gallery-grid {
-        grid-template-columns: 1fr;
+    .gallery-card-img {
+        height: 150px;
+    }
+    .gallery-card-info {
+        padding: 0.75rem;
+    }
+    .gallery-card-info h3 {
+        font-size: 1rem;
+    }
+    .gallery-filters h2 {
+        font-size: 1.4rem;
+    }
+    .filter-btn {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+    .photo-viewer {
+        width: 96%;
+        max-height: 95vh;
+    }
+    .photo-viewer-main {
+        min-height: 200px;
+        max-height: 45vh;
+    }
+    .photo-viewer-main img {
+        max-height: 45vh;
+    }
+    .viewer-nav {
+        padding: 0.5rem;
+        font-size: 1.2rem;
+    }
+    .viewer-thumb {
+        width: 45px;
+        height: 35px;
     }
 }
-.pagination-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1rem;
-    margin-top: 2rem;
-}
-
-.pagination-btn {
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 50px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.pagination-btn:hover:not(:disabled) {
-    background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
-}
-
-.pagination-btn:disabled {
-    background: #ccc;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
-
-.page-info {
-    font-weight: bold;
-    color: var(--primary);
-    font-size: 1.1rem;
+@media (max-width: 400px) {
+    .gallery-places-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 0.75rem;
+    }
+    .gallery-card-img {
+        height: 120px;
+    }
+    .gallery-card-badge {
+        padding: 4px 6px;
+        font-size: 0.9rem;
+    }
+    .gallery-card-count {
+        padding: 3px 8px;
+        font-size: 0.75rem;
+    }
 }
 </style>
 
