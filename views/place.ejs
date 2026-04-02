@@ -256,10 +256,8 @@
         <% } else if(place.image_url.startsWith('/uploads/')) { %>
             <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
         <% } else { %>
-            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/800/400.jpg'">
+            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
         <% } %>
-    <% } else { %>
-        <img src="https://picsum.photos/seed/<%= place.name %>/800/400.jpg" alt="<%= place.name %>" class="place-image" loading="lazy">
     <% } %>
     
     <% if(place && place.description) { %>
@@ -285,43 +283,33 @@
         <h3 data-en="Photo Gallery" data-am="ፎቶ ጋለሪ">Photo Gallery</h3>
         <div class="gallery-grid">
             <% 
-            // Get gallery images from database
+            // Get gallery images from database - handle both array and JSON string formats
             let galleryImages = [];
             
-            // Try to parse gallery_images JSON from database
-            try {
-                if (place.gallery_images) {
-                    galleryImages = JSON.parse(place.gallery_images);
-                }
-            } catch (e) {
-                console.log('Error parsing gallery_images:', e);
-            }
-            
-            // If no gallery images, fall back to main image + placeholders
-            if (galleryImages.length === 0) {
-                if(place.image_url) {
-                    if(place.image_url.startsWith('/uploads/')) {
-                        galleryImages.push(place.image_url);
-                    } else {
-                        galleryImages.push('/img/' + place.image_url);
+            if (place.gallery_images) {
+                if (Array.isArray(place.gallery_images)) {
+                    // New format: stored as array
+                    galleryImages = place.gallery_images;
+                } else if (typeof place.gallery_images === 'string') {
+                    // Old format: stored as JSON string
+                    try {
+                        galleryImages = JSON.parse(place.gallery_images);
+                    } catch (e) {
+                        console.log('Error parsing gallery_images:', e);
                     }
                 }
-                
-                // Add placeholder images if still not enough
-                const placeholders = [
-                    '/img/lalibela2.jpg',
-                    '/img/lalibela3.jpg', 
-                    '/img/lalibela4.jpg',
-                    '/img/lalibela5.jpg',
-                    '/img/lalibela6.jpg'
-                ];
-                
-                // Add enough placeholders to reach 6 images total
-                const needed = 6 - galleryImages.length;
-                for(let i = 0; i < needed && i < placeholders.length; i++) {
-                    galleryImages.push(placeholders[i]);
+            }
+            
+            // If no gallery images, fall back to main image
+            if (galleryImages.length === 0 && place.image_url) {
+                if(place.image_url.startsWith('/uploads/')) {
+                    galleryImages.push(place.image_url);
+                } else {
+                    galleryImages.push('/img/' + place.image_url);
                 }
             }
+            
+            console.log('Place detail gallery images for <%= place.name %>:', galleryImages);
             
             galleryImages.forEach((imageSrc, index) => { %>
                 <div class="gallery-item" onclick="openLightbox('<%= imageSrc %>')">
