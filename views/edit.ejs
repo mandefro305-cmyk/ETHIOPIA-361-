@@ -174,14 +174,57 @@
         </div>
         <hr>
 
-        <form action="/admin/update/<%= place.id %>" method="POST" enctype="multipart/form-data">
+        <form action="/admin/update/<%= place._id %>" method="POST" enctype="multipart/form-data">
             <div class="form-group">
-                <label>Name:</label>
+                <label>Name (English):</label>
                 <input type="text" name="name" value="<%= place.name %>" required>
             </div>
             <div class="form-group">
-                <label>Description:</label>
+                <label>Name (Amharic):</label>
+                <input type="text" name="name_am" value="<%= place.name_am || '' %>">
+            </div>
+            <div class="form-group">
+                <label>Description (English):</label>
                 <textarea name="description" rows="4" required><%= place.description %></textarea>
+            </div>
+            <div class="form-group">
+                <label>Description (Amharic):</label>
+                <textarea name="description_am" rows="4"><%= place.description_am || '' %></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Category:</label>
+                <select name="category" required>
+                    <option value="">Select Category</option>
+                    <option value="Historical" <%= place.category === 'Historical' ? 'selected' : '' %>>Historical</option>
+                    <option value="Natural" <%= place.category === 'Natural' ? 'selected' : '' %>>Natural</option>
+                    <option value="Cultural" <%= place.category === 'Cultural' ? 'selected' : '' %>>Cultural</option>
+                    <option value="Religious" <%= place.category === 'Religious' ? 'selected' : '' %>>Religious</option>
+                    <option value="Adventure" <%= place.category === 'Adventure' ? 'selected' : '' %>>Adventure</option>
+                </select>
+            </div>
+            
+            <!-- Travel Guide Section -->
+            <h3>Travel Guide Information</h3>
+            <div class="form-group">
+                <label>Best Time to Visit:</label>
+                <input type="text" name="best_time" value="<%= place.travel_guide ? place.travel_guide.best_time || '' : '' %>">
+            </div>
+            <div class="form-group">
+                <label>How to Get There:</label>
+                <textarea name="how_to_get_there" rows="3"><%= place.travel_guide ? place.travel_guide.how_to_get_there || '' : '' %></textarea>
+            </div>
+            <div class="form-group">
+                <label>What to Bring:</label>
+                <textarea name="what_to_bring" rows="3"><%= place.travel_guide ? place.travel_guide.what_to_bring || '' : '' %></textarea>
+            </div>
+            <div class="form-group">
+                <label>Accommodation:</label>
+                <textarea name="accommodation" rows="3"><%= place.travel_guide ? place.travel_guide.accommodation || '' : '' %></textarea>
+            </div>
+            <div class="form-group">
+                <label>Local Tips:</label>
+                <textarea name="local_tips" rows="3"><%= place.travel_guide ? place.travel_guide.local_tips || '' : '' %></textarea>
             </div>
             
             <div class="form-group">

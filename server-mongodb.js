@@ -639,7 +639,25 @@ app.get('/admin/edit/:id', isAuthenticated, async (req, res) => {
 app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'video', maxCount: 1 }, { name: 'additional_images', maxCount: 5 }]), async (req, res) => {
     try {
         const id = req.params.id;
-        const { name, description, name_am, description_am, image_url, video_url, deleted_images, delete_video } = req.body;
+        const { 
+            name, 
+            description, 
+            name_am, 
+            description_am, 
+            image_url, 
+            video_url, 
+            category,
+            best_time,
+            how_to_get_there,
+            what_to_bring,
+            accommodation,
+            local_tips,
+            deleted_images, 
+            delete_video 
+        } = req.body;
+        
+        console.log('Update request received for place ID:', id);
+        console.log('Request body:', req.body);
         
         // Get current place
         const currentPlace = await Place.findById(id);
@@ -688,33 +706,49 @@ app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', m
                 }
             }
             
-            currentPlace.gallery_images.forEach(img => {
-                if (img !== currentPlace.image_url && 
-                    !deletedImagePaths.includes(img) && 
-                    !galleryImages.includes(img)) {
+            const existingGallery = Array.isArray(currentPlace.gallery_images) 
+                ? currentPlace.gallery_images 
+                : JSON.parse(currentPlace.gallery_images || '[]');
+            
+            existingGallery.forEach(img => {
+                if (!deletedImagePaths.includes(img)) {
                     galleryImages.push(img);
                 }
             });
         }
         
         // Add new additional images
-        galleryImages = galleryImages.concat(additionalImages);
+        galleryImages.push(...additionalImages);
+        
+        // Create travel guide object
+        const travelGuide = {
+            best_time: best_time || (currentPlace.travel_guide ? currentPlace.travel_guide.best_time : ''),
+            how_to_get_there: how_to_get_there || (currentPlace.travel_guide ? currentPlace.travel_guide.how_to_get_there : ''),
+            what_to_bring: what_to_bring || (currentPlace.travel_guide ? currentPlace.travel_guide.what_to_bring : ''),
+            accommodation: accommodation || (currentPlace.travel_guide ? currentPlace.travel_guide.accommodation : ''),
+            local_tips: local_tips || (currentPlace.travel_guide ? currentPlace.travel_guide.local_tips : '')
+        };
         
         // Update place
         await Place.findByIdAndUpdate(id, {
             name,
-            name_am: name_am || '',
             description,
+            name_am: name_am || '',
             description_am: description_am || '',
+            category: category || currentPlace.category,
             image_url: imagePath,
             video_url: videoPath,
-            gallery_images: galleryImages
+            gallery_images: JSON.stringify(galleryImages),
+            travel_guide: travelGuide
         });
         
+        console.log('Place updated successfully:', name);
         res.redirect('/admin');
+        
     } catch (error) {
-        console.error('Update place error:', error);
-        res.status(500).send('Error updating place');
+        console.error('Update error details:', error);
+        console.error('Error stack:', error.stack);
+        res.status(500).send('Error updating place: ' + error.message);
     }
 });
 
@@ -727,37 +761,6 @@ app.post('/admin/delete/:id', isAuthenticated, async (req, res) => {
         console.error('Delete place error:', error);
         res.status(500).send('Error deleting place');
     }
-});
-
-// Other routes (keep existing ones)
-app.get('/', async (req, res) => {
-    try {
-        const places = await Place.find({});
-        res.render('index', { places });
-    } catch (error) {
-        console.error('Error fetching places:', error);
-        res.render('index', { places: [] });
-    }
-});
-
-app.get('/destinations', async (req, res) => {
-    res.render('destinations');
-});
-
-app.get('/guide', async (req, res) => {
-    res.render('guide');
-});
-
-app.get('/gallery', async (req, res) => {
-    res.render('gallery');
-});
-
-app.get('/blog', async (req, res) => {
-    res.render('blog');
-});
-
-app.get('/contact', async (req, res) => {
-    res.render('contact');
 });
 
 // Start server
