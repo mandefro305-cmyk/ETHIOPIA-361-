@@ -848,7 +848,7 @@ app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', m
             category: category || currentPlace.category,
             image_url: imagePath,
             video_url: videoPath,
-            gallery_images: JSON.stringify(galleryImages),
+            gallery_images: galleryImages,
             travel_guide: travelGuide
         });
         

@@ -136,6 +136,10 @@ function getImageUrl(img) {
 }
 
 function getPlaceImages(place) {
+    console.log('=== getPlaceImages for:', place.name, '===');
+    console.log('Raw gallery_images:', place.gallery_images);
+    console.log('Raw image_url:', place.image_url);
+    
     var images = [];
     var seen = {};
 
@@ -143,25 +147,43 @@ function getPlaceImages(place) {
     if (place.gallery_images && place.gallery_images.length > 0) {
         var galleryImgs = [];
         if (typeof place.gallery_images === 'string') {
-            try { galleryImgs = JSON.parse(place.gallery_images); } catch (e) { galleryImgs = []; }
+            try { 
+                galleryImgs = JSON.parse(place.gallery_images); 
+                console.log('Parsed gallery_images from string:', galleryImgs);
+            } catch (e) { 
+                console.log('Failed to parse gallery_images as string:', e);
+                galleryImgs = []; 
+            }
         } else {
             galleryImgs = place.gallery_images;
+            console.log('Using gallery_images as array:', galleryImgs);
         }
         galleryImgs.forEach(function(img) {
             var url = getImageUrl(img);
+            console.log('Processing image:', img, '-> URL:', url);
             if (url && !seen[url]) {
                 seen[url] = true;
                 images.push(url);
+                console.log('Added image to gallery:', url);
+            } else if (!url) {
+                console.log('Skipped null/undefined image');
+            } else {
+                console.log('Skipped duplicate image:', url);
             }
         });
+    } else {
+        console.log('No gallery_images found');
     }
 
     // If gallery_images was empty, use main image_url as fallback
     if (images.length === 0 && place.image_url) {
         var mainUrl = getImageUrl(place.image_url);
+        console.log('Using main image_url as fallback:', place.image_url, '->', mainUrl);
         if (mainUrl) images.push(mainUrl);
     }
 
+    console.log('Final images array:', images);
+    console.log('=== END getPlaceImages ===');
     return images;
 }
 
