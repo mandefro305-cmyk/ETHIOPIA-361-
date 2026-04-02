@@ -867,10 +867,15 @@ app.get('/gallery', (req, res) => {
     res.render('gallery');
 });
 
-// Blog Page
-app.get('/blog', (req, res) => {
-    console.log('Blog page requested - deployed: 2026-04-02-09-02');
-    res.render('blog');
+// Blog Page - Top 10 Places
+app.get('/blog', async (req, res) => {
+    try {
+        const places = await Place.find({}).limit(10);
+        res.render('blog', { places });
+    } catch (error) {
+        console.error('Blog page error:', error);
+        res.render('blog', { places: [] });
+    }
 });
 
 // Admin Delete Place
@@ -882,6 +887,11 @@ app.post('/admin/delete/:id', isAuthenticated, async (req, res) => {
         console.error('Delete place error:', error);
         res.status(500).send('Error deleting place');
     }
+});
+
+// Custom 404 handler - must be after all other routes
+app.use((req, res) => {
+    res.status(404).render('404');
 });
 
 // Start server

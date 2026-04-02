@@ -1,27 +1,464 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Travel Blog</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top 10 Places to Visit - Ethiopia 361°</title>
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="css/ai-chat.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+.blog-hero {
+    background: linear-gradient(135deg, rgba(0,77,64,0.9), rgba(0,128,128,0.8)), url('https://images.unsplash.com/photo-1523805009345-7448845a9e53?w=1200') center/cover;
+    padding: 4rem 2rem;
+    text-align: center;
+    color: white;
+}
+.blog-hero h2 {
+    font-size: 2.8rem;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.blog-hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Map Section */
+.map-section {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 2rem;
+}
+.map-section h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+.map-section p.subtitle {
+    text-align: center;
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+#ethiopiaMap {
+    width: 100%;
+    height: 450px;
+    border-radius: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+    z-index: 1;
+}
+
+/* Top 10 Section */
+.top10-section {
+    max-width: 1000px;
+    margin: 3rem auto;
+    padding: 0 2rem;
+}
+.top10-section > h2 {
+    text-align: center;
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.place-rank-card {
+    display: flex;
+    gap: 2rem;
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    margin-bottom: 2rem;
+    transition: all 0.3s ease;
+    position: relative;
+}
+.place-rank-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+.rank-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 45px;
+    height: 45px;
+    background: linear-gradient(135deg, #ffc107, #ff9800);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.3rem;
+    box-shadow: 0 4px 15px rgba(255,193,7,0.4);
+    z-index: 2;
+}
+
+.place-rank-image {
+    width: 350px;
+    min-height: 250px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.place-rank-content {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+.place-rank-content h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 0.3rem;
+}
+.place-rank-content .category-tag {
+    display: inline-block;
+    background: rgba(0,77,64,0.1);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+}
+.place-rank-content .description {
+    color: #555;
+    line-height: 1.7;
+    margin-bottom: 1rem;
+}
+.place-rank-content .travel-info {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.place-rank-content .travel-info span {
+    font-size: 0.85rem;
+    color: #666;
+}
+.place-rank-content .travel-info i {
+    color: var(--primary-color);
+    margin-right: 0.3rem;
+}
+.place-rank-content .btn-view {
+    display: inline-block;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.6rem 1.5rem;
+    border-radius: 25px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: fit-content;
+}
+.place-rank-content .btn-view:hover {
+    background: #00695c;
+    transform: translateX(5px);
+}
+.place-rank-content .btn-view i {
+    margin-left: 0.4rem;
+}
+
+/* Travel Tips Section */
+.tips-section {
+    background: linear-gradient(135deg, #f8f9fa, #e8f5e9);
+    padding: 3rem 2rem;
+    margin-top: 2rem;
+}
+.tips-section h2 {
+    text-align: center;
+    color: var(--primary-color);
+    margin-bottom: 2rem;
+    font-size: 2rem;
+}
+.tips-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+.tip-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: transform 0.3s ease;
+}
+.tip-card:hover {
+    transform: translateY(-3px);
+}
+.tip-card .tip-icon {
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+}
+.tip-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+.tip-card p {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .blog-hero h2 { font-size: 2rem; }
+    .place-rank-card {
+        flex-direction: column;
+    }
+    .place-rank-image {
+        width: 100%;
+        height: 200px;
+    }
+    .place-rank-content {
+        padding: 1.5rem;
+    }
+    #ethiopiaMap {
+        height: 300px;
+    }
+}
+</style>
 </head>
 <body>
 
 <header>
-<h1>Tourism Blog</h1>
+    <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+    <nav class="desktop-nav">
+        <a href="/" data-en="Home" data-am="ቤት">Home</a>
+        <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+        <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+        <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+        <a href="/blog" class="active" data-en="Top 10" data-am="ምርጥ 10">Top 10</a>
+        <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+    </nav>
+    <div class="mobile-header">
+        <button class="menu-btn" onclick="toggleMobileMenu()">☰</button>
+    </div>
 </header>
+<nav class="mobile-nav" id="mobile-nav">
+    <a href="/">Home</a>
+    <a href="/destinations">Destinations</a>
+    <a href="/guide">Travel Guide</a>
+    <a href="/gallery">Gallery</a>
+    <a href="/blog" class="active">Top 10</a>
+    <a href="/contact">Contact</a>
+</nav>
 
-<section>
-
-<h2>Top 10 Places to Visit</h2>
-<p>A guide to the best tourist attractions.</p>
-
-<h2>Travel Tips</h2>
-<p>Helpful advice for visitors.</p>
-
+<!-- Hero Section -->
+<section class="blog-hero">
+    <h2 data-en="Top 10 Must-Visit Places in Ethiopia" data-am="በኢትዮጵያ ውስጥ ምርጥ 10 ቦታዎች">Top 10 Must-Visit Places in Ethiopia</h2>
+    <p data-en="Discover the most incredible destinations that make Ethiopia a world-class travel destination" data-am="ኢትዮጵያን ዓለም-ደረጃ የጉዞ መዳረሻ የሚያደርጉ ድንቅ ቦታዎችን ያግኙ">Discover the most incredible destinations that make Ethiopia a world-class travel destination</p>
 </section>
 
+<!-- Interactive Map Section -->
+<section class="map-section">
+    <h2><i class="fas fa-map-marked-alt"></i> <span data-en="Explore on Map" data-am="በካርታ ላይ ያስሱ">Explore on Map</span></h2>
+    <p class="subtitle" data-en="Click on markers to discover each destination" data-am="ለእያንዳንዱ መዳረሻ ለማግኘት ጠቋሚዎችን ጠቅ ያድርጉ">Click on markers to discover each destination</p>
+    <div id="ethiopiaMap"></div>
+</section>
+
+<!-- Top 10 Places Section -->
+<section class="top10-section">
+    <h2><i class="fas fa-trophy"></i> <span data-en="Top 10 Destinations" data-am="ምርጥ 10 መዳረሻዎች">Top 10 Destinations</span></h2>
+    
+    <% if (places && places.length > 0) { %>
+        <% places.forEach(function(place, index) { %>
+            <div class="place-rank-card" id="place-<%= index + 1 %>">
+                <div class="rank-badge"><%= index + 1 %></div>
+                <% if (place.image_url) { %>
+                    <% if (place.image_url.startsWith('http')) { %>
+                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image">
+                    <% } else if (place.image_url.startsWith('/uploads/')) { %>
+                        <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image">
+                    <% } else { %>
+                        <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-rank-image" onerror="this.src='https://picsum.photos/seed/<%= place.name %>/400/300'">
+                    <% } %>
+                <% } else { %>
+                    <img src="https://picsum.photos/seed/<%= place.name %>/400/300" alt="<%= place.name %>" class="place-rank-image">
+                <% } %>
+                <div class="place-rank-content">
+                    <h3><%= place.name %></h3>
+                    <span class="category-tag"><%= place.category_icon || '📍' %> <%= place.category %></span>
+                    <p class="description"><%= place.description ? place.description.substring(0, 200) + '...' : 'Discover this amazing Ethiopian destination.' %></p>
+                    <div class="travel-info">
+                        <% if (place.travel_guide && place.travel_guide.best_time_to_visit) { %>
+                            <span><i class="fas fa-calendar-alt"></i> <%= place.travel_guide.best_time_to_visit %></span>
+                        <% } %>
+                        <% if (place.travel_guide && place.travel_guide.entrance_fees) { %>
+                            <span><i class="fas fa-ticket-alt"></i> <%= place.travel_guide.entrance_fees %></span>
+                        <% } %>
+                    </div>
+                    <a href="/place/<%= place._id %>" class="btn-view">
+                        Explore <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div style="text-align: center; padding: 3rem;">
+            <i class="fas fa-map-marked-alt" style="font-size: 4rem; color: #ccc; margin-bottom: 1rem;"></i>
+            <h3>No Places Available Yet</h3>
+            <p>Check back soon for our top destinations!</p>
+        </div>
+    <% } %>
+</section>
+
+<!-- Travel Tips Section -->
+<section class="tips-section">
+    <h2><i class="fas fa-lightbulb"></i> <span data-en="Essential Travel Tips for Ethiopia" data-am="ለኢትዮጵያ አስፈላጊ የጉዞ ጥቆማዎች">Essential Travel Tips for Ethiopia</span></h2>
+    <div class="tips-grid">
+        <div class="tip-card">
+            <div class="tip-icon">🛂</div>
+            <h3 data-en="Visa & Entry" data-am="ቪዛ እና መግቢያ">Visa & Entry</h3>
+            <p data-en="Most visitors can get an e-Visa online before arrival. Processing takes 3-5 days. You can also get a visa on arrival at Bole International Airport." data-am="አብዛኛዎቹ ጎብኝዎች ከመድረሳቸው በፊት ኢ-ቪዛ ማግኘት ይችላሉ።">Most visitors can get an e-Visa online before arrival. Processing takes 3-5 days. You can also get a visa on arrival at Bole International Airport.</p>
+        </div>
+        <div class="tip-card">
+            <div class="tip-icon">💰</div>
+            <h3 data-en="Currency & Budget" data-am="ገንዘብ እና በጀት">Currency & Budget</h3>
+            <p data-en="Ethiopian Birr (ETB) is the local currency. Budget travelers can get by on $30-50/day. ATMs are available in major cities but carry cash for rural areas." data-am="የኢትዮጵያ ብር ሀገር ውስጥ ገንዘብ ነው።">Ethiopian Birr (ETB) is the local currency. Budget travelers can get by on $30-50/day. ATMs are available in major cities but carry cash for rural areas.</p>
+        </div>
+        <div class="tip-card">
+            <div class="tip-icon">🏥</div>
+            <h3 data-en="Health & Safety" data-am="ጤና እና ደህንነት">Health & Safety</h3>
+            <p data-en="Yellow fever vaccination may be required. Drink bottled water only. Altitude sickness is possible in the highlands. Ethiopia is generally safe for tourists." data-am="የቢጫ ትኩሳት ክትባት ሊያስፈልግ ይችላል።">Yellow fever vaccination may be required. Drink bottled water only. Altitude sickness is possible in the highlands. Ethiopia is generally safe for tourists.</p>
+        </div>
+        <div class="tip-card">
+            <div class="tip-icon">☕</div>
+            <h3 data-en="Coffee Culture" data-am="የቡና ባህል">Coffee Culture</h3>
+            <p data-en="Ethiopia is the birthplace of coffee! Don't miss a traditional coffee ceremony — it's a beautiful social ritual involving roasting, grinding, and brewing fresh beans." data-am="ኢትዮጵያ የቡና ተወላጅ ናት! ባህላዊ የቡና ስነ-ስርአት አያምሉ።">Ethiopia is the birthplace of coffee! Don't miss a traditional coffee ceremony — it's a beautiful social ritual involving roasting, grinding, and brewing fresh beans.</p>
+        </div>
+        <div class="tip-card">
+            <div class="tip-icon">📅</div>
+            <h3 data-en="Best Time to Visit" data-am="ለመጎብኘት ምርጥ ጊዜ">Best Time to Visit</h3>
+            <p data-en="October to March is the dry season and best for travel. Timkat (January) and Meskel (September) are incredible festivals to experience." data-am="ከጥቅምት እስከ መጋቢት ደረቅ ወቅት ናት።">October to March is the dry season and best for travel. Timkat (January) and Meskel (September) are incredible festivals to experience.</p>
+        </div>
+        <div class="tip-card">
+            <div class="tip-icon">✈️</div>
+            <h3 data-en="Getting Around" data-am="መዞር">Getting Around</h3>
+            <p data-en="Ethiopian Airlines offers domestic flights to major destinations. Buses connect all major cities. Hire a private driver for flexibility in remote areas." data-am="ኢትዮጵያ አየር መንገድ ወደ ዋና ዋና መዳረሻዎች ይበራል።">Ethiopian Airlines offers domestic flights to major destinations. Buses connect all major cities. Hire a private driver for flexibility in remote areas.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Ethiopia 361°</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/language.js"></script>
 <script src="js/ai-chat.js"></script>
+<script>
+// Known coordinates for Ethiopian destinations
+const placeCoordinates = {
+    'lalibela': { lat: 12.0319, lng: 39.0474 },
+    'simien': { lat: 13.2500, lng: 38.4167 },
+    'entoto': { lat: 9.0800, lng: 38.7578 },
+    'aksum': { lat: 14.1209, lng: 38.7468 },
+    'axum': { lat: 14.1209, lng: 38.7468 },
+    'gondar': { lat: 12.6030, lng: 37.4521 },
+    'harar': { lat: 9.3100, lng: 42.1200 },
+    'danakil': { lat: 14.2417, lng: 40.3000 },
+    'bahir dar': { lat: 11.5936, lng: 37.3887 },
+    'addis ababa': { lat: 9.0222, lng: 38.7468 },
+    'addis': { lat: 9.0222, lng: 38.7468 },
+    'omo valley': { lat: 5.5000, lng: 36.5000 },
+    'omo': { lat: 5.5000, lng: 36.5000 },
+    'tana': { lat: 12.0000, lng: 37.2500 },
+    'lake tana': { lat: 12.0000, lng: 37.2500 },
+    'bale': { lat: 7.0000, lng: 39.7500 },
+    'bale mountains': { lat: 7.0000, lng: 39.7500 },
+    'tigray': { lat: 14.0323, lng: 38.3166 },
+    'sof omar': { lat: 6.9167, lng: 40.8333 },
+    'langano': { lat: 7.6000, lng: 38.7167 },
+    'lake langano': { lat: 7.6000, lng: 38.7167 },
+    'awash': { lat: 8.9833, lng: 40.1667 },
+    'dire dawa': { lat: 9.6000, lng: 41.8500 },
+    'jimma': { lat: 7.6667, lng: 36.8333 },
+    'arba minch': { lat: 6.0333, lng: 37.5500 },
+    'lalibela rock': { lat: 12.0319, lng: 39.0474 },
+    'blue nile': { lat: 11.4833, lng: 37.5833 },
+    'tis abay': { lat: 11.4833, lng: 37.5833 },
+    'wenchi': { lat: 8.9333, lng: 37.7833 },
+    'debre damo': { lat: 14.3694, lng: 39.1833 },
+    'yeha': { lat: 14.2833, lng: 39.0000 }
+};
+
+function getCoordinatesForPlace(placeName) {
+    const name = placeName.toLowerCase();
+    for (const [key, coords] of Object.entries(placeCoordinates)) {
+        if (name.includes(key) || key.includes(name.split(' ')[0].toLowerCase())) {
+            return coords;
+        }
+    }
+    // Default to center of Ethiopia with slight random offset
+    return { 
+        lat: 9.0 + (Math.random() * 4 - 2), 
+        lng: 38.7 + (Math.random() * 4 - 2) 
+    };
+}
+
+// Initialize Map
+const map = L.map('ethiopiaMap').setView([9.0, 38.7], 5.5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 18
+}).addTo(map);
+
+// Custom marker icon
+const placeIcon = L.divIcon({
+    className: 'custom-marker',
+    html: '<div style="background: #004d40; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; box-shadow: 0 3px 10px rgba(0,0,0,0.3); border: 2px solid white;"></div>',
+    iconSize: [30, 30],
+    iconAnchor: [15, 15]
+});
+
+// Add markers for each place from server data
+const places = <%- JSON.stringify(places) %>;
+const markers = [];
+
+places.forEach(function(place, index) {
+    const coords = getCoordinatesForPlace(place.name);
+    
+    const numberedIcon = L.divIcon({
+        className: 'custom-marker',
+        html: '<div style="background: linear-gradient(135deg, #004d40, #00796b); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; box-shadow: 0 3px 10px rgba(0,0,0,0.4); border: 2px solid white;">' + (index + 1) + '</div>',
+        iconSize: [32, 32],
+        iconAnchor: [16, 16]
+    });
+    
+    const marker = L.marker([coords.lat, coords.lng], { icon: numberedIcon }).addTo(map);
+    
+    marker.bindPopup(
+        '<div style="text-align:center; min-width: 180px;">' +
+        '<strong style="font-size: 1.1rem; color: #004d40;">#' + (index + 1) + ' ' + place.name + '</strong><br>' +
+        '<span style="color: #666; font-size: 0.85rem;">' + place.category + '</span><br>' +
+        '<a href="/place/' + place._id + '" style="display:inline-block; margin-top:8px; padding:5px 15px; background:#004d40; color:white; border-radius:20px; text-decoration:none; font-size:0.85rem;">View Details</a>' +
+        '</div>'
+    );
+    
+    markers.push(marker);
+});
+
+// Fit map to show all markers
+if (markers.length > 0) {
+    const group = new L.featureGroup(markers);
+    map.fitBounds(group.getBounds().pad(0.1));
+}
+
+function toggleMobileMenu() {
+    const nav = document.getElementById('mobile-nav');
+    nav.classList.toggle('active');
+}
+</script>
 </body>
 </html>
