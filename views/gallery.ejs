@@ -129,25 +129,32 @@ function getImageUrl(img) {
 }
 
 function getPlaceImages(place) {
-    const images = [];
-    if (place.image_url) {
-        images.push(getImageUrl(place.image_url));
-    }
+    var images = [];
+    var seen = {};
+
+    // gallery_images already includes the main image (added by server)
     if (place.gallery_images && place.gallery_images.length > 0) {
-        let galleryImgs = [];
+        var galleryImgs = [];
         if (typeof place.gallery_images === 'string') {
             try { galleryImgs = JSON.parse(place.gallery_images); } catch (e) { galleryImgs = []; }
         } else {
             galleryImgs = place.gallery_images;
         }
-        galleryImgs.forEach(img => {
-            const url = getImageUrl(img);
-            if (url) images.push(url);
+        galleryImgs.forEach(function(img) {
+            var url = getImageUrl(img);
+            if (url && !seen[url]) {
+                seen[url] = true;
+                images.push(url);
+            }
         });
     }
-    if (images.length === 0) {
-        images.push('https://picsum.photos/seed/' + encodeURIComponent(place.name) + '/600/400');
+
+    // If gallery_images was empty, use main image_url as fallback
+    if (images.length === 0 && place.image_url) {
+        var mainUrl = getImageUrl(place.image_url);
+        if (mainUrl) images.push(mainUrl);
     }
+
     return images;
 }
 
@@ -181,15 +188,28 @@ function displayPlaceCards(places) {
         return;
     }
 
+    // Only show places that have real images
+    var placesWithImages = filtered.filter(function(p) { return getPlaceImages(p).length > 0; });
+
+    if (placesWithImages.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <i class="fas fa-images" style="font-size: 3rem; color: #888; margin-bottom: 1rem;"></i>
+                <h3 data-en="No Photos Available" data-am="ፎቶዎች አልተገኙም">No Photos Available</h3>
+            </div>`;
+        window._filteredPlaces = placesWithImages;
+        return;
+    }
+
     let html = '';
-    filtered.forEach((place, idx) => {
+    placesWithImages.forEach((place, idx) => {
         const images = getPlaceImages(place);
         const coverImg = images[0];
         const imgCount = images.length;
         html += `
             <div class="gallery-place-card" onclick="openViewer(${idx})">
                 <div class="gallery-card-img">
-                    <img src="${coverImg}" alt="${place.name}" loading="lazy" onerror="this.src='https://picsum.photos/seed/${encodeURIComponent(place.name)}/600/400'">
+                    <img src="${coverImg}" alt="${place.name}" loading="lazy">
                     <div class="gallery-card-badge">${getCategoryIcon(place.category)}</div>
                     <div class="gallery-card-count"><i class="fas fa-images"></i> ${imgCount}</div>
                 </div>
@@ -202,7 +222,7 @@ function displayPlaceCards(places) {
     container.innerHTML = html;
 
     // Store filtered for viewer access
-    window._filteredPlaces = filtered;
+    window._filteredPlaces = placesWithImages;
 }
 
 function openViewer(placeIdx) {
@@ -239,10 +259,6 @@ function updateViewer() {
     var img = document.getElementById('viewerImage');
     var newSrc = viewerImages[viewerIndex];
     console.log('Showing image', viewerIndex + 1, 'of', viewerImages.length, ':', newSrc);
-    img.onerror = function() {
-        this.onerror = null;
-        this.src = 'https://picsum.photos/seed/place' + viewerIndex + Date.now() + '/600/400';
-    };
     img.src = newSrc;
     document.getElementById('viewerCounter').textContent = (viewerIndex + 1) + ' / ' + viewerImages.length;
 
@@ -255,7 +271,7 @@ function buildThumbnails() {
     var container = document.getElementById('viewerThumbs');
     if (viewerImages.length <= 1) { container.innerHTML = ''; return; }
     container.innerHTML = viewerImages.map(function(src, i) {
-        return '<img class="viewer-thumb ' + (i === 0 ? 'active' : '') + '" src="' + src + '" alt="Thumb ' + (i+1) + '" onclick="goToPhoto(' + i + ')" onerror="this.onerror=null;this.src=\'https://picsum.photos/seed/t' + i + '/100/70\'">';
+        return '<img class="viewer-thumb ' + (i === 0 ? 'active' : '') + '" src="' + src + '" alt="Thumb ' + (i+1) + '" onclick="goToPhoto(' + i + ')">';
     }).join('');
 }
 
