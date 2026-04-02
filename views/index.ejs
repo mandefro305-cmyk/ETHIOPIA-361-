@@ -105,7 +105,10 @@ async function loadPlaces() {
                 `}
                 <div class="card-content">
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
-                    <p class="card-description" data-en="${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 120) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</p>
+                    <p class="card-description" 
+                       data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" 
+                       data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}"
+                       style="max-height: 4.8rem; overflow: hidden;">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</p>
                 </div>
                 <div class="card-actions">
                     <button class="card-btn btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
@@ -182,16 +185,23 @@ function toggleMobileMenu() {
 function toggleReadMore(button) {
     const card = button.closest('.destination-card');
     const description = card.querySelector('.card-description');
+    const currentLang = document.documentElement.lang || 'en';
     
     if (description) {
-        if (description.style.maxHeight === 'none' || description.style.maxHeight === '') {
+        const isExpanded = description.style.maxHeight === 'none';
+        
+        if (isExpanded) {
+            // Collapse
             description.style.maxHeight = '4.8rem';
             description.style.overflow = 'hidden';
-            button.textContent = button.getAttribute('data-en') === 'Read More' ? 'Read More' : 'ተጨማሪ ያንብቡ';
+            button.textContent = currentLang === 'am' ? 'ተጨማሪ ያንብቡ' : 'Read More';
         } else {
+            // Expand
+            const fullText = currentLang === 'am' ? description.getAttribute('data-am') : description.getAttribute('data-en');
+            description.textContent = fullText;
             description.style.maxHeight = 'none';
             description.style.overflow = 'visible';
-            button.textContent = button.getAttribute('data-en') === 'Read More' ? 'Read Less' : 'ተጨማሪ ያንብቡ';
+            button.textContent = currentLang === 'am' ? 'ያነሰውን ያንብቡ' : 'Read Less';
         }
     }
 }
