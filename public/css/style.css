@@ -347,26 +347,20 @@ select#language option {
 
 .hero-video {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  min-width: 100%;
-  min-height: 100%;
-  width: auto;
-  height: auto;
-  transform: translateX(-50%) translateY(-50%);
-  z-index: -1;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  z-index: -1;
 }
 
 .hero-overlay {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 1;
   text-align: center;
-  padding: 10px 40px;
-  width: auto;
+  padding: 1rem 1.5rem;
+  max-width: 90%;
 }
 
 .hero h2 {
@@ -738,18 +732,13 @@ footer {
     height: 50vh;
     min-height: 250px;
   }
-
-  .hero-overlay {
-    padding: 15px;
-    width: 90%;
-  }
   
   .hero h2 {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
   }
   
   .hero p {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   
   .places-grid {
@@ -816,16 +805,16 @@ footer {
   }
   
   .hero {
-    height: 40vh;
-    min-height: 200px;
+    height: 35vh;
+    min-height: 180px;
   }
   
   .hero h2 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .hero p {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
   }
   
   .grid-container {
