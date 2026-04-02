@@ -399,9 +399,6 @@ select#language option {
   text-align: center;
   padding: 1.5rem 2rem;
   max-width: 90%;
-  background: rgba(0,0,0,0.3);
-  backdrop-filter: blur(4px);
-  border-radius: 16px;
 }
 
 .hero h2 {
