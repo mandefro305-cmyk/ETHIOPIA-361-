@@ -125,16 +125,14 @@ async function initializeDatabase() {
         await adminUser.save();
         console.log('Admin user created successfully');
 
-        // Check if sample places exist
-        const placesCount = await Place.countDocuments();
-        console.log('Current places count:', placesCount);
-        
-        if (placesCount === 0) {
-            console.log('Creating sample places...');
-            // Insert sample places
-            const samplePlaces = [
-                {
-                    name: 'Lalibela Rock-Hewn Churches',
+        // Always recreate sample places with real images
+        console.log('Clearing existing places and recreating with real images...');
+        await Place.deleteMany({});
+        console.log('Creating sample places...');
+        // Insert sample places
+        const samplePlaces = [
+            {
+                name: 'Lalibela Rock-Hewn Churches',
                     description: 'Lalibela is famous for its rock-hewn churches carved into stone during the 12th century. These magnificent churches are considered one of the wonders of the world.',
                     category: 'Historical & Cultural Sites',
                     category_icon: '🏛️',
@@ -148,15 +146,15 @@ async function initializeDatabase() {
                         accommodation: 'Various hotels and guesthouses available',
                         nearby_attractions: 'Yemrehana Kristos Church, Asheton Maryam Monastery'
                     },
-                    image_url: 'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela',
+                    image_url: '/uploads/images/image-1774348095544-243391367.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+1',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+2',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+3',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+4',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+5',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Lalibela+6'
+                        '/uploads/images/image-1774348095544-243391367.jpg',
+                        '/uploads/images/additional_images-1774349835723-710576150.jpg',
+                        '/uploads/images/additional_images-1774349891282-170302827.jpg',
+                        '/uploads/images/additional_images-1774350056990-769444031.jpg',
+                        '/uploads/images/additional_images-1774350133743-296989636.jpg',
+                        '/uploads/images/additional_images-1774350328810-963274291.jpg'
                     ]
                 },
                 {
@@ -174,36 +172,35 @@ async function initializeDatabase() {
                         accommodation: 'Camping sites and lodge available',
                         nearby_attractions: 'Chenek Camp, Imet Gogo, Sankaber Camp'
                     },
-                    image_url: 'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+Mountains',
+                    image_url: '/uploads/images/image-1774349332567-819111054.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
-                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+1',
-                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+2',
-                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+3',
-                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+4',
-                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+5',
-                        'https://via.placeholder.com/400x300/007bff/ffffff?text=Simien+6'
+                        '/uploads/images/image-1774349332567-819111054.jpg',
+                        '/uploads/images/additional_images-1774350380775-959920199.jpg',
+                        '/uploads/images/additional_images-1774350533360-213653322.jpg',
+                        '/uploads/images/additional_images-1774350814813-654356778.jpg',
+                        '/uploads/images/additional_images-1774350845299-527145360.jpg',
+                        '/uploads/images/additional_images-1774351068542-722786279.jpg'
                     ]
                 },
                 {
                     name: 'Entoto Park',
                     description: 'Entoto Park is a beautiful natural park overlooking Addis Ababa, offering stunning views, walking trails, and cultural experiences.',
-                    image_url: 'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+Park',
+                    image_url: '/uploads/images/image-1774349550575-560101554.jpg',
                     video_url: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
                     gallery_images: [
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+1',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+2',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+3',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+4',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+5',
-                        'https://via.placeholder.com/400x300/28a745/ffffff?text=Entoto+6'
+                        '/uploads/images/image-1774349550575-560101554.jpg',
+                        '/uploads/images/additional_images-1774351246861-532557193.jpg',
+                        '/uploads/images/additional_images-1774351523994-346573917.jpg',
+                        '/uploads/images/additional_images-1774352120265-787774579.jpg',
+                        '/uploads/images/additional_images-1774352163903-271439695.jpg',
+                        '/uploads/images/additional_images-1774352192362-281898948.jpg'
                     ]
                 }
             ];
 
             await Place.insertMany(samplePlaces);
-            console.log('Sample places created successfully');
-        }
+        console.log('Sample places created successfully');
 
         console.log('Database initialized successfully');
     } catch (error) {
