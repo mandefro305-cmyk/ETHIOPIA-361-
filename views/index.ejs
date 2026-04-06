@@ -1,40 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ethiopia 361°</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/ai-chat.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethiopia 361° - Discover the Land of Origins</title>
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="/css/modern-style.css">
+    <link rel="stylesheet" href="/css/ai-chat.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Meta Tags -->
+    <meta name="description" content="Discover Ethiopia's ancient wonders, stunning landscapes, and rich cultural heritage with Ethiopia 361°">
+    <meta name="keywords" content="Ethiopia tourism, travel Ethiopia, Lalibela, Simien Mountains, Addis Ababa">
+    <meta name="author" content="Ethiopia 361°">
 </head>
 
 <body>
 
-<header>
-    <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
-    <nav class="desktop-nav">
-        <a href="/" data-en="Home" data-am="ቤት">Home</a>
-        <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
-        <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
-        <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
-        <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
-        <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
-        <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
-    </nav>
-    <div class="header-right">
-        <div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
-        <select id="language" onchange="changeLanguage()">
-            <option value="en">English</option>
-            <option value="am">አማርኛ</option>
-        </select>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
+<!-- ===== MODERN HEADER ===== -->
+<header id="header">
+    <div class="header-container">
+        <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+        
+        <nav class="desktop-nav">
+            <a href="/" data-en="Home" data-am="ቤት">Home</a>
+            <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+            <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+            <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+            <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+            <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+            <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+        </nav>
+        
+        <div class="header-right">
+            <select id="language" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="am">አማርኛ</option>
+            </select>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </div>
 </header>
+
+<!-- ===== MOBILE NAVIGATION ===== -->
 <nav class="mobile-nav" id="mobile-nav">
     <a href="/" data-en="Home" data-am="ቤት">Home</a>
     <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
@@ -45,27 +61,53 @@
     <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
 </nav>
 
+<!-- ===== MODERN HERO SECTION ===== -->
 <section class="hero">
     <video autoplay muted loop playsinline class="hero-video">
         <source src="/videos/hero-background.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-    <div class="hero-overlay">
-        <h2 data-en="Discover the Beauty of Ethiopia" data-am="የኢትዮጵያን ውበት ያግኙ">Discover the Beauty of Ethiopia</h2>
-        <p data-en="Explore history, mountains and culture." data-am="ታሪክ፣ ተራሮች እና ባህልን ያስሱ">Explore history, mountains and culture.</p>
+    
+    <div class="hero-overlay"></div>
+    
+    <div class="hero-content">
+        <h2 data-en="Discover the Land of Origins" data-am="የመነጽዐ ሀገርን ያግኙ">Discover the Land of Origins</h2>
+        <p data-en="From ancient rock-hewn churches to breathtaking mountains, experience Ethiopia's timeless wonders" data-am="ከቅዱሳን የተፈተኑ አብያተርፎች እስከ ያማቅ ተራራዎች፣ የኢትዮጵያን የማይጠፋ ድንቅ ያግኙ">
+            From ancient rock-hewn churches to breathtaking mountains, experience Ethiopia's timeless wonders
+        </p>
+        <a href="#destinations" class="hero-cta">
+            <i class="fas fa-compass"></i>
+            <span data-en="Explore Destinations" data-am="መዳረሻዎችን ይመልከቱ">Explore Destinations</span>
+        </a>
     </div>
 </section>
 
-<section class="places-grid">
-<h2 data-en="Top Destinations" data-am="ከፍተኛ መዳረሻዎች">Top Destinations</h2>
-<div class="grid-container" id="placesGrid">
-    <!-- Loading spinner -->
-    <div id="placesLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-        <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-        <p style="margin-top: 1rem; color: #888;" data-en="Loading destinations..." data-am="መዳረሻዎችን በመጫን ላይ...">Loading destinations...</p>
+<!-- ===== DESTINATIONS SECTION ===== -->
+<section class="destinations" id="destinations">
+    <div class="container">
+        <div class="section-header">
+            <h2 data-en="Featured Destinations" data-am="የተመረጡ መዳረሻዎች">Featured Destinations</h2>
+            <p data-en="Journey through Ethiopia's most iconic and breathtaking locations" data-am="በኢትዮጵያ ውስጥ ያሉትን ታላላኅሉና ያማቅ ቦታዎች ይጎብኙ">
+                Journey through Ethiopia's most iconic and breathtaking locations
+            </p>
+        </div>
+        
+        <div class="places-grid" id="placesGrid">
+            <!-- Loading spinner -->
+            <div id="placesLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-600); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                <p style="margin-top: 1rem; color: #888;" data-en="Loading destinations..." data-am="መዳረሻዎችን በመጫን ላይ...">Loading destinations...</p>
+            </div>
+            <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+        </div>
+        
+        <div class="text-center">
+            <a href="/destinations" class="btn btn-primary" style="display: inline-flex; width: auto;">
+                <i class="fas fa-map-marked-alt"></i>
+                <span data-en="View All Destinations" data-am="ሁሉንም መዳረሻዎች ይመልከቱ">View All Destinations</span>
+            </a>
+        </div>
     </div>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-</div>
 </section>
 
 <script>
@@ -102,36 +144,70 @@ async function loadPlaces() {
             return;
         }
         
-        container.innerHTML = places.map(place => `
-            <div class="destination-card">
-                ${place.image_url && place.image_url !== '' ? `
-                    ${place.image_url.startsWith('http') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image" loading="lazy">`
-                        : place.image_url.startsWith('/uploads/') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="card-image" loading="lazy">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="card-image" loading="lazy" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
-                    }
-                ` : `
-                    <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="card-image" loading="lazy">
-                `}
-                <div class="card-content">
-                    <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
-                    <p class="card-description" 
-                       data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" 
-                       data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}"
-                       style="max-height: 4.8rem; overflow: hidden;">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</p>
+        container.innerHTML = places.map(place => {
+            // Get image URL
+            let imageUrl = '';
+            if (place.image_url && place.image_url !== '') {
+                if (place.image_url.startsWith('http')) {
+                    imageUrl = place.image_url;
+                } else if (place.image_url.startsWith('/uploads/')) {
+                    imageUrl = place.image_url;
+                } else {
+                    imageUrl = `/img/${place.image_url}`;
+                }
+            } else {
+                imageUrl = `https://picsum.photos/seed/${place.name}/400/250.jpg`;
+            }
+            
+            // Get category icon
+            const categoryIcons = {
+                'Historical & Cultural Sites': '🏛️',
+                'Nature & Mountains': '🌄',
+                'Lakes & Water Attractions': '🌊',
+                'Unique & Adventure Destinations': '🌋',
+                'Cities & Urban Tourism': '🏙️',
+                'Relaxation & Resort Areas': '🌿'
+            };
+            const categoryIcon = categoryIcons[place.category] || '📍';
+            
+            return `
+            <div class="place-card" onclick="window.location.href='/place/${place._id}'">
+                <div class="place-card-image">
+                    <img src="${imageUrl}" alt="${place.name}" loading="lazy" 
+                         onerror="this.src='https://picsum.photos/seed/${place.name}/400/250.jpg'">
+                    
+                    <div class="place-card-overlay"></div>
+                    <div class="place-card-category">
+                        ${categoryIcon} ${place.category || 'Destination'}
+                    </div>
                 </div>
-                <div class="card-actions">
-                    <button class="card-btn btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
-                    <a href="/place/${place._id.toString()}" class="card-btn btn-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
-                    ${place.video_url ? `
-                        <button class="card-btn btn-video" onclick="showVideo('${place.video_url}', '${place.name}')">
-                            <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
-                        </button>
-                    ` : ''}
+                
+                <div class="place-card-content">
+                    <h3>${place.name}</h3>
+                    <p>${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia.'}</p>
+                    
+                    <div class="place-card-actions">
+                        <a href="/place/${place._id}" class="btn btn-primary">
+                            <i class="fas fa-info-circle"></i>
+                            <span data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</span>
+                        </a>
+                        
+                        ${place.video_url && place.video_url !== '' ? `
+                            <a href="/place/${place._id}#video" class="btn btn-secondary">
+                                <i class="fas fa-play"></i>
+                                <span data-en="Watch Video" data-am="ቪዲዮ ይመልከቱ">Watch Video</span>
+                            </a>
+                        ` : `
+                            <a href="/place/${place._id}#gallery" class="btn btn-secondary">
+                                <i class="fas fa-images"></i>
+                                <span data-en="View Gallery" data-am="ጋለሪ ይመልከቱ">View Gallery</span>
+                            </a>
+                        `}
+                    </div>
                 </div>
             </div>
-        `).join('');
+        `;
+        }).join('');
         
     } catch (error) {
         console.error('Error loading places:', error);
@@ -156,29 +232,159 @@ document.addEventListener('DOMContentLoaded', loadPlaces);
     <a href="/destinations" class="nav-cta" data-en="View All Destinations" data-am="ሁሉንን መዳረሻዎችን ይመልከቱ" style="display: inline-block; text-decoration: none; padding: 1rem 2.5rem; font-size: 1.1rem;">View All Destinations</a>
 </section>
 
-<footer>
-    <div style="text-align: center; padding: 2rem; background: var(--primary-color); color: white;">
-        <p style="margin-bottom: 1rem;">© 2026 Ethiopia 361°</p>
-        <div class="footer-social" style="display: flex; justify-content: center; gap: 1rem; margin-bottom: 1rem;">
-            <a href="https://www.facebook.com/profile.php?id=61558024743838&mibextid=rS40aB7S9Ucbxw6v" target="_blank" style="color: white; font-size: 1.2rem; transition: transform 0.3s ease;" title="Facebook">
-                <i class="fab fa-facebook-f"></i>
-            </a>
-            <a href="https://x.com/Abebech1447551" target="_blank" style="color: white; font-size: 1.2rem; transition: transform 0.3s ease;" title="X (Twitter)">
-                <i class="fab fa-x-twitter"></i>
-            </a>
-            <a href="https://www.instagram.com/belonayalew?igsh=eW9reWZ1YWgycjF6" target="_blank" style="color: white; font-size: 1.2rem; transition: transform 0.3s ease;" title="Instagram">
-                <i class="fab fa-instagram"></i>
-            </a>
-            <a href="https://t.me/mande11" target="_blank" style="color: white; font-size: 1.2rem; transition: transform 0.3s ease;" title="Telegram">
-                <i class="fab fa-telegram"></i>
-            </a>
+<!-- ===== MODERN FOOTER ===== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Ethiopia 361°</h3>
+                <p data-en="Your gateway to discovering the wonders of Ethiopia, from ancient history to natural beauty." data-am="ወደ ኢትዮጵያን ድንቅ የሚያስተላልፍ የእርስዎ መግቢያ">
+                    Your gateway to discovering the wonders of Ethiopia, from ancient history to natural beauty.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-en="Quick Links" data-am="ፈጣን አገናኞች">Quick Links</h4>
+                <ul>
+                    <li><a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a></li>
+                    <li><a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a></li>
+                    <li><a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a></li>
+                    <li><a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-en="Connect" data-am="ይገናኑ">Connect</h4>
+                <div class="social-links">
+                    <a href="https://www.facebook.com/profile.php?id=61558024743838&mibextid=rS40aB7S9Ucbxw6v" target="_blank" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="https://x.com/Abebech1447551" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/ethiopia361" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.youtube.com/@ethiopia361" target="_blank" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
         </div>
-        <p style="font-size: 0.9rem; opacity: 0.8;">Follow us for updates</p>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Ethiopia 361°. <span data-en="All rights reserved." data-am="መብቱ በሙሉ የተጠበቀ">All rights reserved.</span></p>
+        </div>
     </div>
 </footer>
 
-<script src="js/language.js"></script>
-<script src="js/ai-chat.js"></script>
+<!-- ===== FLOATING AI CHAT ===== -->
+<div id="ai-chat-container" class="ai-chat-container">
+    <div id="chat-toggle" class="chat-toggle">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div id="chat-box" class="chat-box">
+        <div class="chat-header">
+            <h4>Travel Assistant</h4>
+            <button id="close-chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Hello! I'm your Ethiopia travel assistant. How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input-field" placeholder="Ask about Ethiopia...">
+            <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<script src="/js/language.js"></script>
+<script src="/js/ai-chat.js"></script>
+<script>
+// Header scroll effect
+window.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    mobileNav.classList.toggle('active');
+    
+    // Animate hamburger menu
+    const spans = menuBtn.querySelectorAll('span');
+    if (mobileNav.classList.contains('active')) {
+        spans[0].style.transform = 'rotate(45deg) translateY(8px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translateY(-8px)';
+    } else {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+}
+
+// Smooth scroll for anchor links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (!mobileNav.contains(event.target) && !menuBtn.contains(event.target)) {
+        mobileNav.classList.remove('active');
+        
+        // Reset hamburger menu
+        const spans = menuBtn.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+});
+
+// Add entrance animations on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Observe all place cards after they're loaded
+const observeCards = () => {
+    document.querySelectorAll('.place-card').forEach(card => {
+        card.style.opacity = '0';
+        observer.observe(card);
+    });
+};
+
+// Call observeCards after places are loaded
+const originalLoadPlaces = loadPlaces;
+loadPlaces = async function() {
+    await originalLoadPlaces();
+    observeCards();
+};
+</script>
 <script>
 function toggleMobileMenu() {
     const mobileNav = document.getElementById('mobile-nav');
