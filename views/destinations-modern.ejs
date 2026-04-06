@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destinations - Ethiopia 361°</title>
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="/css/modern-style.css">
+    <link rel="stylesheet" href="/css/ai-chat.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<!-- ===== MODERN HEADER ===== -->
+<header id="header">
+    <div class="header-container">
+        <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
+        
+        <nav class="desktop-nav">
+            <a href="/" data-en="Home" data-am="ቤት">Home</a>
+            <a href="/destinations" class="active" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+            <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+            <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+            <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+            <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+            <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+        </nav>
+        
+        <div class="header-right">
+            <select id="language" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="am">አማርኛ</option>
+            </select>
+            
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<!-- ===== MOBILE NAVIGATION ===== -->
+<nav class="mobile-nav" id="mobile-nav">
+    <a href="/" data-en="Home" data-am="ቤት">Home</a>
+    <a href="/destinations" class="active" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
+    <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
+    <a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
+    <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
+    <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
+    <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
+</nav>
+
+<!-- ===== PAGE HERO ===== -->
+<section class="page-hero">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+        <h1 data-en="Discover Ethiopia's Destinations" data-am="የኢትዮጵያን መዳረሻዎች ያግኙ">Discover Ethiopia's Destinations</h1>
+        <p data-en="Explore ancient wonders, breathtaking landscapes, and vibrant cultures across the Land of Origins" data-am="በመነጽዐ ሀገር ውስጥ ያሉትን ቅዱሳን ድንቅ፣ ያማቅ መልክያዎች እና የበለጠ ባህሎች ይመልከቱ">
+            Explore ancient wonders, breathtaking landscapes, and vibrant cultures across the Land of Origins
+        </p>
+    </div>
+</section>
+
+<!-- ===== DESTINATIONS SECTION ===== -->
+<section class="destinations">
+    <div class="container">
+        <!-- Category Filters -->
+        <div class="category-filters">
+            <button class="filter-btn active" data-category="all">
+                <i class="fas fa-globe"></i>
+                <span data-en="All Places" data-am="ሁሉም ቦታዎች">All Places</span>
+            </button>
+            <button class="filter-btn" data-category="Historical & Cultural Sites">
+                <i class="fas fa-landmark"></i>
+                <span data-en="Historical" data-am="ታሪካዊ">Historical</span>
+            </button>
+            <button class="filter-btn" data-category="Nature & Mountains">
+                <i class="fas fa-mountain"></i>
+                <span data-en="Nature" data-am="ተፈጥሯዊ">Nature</span>
+            </button>
+            <button class="filter-btn" data-category="Lakes & Water Attractions">
+                <i class="fas fa-water"></i>
+                <span data-en="Lakes" data-am="ሀይቆች">Lakes</span>
+            </button>
+            <button class="filter-btn" data-category="Unique & Adventure Destinations">
+                <i class="fas fa-compass"></i>
+                <span data-en="Adventure" data-am="ተሳታፊ">Adventure</span>
+            </button>
+            <button class="filter-btn" data-category="Cities & Urban Tourism">
+                <i class="fas fa-city"></i>
+                <span data-en="Cities" data-am="ከተሞች">Cities</span>
+            </button>
+        </div>
+
+        <!-- Places Grid -->
+        <div class="places-grid" id="places-grid">
+            <% places.forEach(function(place) { %>
+            <div class="place-card" data-category="<%= place.category %>" onclick="window.location.href='/place/<%= place._id %>'">
+                <div class="place-card-image">
+                    <% if(place.image_url && place.image_url !== '') { %>
+                        <% if(place.image_url.startsWith('http')) { %>
+                            <img src="<%= place.image_url %>" alt="<%= place.name %>" loading="lazy">
+                        <% } else if(place.image_url.startsWith('/uploads/')) { %>
+                            <img src="<%= place.image_url %>" alt="<%= place.name %>" loading="lazy">
+                        <% } else { %>
+                            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" loading="lazy">
+                        <% } %>
+                    <% } else { %>
+                        <img src="https://picsum.photos/seed/<%= place.name %>/400/250.jpg" alt="<%= place.name %>" loading="lazy">
+                    <% } %>
+                    
+                    <div class="place-card-overlay"></div>
+                    <div class="place-card-category">
+                        <%= place.category_icon || '📍' %> <%= place.category || 'Destination' %>
+                    </div>
+                </div>
+                
+                <div class="place-card-content">
+                    <h3><%= place.name %></h3>
+                    <p><%= place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia.' %></p>
+                    
+                    <div class="place-card-meta">
+                        <div class="place-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>4.5</span>
+                        </div>
+                        <div class="place-duration">
+                            <i class="fas fa-clock"></i>
+                            <span>2-3 days</span>
+                        </div>
+                    </div>
+                    
+                    <div class="place-card-actions">
+                        <a href="/place/<%= place._id %>" class="btn btn-primary">
+                            <i class="fas fa-info-circle"></i>
+                            <span data-en="Explore" data-am="ይመልከቱ">Explore</span>
+                        </a>
+                        
+                        <% if(place.video_url && place.video_url !== '') { %>
+                            <a href="/place/<%= place._id %>#video" class="btn btn-secondary">
+                                <i class="fas fa-play"></i>
+                            </a>
+                        <% } else { %>
+                            <a href="/place/<%= place._id %>#gallery" class="btn btn-secondary">
+                                <i class="fas fa-images"></i>
+                            </a>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </div>
+
+        <!-- No Results Message -->
+        <div class="no-results" id="no-results" style="display: none;">
+            <i class="fas fa-search"></i>
+            <h3 data-en="No places found" data-am="ምንም ቦታዎች አልተገኙም">No places found</h3>
+            <p data-en="Try selecting a different category" data-am="የተለየ ምድብ ይሞክሩ">Try selecting a different category</p>
+        </div>
+    </div>
+</section>
+
+<!-- ===== MODERN FOOTER ===== -->
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Ethiopia 361°</h3>
+                <p data-en="Your gateway to discovering the wonders of Ethiopia, from ancient history to natural beauty." data-am="ወደ ኢትዮጵያን ድንቅ የሚያስተላልፍ የእርስዎ መግቢያ">
+                    Your gateway to discovering the wonders of Ethiopia, from ancient history to natural beauty.
+                </p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-en="Quick Links" data-am="ፈጣን አገናኞች">Quick Links</h4>
+                <ul>
+                    <li><a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a></li>
+                    <li><a href="/gallery" data-en="Gallery" data-am="ጋለሪ">Gallery</a></li>
+                    <li><a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a></li>
+                    <li><a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-en="Connect" data-am="ይገናኑ">Connect</h4>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>&copy; 2026 Ethiopia 361°. <span data-en="All rights reserved." data-am="መብቱ በሙሉ የተጠበቀ">All rights reserved.</span></p>
+        </div>
+    </div>
+</footer>
+
+<!-- ===== FLOATING AI CHAT ===== -->
+<div id="ai-chat-container" class="ai-chat-container">
+    <div id="chat-toggle" class="chat-toggle">
+        <i class="fas fa-comments"></i>
+    </div>
+    <div id="chat-box" class="chat-box">
+        <div class="chat-header">
+            <h4>Travel Assistant</h4>
+            <button id="close-chat">&times;</button>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot">
+                Hello! I'm your Ethiopia travel assistant. How can I help you today?
+            </div>
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input-field" placeholder="Ask about Ethiopia...">
+            <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== JAVASCRIPT ===== -->
+<script src="/js/language.js"></script>
+<script src="/js/ai-chat.js"></script>
+<script>
+// Header scroll effect
+window.addEventListener('scroll', function() {
+    const header = document.getElementById('header');
+    if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+    } else {
+        header.classList.remove('scrolled');
+    }
+});
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    mobileNav.classList.toggle('active');
+    
+    // Animate hamburger menu
+    const spans = menuBtn.querySelectorAll('span');
+    if (mobileNav.classList.contains('active')) {
+        spans[0].style.transform = 'rotate(45deg) translateY(8px)';
+        spans[1].style.opacity = '0';
+        spans[2].style.transform = 'rotate(-45deg) translateY(-8px)';
+    } else {
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+}
+
+// Category Filter Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const placeCards = document.querySelectorAll('.place-card');
+    const noResults = document.getElementById('no-results');
+    
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Add active class to clicked button
+            this.classList.add('active');
+            
+            const category = this.getAttribute('data-category');
+            let visibleCount = 0;
+            
+            placeCards.forEach(card => {
+                if (category === 'all' || card.getAttribute('data-category') === category) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                    // Add animation
+                    card.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+        });
+    });
+});
+
+// Close mobile menu when clicking outside
+document.addEventListener('click', function(event) {
+    const mobileNav = document.getElementById('mobile-nav');
+    const menuBtn = document.querySelector('.mobile-menu-btn');
+    
+    if (!mobileNav.contains(event.target) && !menuBtn.contains(event.target)) {
+        mobileNav.classList.remove('active');
+        
+        // Reset hamburger menu
+        const spans = menuBtn.querySelectorAll('span');
+        spans[0].style.transform = 'none';
+        spans[1].style.opacity = '1';
+        spans[2].style.transform = 'none';
+    }
+});
+
+// Add entrance animations on scroll
+const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const observer = new IntersectionObserver(function(entries) {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+            observer.unobserve(entry.target);
+        }
+    });
+}, observerOptions);
+
+// Observe all place cards
+document.querySelectorAll('.place-card').forEach(card => {
+    card.style.opacity = '0';
+    observer.observe(card);
+});
+</script>
+
+<style>
+/* ===== PAGE HERO ===== */
+.page-hero {
+    position: relative;
+    height: 60vh;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--primary-800), var(--primary-600));
+    margin-top: 80px;
+}
+
+.page-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('https://picsum.photos/seed/ethiopia-destinations/1920/800.jpg') center/cover;
+    opacity: 0.3;
+    z-index: 1;
+}
+
+.page-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(0, 68, 57, 0.9) 0%,
+        rgba(0, 128, 112, 0.7) 100%
+    );
+    z-index: 2;
+}
+
+.page-hero-content {
+    position: relative;
+    z-index: 3;
+    text-align: center;
+    color: white;
+    max-width: 800px;
+    padding: 0 var(--space-6);
+    animation: fadeInUp 1s ease-out;
+}
+
+.page-hero-content h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: var(--space-6);
+    text-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+}
+
+.page-hero-content p {
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+    font-weight: 400;
+    margin-bottom: 0;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 10px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== CATEGORY FILTERS ===== */
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    justify-content: center;
+    margin-bottom: var(--space-12);
+    padding: var(--space-6);
+    background: var(--neutral-50);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--neutral-200);
+}
+
+.filter-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-5);
+    background: white;
+    border: 2px solid var(--neutral-200);
+    border-radius: var(--radius-lg);
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--neutral-600);
+    cursor: pointer;
+    transition: all var(--transition);
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-400);
+    color: var(--primary-600);
+    background: var(--primary-50);
+}
+
+.filter-btn.active {
+    background: var(--primary-600);
+    border-color: var(--primary-600);
+    color: white;
+    box-shadow: var(--shadow-md);
+}
+
+.filter-btn i {
+    font-size: 1rem;
+}
+
+/* ===== PLACE CARD META ===== */
+.place-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-4);
+    padding: var(--space-3) 0;
+    border-top: 1px solid var(--neutral-200);
+    border-bottom: 1px solid var(--neutral-200);
+}
+
+.place-rating {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 0.875rem;
+    color: var(--secondary-600);
+}
+
+.place-rating i {
+    color: var(--secondary-500);
+}
+
+.place-duration {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    font-size: 0.875rem;
+    color: var(--neutral-500);
+}
+
+/* ===== NO RESULTS ===== */
+.no-results {
+    text-align: center;
+    padding: var(--space-16) var(--space-6);
+    color: var(--neutral-500);
+}
+
+.no-results i {
+    font-size: 4rem;
+    margin-bottom: var(--space-4);
+    color: var(--neutral-300);
+}
+
+.no-results h3 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-2);
+    color: var(--neutral-600);
+}
+
+.no-results p {
+    color: var(--neutral-500);
+}
+
+/* ===== ACTIVE NAVIGATION ===== */
+.desktop-nav a.active,
+.mobile-nav a.active {
+    color: var(--primary-600);
+    background: var(--primary-50);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .page-hero {
+        margin-top: 70px;
+        min-height: 300px;
+    }
+    
+    .category-filters {
+        padding: var(--space-4);
+        gap: var(--space-2);
+    }
+    
+    .filter-btn {
+        padding: var(--space-2) var(--space-4);
+        font-size: 0.875rem;
+    }
+    
+    .filter-btn span {
+        display: none;
+    }
+    
+    .place-card-meta {
+        flex-direction: column;
+        gap: var(--space-2);
+        align-items: flex-start;
+    }
+}
+</style>
+
+</body>
+</html>
