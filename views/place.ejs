@@ -235,11 +235,23 @@
     <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
 </nav>
 
-<section class="hero">
+<%
+let heroBgUrl = '';
+if(place.image_url && place.image_url !== '') {
+    if(place.image_url.startsWith('http') || place.image_url.startsWith('/uploads/')) {
+        heroBgUrl = place.image_url;
+    } else {
+        heroBgUrl = '/img/' + place.image_url;
+    }
+}
+%>
+<section class="hero" style="<%- heroBgUrl ? `background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${heroBgUrl}'); background-size: cover; background-position: center;` : '' %>">
+    <% if (!heroBgUrl) { %>
     <video autoplay muted loop playsinline class="hero-video">
         <source src="/videos/hero-background.mp4" type="video/mp4">
         Your browser does not support video tag.
     </video>
+    <% } %>
     <div class="hero-overlay">
         <h2 data-en="<%= place.name %>" data-am="<%= place.name_am || place.name %>"><%= place.name %></h2>
         <p data-en="Discover this amazing destination in Ethiopia" data-am="ይህንን የሚያምር የኢትዮጵያን መዳረሻዎች">Discover this amazing destination in Ethiopia</p>
