@@ -196,11 +196,12 @@
                 <label>Category:</label>
                 <select name="category" required>
                     <option value="">Select Category</option>
-                    <option value="Historical" <%= place.category === 'Historical' ? 'selected' : '' %>>Historical</option>
-                    <option value="Natural" <%= place.category === 'Natural' ? 'selected' : '' %>>Natural</option>
-                    <option value="Cultural" <%= place.category === 'Cultural' ? 'selected' : '' %>>Cultural</option>
-                    <option value="Religious" <%= place.category === 'Religious' ? 'selected' : '' %>>Religious</option>
-                    <option value="Adventure" <%= place.category === 'Adventure' ? 'selected' : '' %>>Adventure</option>
+                    <option value="Historical & Cultural Sites" <%= place.category === 'Historical & Cultural Sites' ? 'selected' : '' %>>🏛️ Historical & Cultural Sites</option>
+                    <option value="Nature & Mountains" <%= place.category === 'Nature & Mountains' ? 'selected' : '' %>>🌄 Nature & Mountains</option>
+                    <option value="Unique & Adventure Destinations" <%= place.category === 'Unique & Adventure Destinations' ? 'selected' : '' %>>🌋 Unique & Adventure Destinations</option>
+                    <option value="Lakes & Water Attractions" <%= place.category === 'Lakes & Water Attractions' ? 'selected' : '' %>>🌊 Lakes & Water Attractions</option>
+                    <option value="Cities & Urban Tourism" <%= place.category === 'Cities & Urban Tourism' ? 'selected' : '' %>>🏙️ Cities & Urban Tourism</option>
+                    <option value="Relaxation & Resort Areas" <%= place.category === 'Relaxation & Resort Areas' ? 'selected' : '' %>>🌿 Relaxation & Resort Areas</option>
                 </select>
             </div>
             

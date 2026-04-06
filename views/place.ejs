@@ -179,18 +179,20 @@
         z-index: 1;
     }
     
-    /* Background Image Section */
+    /* Background Image Section Inside Container */
     .place-background-section {
         position: relative;
         width: 100%;
-        height: 60vh;
-        min-height: 400px;
+        height: 300px;
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         display: flex;
         align-items: center;
         justify-content: center;
+        border-radius: 8px;
+        margin: 20px 0;
+        overflow: hidden;
     }
     
     .place-background-overlay {
@@ -199,7 +201,7 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: rgba(0, 0, 0, 0.4);
+        background: rgba(0, 0, 0, 0.3);
         z-index: 1;
     }
     
@@ -212,14 +214,14 @@
     }
     
     .place-background-content h2 {
-        font-size: 3rem;
-        margin-bottom: 1rem;
-        text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        font-size: 2.5rem;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     }
     
     .place-background-content p {
-        font-size: 1.2rem;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+        font-size: 1.1rem;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
 
     /* Responsive */
@@ -230,16 +232,16 @@
         }
         
         .place-background-section {
-            height: 40vh;
-            min-height: 300px;
+            height: 200px;
+            margin: 15px 0;
         }
         
         .place-background-content h2 {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
         
         .place-background-content p {
-            font-size: 1rem;
+            font-size: 0.9rem;
         }
         
         .gallery-grid {
@@ -302,29 +304,30 @@
     </div>
 </section>
 
-<!-- Background Image Section -->
-<% if(place.image_url && place.image_url !== '') { %>
-    <% 
-    let backgroundImageUrl = '';
-    if(place.image_url.startsWith('http')) {
-        backgroundImageUrl = place.image_url;
-    } else if(place.image_url.startsWith('/uploads/')) {
-        backgroundImageUrl = place.image_url;
-    } else {
-        backgroundImageUrl = '/img/' + place.image_url;
-    }
-    %>
-    <div class="place-background-section" style="background-image: url('<%= backgroundImageUrl %>');">
-        <div class="place-background-overlay"></div>
-        <div class="place-background-content">
-            <h2><%= place.name %></h2>
-            <p data-en="Discover this amazing destination in Ethiopia" data-am="ይህንን የሚያምር የኢትዮጵያን መዳረሻዎች">Discover this amazing destination in Ethiopia</p>
-        </div>
-    </div>
-<% } %>
-
 <div class="place-detail">
     <a href="/" class="back-btn">&larr; Back to Destinations</a>
+    
+    <!-- Background Image Section Inside White Container -->
+    <% if(place.image_url && place.image_url !== '') { %>
+        <% 
+        let backgroundImageUrl = '';
+        if(place.image_url.startsWith('http')) {
+            backgroundImageUrl = place.image_url;
+        } else if(place.image_url.startsWith('/uploads/')) {
+            backgroundImageUrl = place.image_url;
+        } else {
+            backgroundImageUrl = '/img/' + place.image_url;
+        }
+        %>
+        <div class="place-background-section" style="background-image: url('<%= backgroundImageUrl %>');">
+            <div class="place-background-overlay"></div>
+            <div class="place-background-content">
+                <h2><%= place.name %></h2>
+                <p data-en="Discover this amazing destination in Ethiopia" data-am="ይህንን የሚያምር የኢትዮጵያን መዳረሻዎች">Discover this amazing destination in Ethiopia</p>
+            </div>
+        </div>
+    <% } %>
+    
     <h2><%= place.name %></h2>
     
     <% if(place.image_url && place.image_url !== '') { %>

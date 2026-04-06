@@ -125,12 +125,12 @@ async function initializeDatabase() {
         await adminUser.save();
         console.log('Admin user created successfully');
 
-        // Always recreate sample places with real images
-        console.log('Clearing existing places and recreating with real images...');
-        await Place.deleteMany({});
-        console.log('Creating sample places...');
-        // Insert sample places
-        const samplePlaces = [
+        // Check if sample places exist
+        const placesCount = await Place.countDocuments();
+        if (placesCount === 0) {
+            console.log('Creating sample places...');
+            // Insert sample places
+            const samplePlaces = [
             {
                 name: 'Lalibela Rock-Hewn Churches',
                     description: 'Lalibela is famous for its rock-hewn churches carved into stone during the 12th century. These magnificent churches are considered one of the wonders of the world.',
@@ -200,7 +200,10 @@ async function initializeDatabase() {
             ];
 
             await Place.insertMany(samplePlaces);
-        console.log('Sample places created successfully');
+            console.log('Sample places created successfully');
+        } else {
+            console.log(`Found ${placesCount} existing places, skipping sample creation.`);
+        }
 
         console.log('Database initialized successfully');
     } catch (error) {
