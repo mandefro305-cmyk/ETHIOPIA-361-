@@ -199,6 +199,64 @@
         }
     }
 </style>
+
+<%
+// Prepare background image URL
+let bgImageUrl = '';
+if(place.image_url && place.image_url !== '') {
+    if(place.image_url.startsWith('http')) {
+        bgImageUrl = place.image_url;
+    } else if(place.image_url.startsWith('/uploads/')) {
+        bgImageUrl = place.image_url;
+    } else {
+        bgImageUrl = '/img/' + place.image_url;
+    }
+}
+%>
+
+<style>
+    body {
+        <% if(bgImageUrl) { %>
+        background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('<%- bgImageUrl %>');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        <% } %>
+    }
+
+    body.dark-mode {
+        <% if(bgImageUrl) { %>
+        background-image: linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.85)), url('<%- bgImageUrl %>');
+        <% } %>
+    }
+
+    .place-detail {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+    }
+
+    body.dark-mode .place-detail {
+        background: rgba(30, 30, 30, 0.95);
+    }
+
+    .description-section {
+        background: rgba(248, 249, 250, 0.9) !important;
+    }
+
+    body.dark-mode .description-section {
+        background: rgba(40, 40, 40, 0.9) !important;
+    }
+
+    .place-map-section {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+    }
+
+    body.dark-mode .place-map-section {
+        background: rgba(30, 30, 30, 0.9);
+    }
+</style>
+
 </head>
 
 <body>
