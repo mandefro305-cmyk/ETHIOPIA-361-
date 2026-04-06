@@ -1,0 +1,64 @@
+<!-- Premium Destination Card Component - Reusable across all pages -->
+<% 
+function getCategoryIcon(category) {
+    const icons = {
+        'Historical & Cultural Sites': '🏛️',
+        'Nature & Mountains': '🌄', 
+        'Lakes & Water Attractions': '🌊',
+        'Unique & Adventure Destinations': '🌋',
+        'Cities & Urban Tourism': '🏙️',
+        'Relaxation & Resort Areas': '🌿'
+    };
+    return icons[category] || '📍';
+}
+
+function getImageUrl(place) {
+    if (place.image_url && place.image_url !== '') {
+        if (place.image_url.startsWith('http')) {
+            return place.image_url;
+        } else if (place.image_url.startsWith('/uploads/')) {
+            return place.image_url;
+        } else {
+            return `/img/${place.image_url}`;
+        }
+    } else {
+        return `https://picsum.photos/seed/${place.name}/400/250.jpg`;
+    }
+}
+%>
+
+<div class="place-card" onclick="window.location.href='/place/<%= place._id %>'">
+    <div class="place-card-image">
+        <img src="<%= getImageUrl(place) %>" alt="<%= place.name %>" loading="lazy" 
+             onerror="this.src='https://picsum.photos/seed/<%= place.name %>/400/250.jpg'">
+        
+        <div class="place-card-overlay"></div>
+        <div class="place-card-category">
+            <%= getCategoryIcon(place.category) %> <%= place.category || 'Destination' %>
+        </div>
+    </div>
+    
+    <div class="place-card-content">
+        <h3><%= place.name %></h3>
+        <p><%= place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia.' %></p>
+        
+        <div class="place-card-actions">
+            <a href="/place/<%= place._id %>" class="btn btn-primary">
+                <i class="fas fa-info-circle"></i>
+                <span data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</span>
+            </a>
+            
+            <% if(place.video_url && place.video_url !== '') { %>
+                <a href="/place/<%= place._id %>#video" class="btn btn-secondary">
+                    <i class="fas fa-play"></i>
+                    <span data-en="Watch Video" data-am="ቪዲዮ ይመልከቱ">Watch Video</span>
+                </a>
+            <% } else { %>
+                <a href="/place/<%= place._id %>#gallery" class="btn btn-secondary">
+                    <i class="fas fa-images"></i>
+                    <span data-en="View Gallery" data-am="ጋለሪ ይመልከቱ">View Gallery</span>
+                </a>
+            <% } %>
+        </div>
+    </div>
+</div>

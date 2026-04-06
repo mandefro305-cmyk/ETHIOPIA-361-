@@ -1,49 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gallery - Ethiopia 361°</title>
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/ai-chat.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Ethiopia 361°</title>
+    
+    <!-- Modern CSS -->
+    <link rel="stylesheet" href="/css/modern-style.css">
+    <link rel="stylesheet" href="/css/ai-chat.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 
 <body>
 
-<header>
-    <h1 data-en="Ethiopia 361°" data-am="ኢትዮጵያ 361°">Ethiopia 361°</h1>
-    <nav class="desktop-nav">
-        <a href="/" data-en="Home" data-am="ቤት">Home</a>
-        <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
-        <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
-        <a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
-        <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
-        <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
-        <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
-    </nav>
-    <div class="header-right">
-        <div class="theme-toggle" onclick="toggleDarkMode()" title="Toggle Dark Mode"></div>
-        <select id="language" onchange="changeLanguage()">
-            <option value="en">English</option>
-            <option value="am">አማርኛ</option>
-        </select>
-        <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-            <span></span>
-            <span></span>
-            <span></span>
-        </button>
-    </div>
-</header>
-<nav class="mobile-nav" id="mobile-nav">
-    <a href="/" data-en="Home" data-am="ቤት">Home</a>
-    <a href="/destinations" data-en="Destinations" data-am="መዳረሻዎች">Destinations</a>
-    <a href="/guide" data-en="Travel Guide" data-am="የጉዞ መርህቆ">Travel Guide</a>
-    <a href="/gallery" class="active" data-en="Gallery" data-am="ጋለሪ">Gallery</a>
-    <a href="/blog" data-en="Blog" data-am="ብሎግ">Blog</a>
-    <a href="/contact" data-en="Contact" data-am="ይድረሹ">Contact</a>
-    <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
-</nav>
+<%- include('partials/header', { currentPage: 'gallery' }) %>
 
 <section class="hero">
     <video autoplay muted loop playsinline class="hero-video">
