@@ -197,6 +197,64 @@
         }
     }
 </style>
+
+<%
+// Prepare background image URL
+let bgImageUrl = '';
+if(place.image_url && place.image_url !== '') {
+    if(place.image_url.startsWith('http')) {
+        bgImageUrl = place.image_url;
+    } else if(place.image_url.startsWith('/uploads/')) {
+        bgImageUrl = place.image_url;
+    } else {
+        bgImageUrl = '/img/' + place.image_url;
+    }
+}
+%>
+
+<style>
+    body {
+        <% if(bgImageUrl) { %>
+        background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)), url('<%- bgImageUrl %>');
+        background-size: cover;
+        background-attachment: fixed;
+        background-position: center;
+        <% } %>
+    }
+
+    body.dark-mode {
+        <% if(bgImageUrl) { %>
+        background-image: linear-gradient(rgba(18, 18, 18, 0.85), rgba(18, 18, 18, 0.85)), url('<%- bgImageUrl %>');
+        <% } %>
+    }
+
+    .place-detail {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+    }
+
+    body.dark-mode .place-detail {
+        background: rgba(30, 30, 30, 0.95);
+    }
+
+    .description-section {
+        background: rgba(248, 249, 250, 0.9) !important;
+    }
+
+    body.dark-mode .description-section {
+        background: rgba(40, 40, 40, 0.9) !important;
+    }
+
+    .place-map-section {
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+    }
+
+    body.dark-mode .place-map-section {
+        background: rgba(30, 30, 30, 0.9);
+    }
+</style>
+
 </head>
 
 <body>
@@ -235,23 +293,11 @@
     <a href="/admin" class="nav-cta" data-en="Admin Panel" data-am="አስተባባሪ">Admin Panel</a>
 </nav>
 
-<%
-let heroBgUrl = '';
-if(place.image_url && place.image_url !== '') {
-    if(place.image_url.startsWith('http') || place.image_url.startsWith('/uploads/')) {
-        heroBgUrl = place.image_url;
-    } else {
-        heroBgUrl = '/img/' + place.image_url;
-    }
-}
-%>
-<section class="hero" style="<%- heroBgUrl ? `background-image: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('${heroBgUrl}'); background-size: cover; background-position: center;` : '' %>">
-    <% if (!heroBgUrl) { %>
+<section class="hero">
     <video autoplay muted loop playsinline class="hero-video">
         <source src="/videos/hero-background.mp4" type="video/mp4">
         Your browser does not support video tag.
     </video>
-    <% } %>
     <div class="hero-overlay">
         <h2 data-en="<%= place.name %>" data-am="<%= place.name_am || place.name %>"><%= place.name %></h2>
         <p data-en="Discover this amazing destination in Ethiopia" data-am="ይህንን የሚያምር የኢትዮጵያን መዳረሻዎች">Discover this amazing destination in Ethiopia</p>
