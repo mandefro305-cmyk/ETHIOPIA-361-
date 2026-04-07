@@ -452,135 +452,142 @@ app.get('/api/places/:id/travel-guide', async (req, res) => {
     }
 });
 
+// Cache for tourism context to avoid frequent DB lookups
+let cachedTourismContext = null;
+let lastCacheTime = 0;
+const CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
 // AI Chat API endpoint
 app.post('/api/chat', async (req, res) => {
     try {
-        const { message, conversationHistory } = req.body;
-        console.log('AI chat request:', message);
+        const { message, language = 'en-US', history = [], conversationHistory = [] } = req.body;
+        const chatHistory = history.length > 0 ? history : conversationHistory;
         
-        // Enhanced AI response for Ethiopia tourism
-        let response = '';
-        const msg = message.toLowerCase();
-        
-        // Greetings
-        if (msg.includes('hello') || msg.includes('hi') || msg.includes('hey')) {
-            response = "Hello! Welcome to Ethiopia 361°! I'm your AI assistant for Ethiopian tourism. I can help you with information about destinations, travel tips, cultural sites, and more. What would you like to know about Ethiopia?";
-        } 
-        // Specific places
-        else if (msg.includes('lalibela')) {
-            response = "Lalibela is famous for its 11 medieval rock-hewn churches carved from single blocks of stone. This UNESCO World Heritage site is often called the 'New Jerusalem'. The best time to visit is during the dry season (October-March). Would you like to know about hotels or tours there?";
+        if (!message) {
+            return res.status(400).json({ error: 'Message is required' });
         }
-        else if (msg.includes('aksum') || msg.includes('axum')) {
-            response = "Aksum (or Axum) was the ancient capital of the Aksumite Kingdom and home to the Queen of Sheba. Don't miss the towering stelae, St. Mary of Zion Church (said to house the Ark of the Covenant), and the ancient tombs. The city has a small airport with daily flights from Addis.";
+
+        // Get tourism data from database for context (with caching)
+        if (!cachedTourismContext || Date.now() - lastCacheTime > CACHE_TTL) {
+            const places = await Place.find({});
+            cachedTourismContext = places.map(place =>
+                `${place.name}: ${place.description}`
+            ).join('\n');
+            lastCacheTime = Date.now();
         }
-        else if (msg.includes('simien') || msg.includes('mountains')) {
-            response = "The Simien Mountains are a trekker's paradise! Home to the endemic Gelada baboons, Walia ibex, and Ethiopian wolves. The best trekking season is September-November. You'll need permits and a scout. Would you like information about trekking routes?";
+
+        const tourismContext = cachedTourismContext;
+
+        // Create language-specific prompt
+        let systemPrompt, userPrompt;
+
+        if (language === 'am-ET') {
+            // Amharic prompt
+            systemPrompt = 'እርስዎ የኢትዮጵያ ቱሪዝም ብቃት ያለው እርዳታ ናቸው። ስለ ኢትዮጵያ የቱሪዝም መዳረሻዎች፣ ባህል እና የጉዞ ምክርተኛ በአማርኛ በተሟላ መረጃ ይስጡ።';
+            userPrompt = `እርስዎ የኢትዮጵያን ቱሪዝም የሚያውቁ ተረዳኢ ናቸው። እነዚህን የኢትዮጵያ ቱሪዝም ቦታዎች ያውቁ፦
+${tourismContext}
+
+እባክዎ የተጠየቁትን ጥያቄ ስለ ኢትዮጵያ ቱሪዝም በአማርኛ ይመልሱ። ብቃት ያለው፣ ትክክለኛነት ያለው እና ዝርዝር መረጃ ይስጡ።
+በላይኛው ዝርዝር ውስጥ ያልተገኘውን ቦታ ከሆነ ጥያቄው፣ የኢትዮጵያን ቱሪዝም አጠቃላይ እውቀትዎን ይጠቀሙ።
+
+የተጠየቀው ጥያቄ፦ ${message}`;
+        } else {
+            // English prompt
+            systemPrompt = 'You are a knowledgeable tourism assistant for Ethiopia. Provide helpful, accurate information about Ethiopian tourist destinations, culture, and travel tips.';
+            userPrompt = `You are a helpful AI assistant specializing in Ethiopia tourism.
+You have knowledge about the following Ethiopia tourist places:
+${tourismContext}
+
+Please answer the user's question about Ethiopia tourism. Be helpful, accurate, and provide detailed information.
+If the question is about places not in the list above, use your general knowledge about Ethiopia tourism.
+
+User question: ${message}`;
         }
-        else if (msg.includes('addis') || msg.includes('addis ababa')) {
-            response = "Addis Ababa, Ethiopia's capital at 2,355m altitude, offers the National Museum (Lucy's skeleton), Merkato (Africa's largest market), and great restaurants. Bole International Airport is the main entry point. What interests you most?";
+
+        // Using Google Gemini API (free and reliable)
+        try {
+            console.log('Gemini API Key:', process.env.GEMINI_API_KEY ? 'Key exists' : 'Key missing');
+            console.log('Language:', language);
+            console.log('Message:', message);
+
+            // Build conversation context
+            let conversationContext = '';
+            if (chatHistory && chatHistory.length > 0) {
+                conversationContext = '\n\nPrevious conversation:\n';
+                chatHistory.forEach((msg, index) => {
+                    conversationContext += `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}\n`;
+                });
+                conversationContext += '\n';
+            }
+
+            const simplePrompt = language === 'am-ET' ?
+`እርስዎ የኢትዮጵያ ቱሪዝም ብቃት ያለው የግለገጽ እርዳታ ናቸው። እንደ ቻትጂፒቲ በግልጽል፣ በግልጽል እና በጠቃሚ የተሞላ መልስ ይስጡ።
+
+የኢትዮጵያ ቱሪዝም መረጃ፦
+${tourismContext}${conversationContext}
+
+እባክዎ የተጠየቁትን ጥያቄ ስለ ኢትዮጵያ ቱሪዝም ይመልሉ።
+- ይህንን በግልጽል እና በምርጫ ይዙሉት
+- አጭር እና በግልጽል ይሁኑ
+- የተማማኙን ጥያቄ በትክክል ያሟላት
+- ተጨማማ መረጃ ያካትቱ
+- አስተማማኪ ጥያቄዎች ይጠይ቉
+
+የተጠየቀው ጥያቄ፦ "${message}"` :
+`You are an expert Ethiopia tourism assistant with a warm, conversational personality like ChatGPT. Be helpful, detailed, and engaging.
+
+Ethiopia tourism context:
+${tourismContext}${conversationContext}
+
+Please answer this question about Ethiopia tourism: "${message}"
+
+Guidelines:
+- Be conversational and friendly, not robotic
+- Provide detailed, practical information
+- Include specific tips and recommendations
+- Ask follow-up questions when helpful
+- Use formatting (like bullet points) for readability
+- Mention practical details like best times to visit, costs, transportation
+- Be encouraging and enthusiastic about Ethiopia tourism
+- Reference previous conversation when relevant
+
+Make your response comprehensive and engaging!`;
+
+            const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+                contents: [{
+                    parts: [{
+                        text: simplePrompt
+                    }]
+                }]
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            console.log('Gemini response status:', response.status);
+            const aiResponse = response.data.candidates[0].content.parts[0].text;
+            res.json({ response: aiResponse });
+
+        } catch (apiError) {
+            console.error('Gemini API Error:', apiError.message);
+
+            // Fallback response when API is not available
+            const fallbackResponse = `I apologize, but I'm having trouble connecting to my AI service right now.
+
+However, I can tell you about some amazing places in Ethiopia based on what I know:
+
+${tourismContext}
+
+For more detailed information about these places or other Ethiopia tourism questions, please try again later or contact our tourism office.
+
+Would you like to know more about any specific place mentioned above?`;
+
+            res.json({ response: fallbackResponse });
         }
-        else if (msg.includes('bahir dar') || msg.includes('lake tana')) {
-            response = "Bahir Dar is lovely! Visit the Blue Nile Falls (Tis Abay), take boat trips to Lake Tana's island monasteries, and explore the city's palm-lined avenues. It's the gateway to the historic circuit!";
-        }
-        else if (msg.includes('gondar') || msg.includes('fasilides')) {
-            response = "Gondar, the 'Camelot of Africa', features stunning 17th-century castles built by Emperor Fasilides. Don't miss the Fasil Ghebbi UNESCO site and the Debre Berhan Selassie Church with its angel ceiling!";
-        }
-        else if (msg.includes('harar') || msg.includes('jegol')) {
-            response = "Harar Jugol is a fortified historic city with 368 alleyways! Famous for the Hyena Man feeding tradition, traditional houses, and being the 4th holiest city in Islam. The night hyena feeding is unforgettable!";
-        }
-        else if (msg.includes('danakil') || msg.includes('dallol') || msg.includes('erta ale')) {
-            response = "The Danakil Depression is one of Earth's hottest places! See colorful sulfur springs at Dallol, the Erta Ale volcano with its lava lake, and salt carvings. This extreme adventure requires 4WD and experienced guides!";
-        }
-        // Travel practicalities
-        else if (msg.includes('best time') || msg.includes('when to visit')) {
-            response = "Ethiopia's climate varies by region: Overall, October-March is best (dry season). For the Omo Valley, visit June-September. For the Danakil, November-March. Simien Mountains: September-November & March-May. When are you planning to visit?";
-        }
-        else if (msg.includes('visa') || msg.includes('entry')) {
-            response = "Most visitors need a visa. You can get e-visas online (https://www.evisa.gov.et/) or on arrival at Addis Ababa. Passports need 6+ months validity. Some countries have visa-free access. Where are you from?";
-        }
-        else if (msg.includes('food') || msg.includes('cuisine') || msg.includes('injera')) {
-            response = "Ethiopian cuisine is delicious! Try injera with doro wat (spicy chicken), kitfo (spiced raw beef), shiro (chickpea stew), and tibs (grilled meat). Don't miss the coffee ceremony! Vegetarian options are plentiful on fasting days. What type of food interests you?";
-        }
-        else if (msg.includes('transport') || msg.includes('getting around')) {
-            response = "Transport options: Domestic flights (Ethiopian Airlines), long-distance buses (comfortable but slow), private hire with driver, and in cities, minibuses and taxis. For historic sites, many hire a car with driver. What's your budget and travel style?";
-        }
-        else if (msg.includes('cost') || msg.includes('budget') || msg.includes('price')) {
-            response = "Ethiopia is quite affordable! Budget: $30-50/day (hostels, local food). Mid-range: $70-100/day (3-star hotels, restaurants). Luxury: $150+/day. Site fees: $10-50 for foreigners. Domestic flights: $50-150. What's your budget range?";
-        }
-        else if (msg.includes('safety') || msg.includes('safe')) {
-            response = "Ethiopia is generally safe for tourists! Avoid border regions (Somalia, Eritrea, South Sudan). In cities, watch for pickpockets. Travel with a guide in remote areas. The people are incredibly hospitable. Any specific safety concerns?";
-        }
-        else if (msg.includes('culture') || msg.includes('tradition') || msg.includes('customs')) {
-            response = "Ethiopia has incredible cultural diversity with 80+ ethnic groups! Key customs: respectful dress (cover shoulders/knees in religious sites), remove shoes before entering homes, always accept coffee, and learn basic Amharic greetings like 'Selam' (hello) and 'amesegnalehu' (thank you)!";
-        }
-        else if (msg.includes('coffee') || msg.includes('buna')) {
-            response = "Ethiopia is coffee's birthplace! The coffee ceremony is sacred: beans are roasted, ground, and brewed three times. Don't refuse - it's rude! Visit Yirgacheffe or Sidamo regions for coffee tours. Best coffee: Yirgacheffe (fruity) or Harrar (winey).";
-        }
-        else if (msg.includes('shopping') || msg.includes('souvenirs')) {
-            response = "Great souvenirs: Ethiopian coffee, traditional clothes (habesha kemis), silver jewelry, woven baskets, crosses, spices, and traditional paintings. Merkato in Addis has everything, but nicer shops in Bole area. Always bargain politely!";
-        }
-        else if (msg.includes('language') || msg.includes('amharic')) {
-            response = "Amharic is the official language. Basic phrases: Selam (hello), Amesegnalehu (thank you), Sint new? (how are you?), Chigger yellem (you're welcome). English is spoken in tourist areas. Learning a few words locals love it!";
-        }
-        else if (msg.includes('religion') || msg.includes('church') || msg.includes('mosque')) {
-            response = "Ethiopia has deep religious roots: Ethiopian Orthodox Christianity (oldest Christian tradition), Islam (Harar is 4th holiest city), and traditional beliefs. Religious sites require modest dress and often remove shoes. Timkat (Epiphany) in January is spectacular!";
-        }
-        else if (msg.includes('wildlife') || msg.includes('animals')) {
-            response = "Ethiopia has unique wildlife! Endemic species: Gelada baboons (Simien), Walia ibex (Simien), Ethiopian wolf (Bale), Swayne's hartebeest. Best parks: Simien Mountains, Bale Mountains, and Abijatta-Shalla for flamingos. Want wildlife tour info?";
-        }
-        else if (msg.includes('trekking') || msg.includes('hiking')) {
-            response = "Ethiopia offers amazing trekking! Simien Mountains (multi-day treks with Gelada baboons), Bale Mountains (rare wolves), Mount Entoto (Addis day hike), and Ras Dashen (Ethiopia's highest peak). Need permits and guides for national parks. What's your fitness level?";
-        }
-        else if (msg.includes('hotels') || msg.includes('accommodation') || msg.includes('stay')) {
-            response = "Accommodation options: Luxury (Sheraton Addis, Marriott), mid-range (local chains like Jupiter), budget (guesthouses, hostels), and eco-lodges near parks. Book ahead for Lalibela and Simien! What's your preferred comfort level?";
-        }
-        else if (msg.includes('omo valley') || msg.includes('tribes')) {
-            response = "The Omo Valley is incredible! Visit Mursi (lip plates), Hamar (bull jumping), Karo (body painting), and Konso (terracing). Best visited with cultural respect and local guides. Access via Jinka or Arba Minch. Interested in a cultural tour?";
-        }
-        else if (msg.includes('photography') || msg.includes('photos')) {
-            response = "Ethiopia is a photographer's paradise! Ask permission before photographing people (especially in Omo Valley, may require payment). No photos in some religious sites. Best shots: Lalibela churches, Simien landscapes, Harar streets, Timkat festival!";
-        }
-        else if (msg.includes('festivals') || msg.includes('events')) {
-            response = "Major festivals: Timkat (Epiphany, January), Meskel (Finding of True Cross, September), Enkutatash (New Year, September), Ledet (Christmas, January), and Irreecha (Oromo thanksgiving). Timing varies by calendar. Want specific dates?";
-        }
-        else if (msg.includes('health') || msg.includes('medicine') || msg.includes('vaccine')) {
-            response = "Health tips: Required: Yellow fever certificate. Recommended: Hepatitis A/B, typhoid, malaria prophylaxis (below 2000m), altitude sickness meds for highlands. Drink bottled water. Travel insurance recommended. Any health concerns?";
-        }
-        else if (msg.includes('currency') || msg.includes('money') || msg.includes('birr')) {
-            response = "Currency: Ethiopian Birr (ETB). 1 USD ≈ 55 ETB. Bring USD/EUR cash for better rates. ATMs in cities (Visa works better). Credit cards accepted in hotels/upmarket restaurants. Keep small bills for tips and markets!";
-        }
-        else if (msg.includes('what to do') || msg.includes('activities')) {
-            response = "Ethiopia offers: Historical circuit (Lalibela, Gondar, Aksum), nature (Simien/Bale Mountains), culture (Omo Valley tribes), adventure (Danakil Depression), city life (Addis, Harar), spiritual sites (Lake Tana monasteries), and amazing food/coffee! What interests you most?";
-        }
-        else if (msg.includes('itinerary') || msg.includes('plan') || msg.includes('route')) {
-            response = "Popular itineraries: 7-day Historic Route (Addis→Bahir Dar→Gondar→Lalibela→Axum), 10-day with Simien, or 14-day including Omo Valley. I can create a custom plan based on your interests, time, and budget. How long do you have?";
-        }
-        else if (msg.includes('why') || msg.includes('reason') || msg.includes('special')) {
-            response = "Ethiopia is special: Only African nation never colonized, has unique alphabet and calendar, birthplace of coffee, home to UNESCO sites, incredible religious heritage, diverse cultures, stunning landscapes from below sea level to 4550m, and the world's rarest canine (Ethiopian wolf)!";
-        }
-        // Default responses with variety
-        else if (msg.includes('help')) {
-            response = "I can help with: Destinations (Lalibela, Aksum, Simien, etc.), Travel tips (best time, costs, safety), Culture (food, customs, festivals), Practical info (visas, transport, health), and Itinerary planning. What would you like to know?";
-        }
-        else if (msg.includes('thank')) {
-            response = "You're welcome! Ethiopia awaits with open arms. Feel free to ask more questions - I'm here to help make your Ethiopian adventure amazing! አመሰግናለሁ (Amesegnalehu)!";
-        }
-        else {
-            // Randomized default responses
-            const defaultResponses = [
-                "Ethiopia is fascinating! With 3,000 years of history, it's the cradle of humanity and coffee. Would you like to explore ancient sites, natural wonders, or vibrant cultures?",
-                "From rock-hewn churches to active volcanoes, Ethiopia offers incredible diversity. What draws you most - history, adventure, culture, or nature?",
-                "Ethiopia surprises everyone! Did you know it has its own calendar (it's 2016 there!), unique alphabet, and more UNESCO sites than most African countries? What piques your curiosity?",
-                "Ethiopia's landscapes range from the Danakil Depression (one of Earth's hottest places) to the Simien Mountains (over 4,500m). What kind of experience are you seeking?",
-                "As Africa's oldest independent nation, Ethiopia has preserved incredible traditions. Whether you want to witness ancient ceremonies or spot endemic wildlife, there's something special. What interests you?"
-            ];
-            response = defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
-        }
-        
-        res.json({ response });
     } catch (error) {
-        console.error('AI chat error:', error);
-        res.status(500).json({ error: 'AI service unavailable' });
+        console.error('Chat endpoint error:', error);
+        res.status(500).json({ error: 'Internal server error' });
     }
 });
 
