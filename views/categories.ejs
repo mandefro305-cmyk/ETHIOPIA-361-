@@ -276,7 +276,7 @@
                     if (container && data[category].length > 0) {
                         container.innerHTML = data[category].map(place => `
                             <div class="place-item">
-                                <img src="${place.image_url || '/img/placeholder.jpg'}" alt="${place.name}" class="place-image">
+                                <img src="${place.image_url ? (place.image_url.startsWith('http') || place.image_url.startsWith('/') ? place.image_url : '/img/' + place.image_url) : 'https://picsum.photos/seed/' + place.name.replace(/[^a-zA-Z0-9]/g, '') + '/400/300.jpg'}" alt="${place.name}" class="place-image" onerror="this.src='https://picsum.photos/seed/${place.name.replace(/[^a-zA-Z0-9]/g, '')}/400/300.jpg'">
                                 <div class="place-info">
                                     <div class="place-name">${place.name}</div>
                                     <div class="place-description">${place.description}</div>
