@@ -255,7 +255,7 @@
         <% if(!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) { %>
             <% imgSrc = '/img/' + imgSrc; %>
         <% } %>
-        <img src="<%= imgSrc %>" alt="<%= place.name %>" class="place-image" loading="lazy">
+        <img src="<%= imgSrc %>" alt="<%= place.name %>" class="place-image" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
     <% } %>
     
     <% if(place && place.description) { %>
@@ -312,7 +312,7 @@
             
             <% galleryImages.forEach((imageSrc, index) => { %>
                 <div class="gallery-item" onclick="openLightbox('<%= imageSrc %>')">
-                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>" loading="lazy">
+                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
                     <div class="gallery-overlay">
                         <span class="view-icon">🔍</span>
                     </div>

@@ -105,9 +105,9 @@ async function loadPlaces() {
         container.innerHTML = places.map(place => `
             <div class="destination-card">
                 ${place.image_url && place.image_url !== '' ? `
-                    <img src="${place.image_url.startsWith('http') || place.image_url.startsWith('/') ? place.image_url : '/img/' + place.image_url}" alt="${place.name}" class="card-image" loading="lazy" onerror="this.src='https://picsum.photos/seed/${place.name.replace(/[^a-zA-Z0-9]/g, '')}/400/300.jpg'">
+                    <img src="${place.image_url.startsWith('http') || place.image_url.startsWith('/') ? place.image_url : '/img/' + place.image_url}" alt="${place.name}" class="card-image" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
                 ` : `
-                    <img src="https://picsum.photos/seed/${place.name.replace(/[^a-zA-Z0-9]/g, '')}/400/300.jpg" alt="${place.name}" class="card-image" loading="lazy">
+                    <img src="/img/placeholder.jpg" alt="${place.name}" class="card-image" loading="lazy">
                 `}
                 <div class="card-content">
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
