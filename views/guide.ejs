@@ -230,7 +230,7 @@ async function loadDestinations() {
         }
         
         container.innerHTML = places.slice(0, 6).map(place => `
-            <div class="card" onclick="window.location.href='/place/${place.id}'" style="cursor: pointer;">
+            <div class="card" onclick="window.location.href='/place/${place._id}'" style="cursor: pointer;">
                 ${place.image_url ? `
                     ${place.image_url.startsWith('/uploads/') 
                         ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
@@ -383,7 +383,7 @@ function displayTravelGuides(places) {
                 </div>
                 
                 <div class="card-actions" style="margin-top: 1.5rem;">
-                    <a href="/place/${place.id}" class="btn-view-details" data-en="View Full Details" data-am="ሙሉኣ ዝርዝሮችን ይመልከቱ">View Full Details</a>
+                    <a href="/place/${place._id}" class="btn-view-details" data-en="View Full Details" data-am="ሙሉኣ ዝርዝሮችን ይመልከቱ">View Full Details</a>
                     ${place.video_url ? `
                         <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
                             <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>

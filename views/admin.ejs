@@ -687,7 +687,7 @@
                         <tbody>
                             <% places.forEach(place => { %>
                             <tr>
-                                <td><strong>#<%= place.id %></strong></td>
+                                <td><strong>#<%= place._id %></strong></td>
                                 <td><%= place.name %></td>
                                 <td>
                                     <% if(place.description && place.description.length > 50) { %>
@@ -712,12 +712,12 @@
                                 </td>
                                 <td>
                                     <div class="action-buttons">
-                                        <form action="/admin/edit/<%= place.id %>" method="GET" style="display:inline;">
+                                        <form action="/admin/edit/<%= place._id %>" method="GET" style="display:inline;">
                                             <button type="submit" class="btn btn-edit">
                                                 <i class="fas fa-edit"></i> Edit
                                             </button>
                                         </form>
-                                        <form action="/admin/delete/<%= place.id %>" method="POST" style="display:inline;">
+                                        <form action="/admin/delete/<%= place._id %>" method="POST" style="display:inline;">
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this place?')">
                                                 <i class="fas fa-trash"></i> Delete
                                             </button>
