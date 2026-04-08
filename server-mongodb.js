@@ -473,9 +473,16 @@ app.post('/api/chat', async (req, res) => {
         // Get tourism data from database for context (with caching)
         if (!cachedTourismContext || Date.now() - lastCacheTime > CACHE_TTL) {
             const places = await Place.find({});
-            cachedTourismContext = places.map(place =>
+            let fullContext = places.map(place =>
                 `${place.name}: ${place.description}`
             ).join('\n');
+
+            // Truncate context to ~15000 characters to prevent token limit errors
+            // even though gpt-4o-mini supports 128k, it's good practice to keep payloads small
+            if (fullContext.length > 15000) {
+                fullContext = fullContext.substring(0, 15000) + '... [Context truncated]';
+            }
+            cachedTourismContext = fullContext;
             lastCacheTime = Date.now();
         }
 
@@ -550,34 +557,36 @@ Guidelines:
 - Ask follow-up questions when helpful
 - Reference previous conversation when relevant`;
 
-            const token = process.env.GITHUB_TOKEN;
+            const token = process.env.OPENROUTER_API_KEY;
             if (!token) {
-                console.error("GITHUB_TOKEN environment variable is not set.");
+                console.error("OPENROUTER_API_KEY environment variable is not set.");
                 throw new Error("API token is missing.");
             }
-            const response = await axios.post(`https://models.inference.ai.azure.com/chat/completions`, {
+            const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
                 messages: [
                     { role: "system", content: "You are a helpful assistant." },
                     { role: "user", content: simplePrompt }
                 ],
-                model: "gpt-4o",
+                model: "openai/gpt-4o-mini",
                 temperature: 0.7,
                 max_tokens: 150
             }, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
+                    'Authorization': `Bearer ${token}`,
+                    'HTTP-Referer': 'https://ethiopia361.com',
+                    'X-Title': 'Ethiopia 361 AI Chat'
                 }
             });
 
-            console.log('GitHub API response status:', response.status);
+            console.log('OpenRouter API response status:', response.status);
             const aiResponse = response.data.choices[0].message.content;
             res.json({ response: aiResponse });
 
         } catch (apiError) {
-            console.error('GitHub API Error:', apiError.message);
+            console.error('OpenRouter API Error:', apiError.message);
             if (apiError.response && apiError.response.data) {
-                console.error('GitHub API Error Details:', JSON.stringify(apiError.response.data, null, 2));
+                console.error('OpenRouter API Error Details:', JSON.stringify(apiError.response.data, null, 2));
             }
 
             // Fallback response when API is not available
