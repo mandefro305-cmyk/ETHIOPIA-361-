@@ -13,39 +13,6 @@ const { User, Place } = require('./models/database');
 require('dotenv').config();
 const app = express();
 
-// Initialize Local LLM via Transformers.js
-let aiGenerator = null;
-let isAiLoading = false;
-
-async function getAiGenerator() {
-    if (aiGenerator) return aiGenerator;
-    if (isAiLoading) {
-        // Wait until loaded
-        while(isAiLoading) {
-            await new Promise(r => setTimeout(r, 100));
-        }
-        return aiGenerator;
-    }
-
-    isAiLoading = true;
-    try {
-        console.log('Loading local AI model (TinyLlama)... This happens only once.');
-        const { pipeline, env } = await import('@xenova/transformers');
-        // Disable local models to force download on first run
-        env.allowLocalModels = false;
-        aiGenerator = await pipeline('text-generation', 'Xenova/TinyLlama-1.1B-Chat-v1.0');
-        console.log('Local AI model loaded successfully!');
-    } catch (err) {
-        console.error('Failed to load local AI model:', err);
-    } finally {
-        isAiLoading = false;
-    }
-    return aiGenerator;
-}
-
-// Start loading the model in the background immediately
-getAiGenerator();
-
 // Connect to MongoDB
 mongoose.connect('mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appName=Cluster0').then(() => {
     console.log('Connected to MongoDB database.');
@@ -537,65 +504,81 @@ If the question is about places not in the list above, use your general knowledg
 User question: ${message}`;
         }
 
-        // Using Local LLM (Transformers.js)
+        // Using Google Gemini API (free and reliable)
         try {
+            console.log('Gemini API Key:', process.env.GEMINI_API_KEY ? 'Key exists' : 'Key missing');
             console.log('Language:', language);
             console.log('Message:', message);
 
-            const generator = await getAiGenerator();
-
-            if (!generator) {
-                throw new Error("Local AI model is still loading or failed to load.");
-            }
-
-            // Build a short, concise system prompt
-            const sys = language === 'am-ET' ?
-                'አጭር እና አጭር መልስ ይስጡ። እርስዎ የኢትዮጵያ ቱሪዝም እርዳታ ነዎት።' :
-                'You are an Ethiopia tourism assistant. Keep your answers VERY short and concise. Answer only what is asked.';
-
-            // TinyLlama chat template format
-            let prompt = `<|system|>\n${sys} Context: ${tourismContext.substring(0, 500)}</s>\n`;
-
-            // Add conversation history
+            // Build conversation context
+            let conversationContext = '';
             if (chatHistory && chatHistory.length > 0) {
-                // Limit to last 2 exchanges to keep context small
-                const recentHistory = chatHistory.slice(-4);
-                recentHistory.forEach((msg) => {
-                    const roleTag = msg.role === 'user' ? '<|user|>' : '<|assistant|>';
-                    prompt += `${roleTag}\n${msg.content}</s>\n`;
+                conversationContext = '\n\nPrevious conversation:\n';
+                chatHistory.forEach((msg, index) => {
+                    conversationContext += `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}\n`;
                 });
+                conversationContext += '\n';
             }
 
-            prompt += `<|user|>\n${message}</s>\n<|assistant|>\n`;
+            const simplePrompt = language === 'am-ET' ?
+`እርስዎ የኢትዮጵያ ቱሪዝም ብቃት ያለው የግለገጽ እርዳታ ናቸው። እንደ ቻትጂፒቲ በግልጽል፣ በግልጽል እና በጠቃሚ የተሞላ መልስ ይስጡ።
 
-            console.log('Generating response via local LLM...');
-            const out = await generator(prompt, {
-                max_new_tokens: 100, // Keep it short as requested
-                temperature: 0.7,
-                repetition_penalty: 1.1,
-                return_full_text: false
+የኢትዮጵያ ቱሪዝም መረጃ፦
+${tourismContext}${conversationContext}
+
+እባክዎ የተጠየቁትን ጥያቄ ስለ ኢትዮጵያ ቱሪዝም ይመልሉ።
+- ይህንን በግልጽል እና በምርጫ ይዙሉት
+- አጭር እና በግልጽል ይሁኑ
+- የተማማኙን ጥያቄ በትክክል ያሟላት
+- ተጨማማ መረጃ ያካትቱ
+- አስተማማኪ ጥያቄዎች ይጠይ቉
+
+የተጠየቀው ጥያቄ፦ "${message}"` :
+`You are an expert Ethiopia tourism assistant. Be helpful and engaging, but KEEP YOUR ANSWERS VERY SHORT AND CONCISE.
+
+Ethiopia tourism context:
+${tourismContext}${conversationContext}
+
+Please answer this question about Ethiopia tourism: "${message}"
+
+Guidelines:
+- Keep your answers VERY short and concise. Answer only what is asked.
+- Be conversational and friendly, not robotic
+- Ask follow-up questions when helpful
+- Reference previous conversation when relevant`;
+
+            const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
+                contents: [{
+                    parts: [{
+                        text: simplePrompt
+                    }]
+                }]
+            }, {
+                headers: {
+                    'Content-Type': 'application/json'
+                }
             });
 
-            let aiResponse = out[0].generated_text.trim();
-            console.log('Local AI response generated successfully.');
+            console.log('Gemini response status:', response.status);
+            const aiResponse = response.data.candidates[0].content.parts[0].text;
             res.json({ response: aiResponse });
 
-        } catch (error) {
-            console.error('Local AI Error:', error.message);
-
-            // Fast offline fallback if model fails
-            const isGreeting = /^(hi|hello|hey|greetings|how are you|ሰላም|ጤና ይስጥልኝ)/i.test(message.trim());
-            let fallbackResponse = "";
-
-            if (isGreeting) {
-                fallbackResponse = language === 'am-ET' ?
-                    "ሰላም! እኔ የኢትዮጵያ ቱሪዝም ረዳት ነኝ። እንዴት ልረዳዎት እችላለሁ?" :
-                    "Hello! I am your Ethiopia tourism assistant. How can I help you today?";
-            } else {
-                fallbackResponse = language === 'am-ET' ?
-                    `ስለ ${message} የቱሪዝም መረጃ ለማግኘት እባክዎ የጉዞ ገፃችንን ይመልከቱ። ሞዴሉ አሁንም እየጫነ ሊሆን ይችላል።` :
-                    `I am an AI assistant. I have information about Ethiopia tourism, but my primary model is currently loading or unavailable. Please try asking again in a moment.`;
+        } catch (apiError) {
+            console.error('Gemini API Error:', apiError.message);
+            if (apiError.response && apiError.response.data) {
+                console.error('Gemini API Error Details:', JSON.stringify(apiError.response.data, null, 2));
             }
+
+            // Fallback response when API is not available
+            const fallbackResponse = `I apologize, but I'm having trouble connecting to my AI service right now.
+
+However, I can tell you about some amazing places in Ethiopia based on what I know:
+
+${tourismContext}
+
+For more detailed information about these places or other Ethiopia tourism questions, please try again later or contact our tourism office.
+
+Would you like to know more about any specific place mentioned above?`;
 
             res.json({ response: fallbackResponse });
         }

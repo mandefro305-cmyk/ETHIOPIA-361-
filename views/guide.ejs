@@ -233,8 +233,8 @@ async function loadDestinations() {
             <div class="card" onclick="window.location.href='/place/${place._id}'" style="cursor: pointer;">
                 ${place.image_url ? `
                     ${place.image_url.startsWith('/uploads/') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">`
                     }
                 ` : `
                     <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
@@ -305,8 +305,8 @@ function displayTravelGuides(places) {
             <div class="card">
                 ${place.image_url ? `
                     ${place.image_url.startsWith('/uploads/') 
-                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img">`
-                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img">`
+                        ? `<img src="${place.image_url}" alt="${place.name}" class="place-img" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">`
+                        : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">`
                     }
                 ` : `
                     <div style="height: 200px; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); display: flex; align-items: center; justify-content: center; margin: -20px -20px 15px -20px; border-radius: 8px 8px 0 0;">
