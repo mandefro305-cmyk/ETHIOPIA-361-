@@ -547,26 +547,34 @@ Guidelines:
 - Ask follow-up questions when helpful
 - Reference previous conversation when relevant`;
 
-            const response = await axios.post(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-                contents: [{
-                    parts: [{
-                        text: simplePrompt
-                    }]
-                }]
+            const token = process.env.GITHUB_TOKEN;
+            if (!token) {
+                console.error("GITHUB_TOKEN environment variable is not set.");
+                throw new Error("API token is missing.");
+            }
+            const response = await axios.post(`https://models.inference.ai.azure.com/chat/completions`, {
+                messages: [
+                    { role: "system", content: "You are a helpful assistant." },
+                    { role: "user", content: simplePrompt }
+                ],
+                model: "gpt-4o",
+                temperature: 0.7,
+                max_tokens: 150
             }, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
-            console.log('Gemini response status:', response.status);
-            const aiResponse = response.data.candidates[0].content.parts[0].text;
+            console.log('GitHub API response status:', response.status);
+            const aiResponse = response.data.choices[0].message.content;
             res.json({ response: aiResponse });
 
         } catch (apiError) {
-            console.error('Gemini API Error:', apiError.message);
+            console.error('GitHub API Error:', apiError.message);
             if (apiError.response && apiError.response.data) {
-                console.error('Gemini API Error Details:', JSON.stringify(apiError.response.data, null, 2));
+                console.error('GitHub API Error Details:', JSON.stringify(apiError.response.data, null, 2));
             }
 
             // Fallback response when API is not available
