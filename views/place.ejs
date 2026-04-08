@@ -251,13 +251,11 @@
     <h2><%= place.name %></h2>
     
     <% if(place.image_url && place.image_url !== '') { %>
-        <% if(place.image_url.startsWith('http')) { %>
-            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
-        <% } else if(place.image_url.startsWith('/uploads/')) { %>
-            <img src="<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
-        <% } else { %>
-            <img src="/img/<%= place.image_url %>" alt="<%= place.name %>" class="place-image" loading="lazy">
+        <% let imgSrc = place.image_url; %>
+        <% if(!imgSrc.startsWith('http') && !imgSrc.startsWith('/')) { %>
+            <% imgSrc = '/img/' + imgSrc; %>
         <% } %>
+        <img src="<%= imgSrc %>" alt="<%= place.name %>" class="place-image" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
     <% } %>
     
     <% if(place && place.description) { %>
@@ -302,11 +300,11 @@
             
             // If no gallery images, fall back to main image
             if (galleryImages.length === 0 && place.image_url) {
-                if(place.image_url.startsWith('/uploads/')) {
-                    galleryImages.push(place.image_url);
-                } else {
-                    galleryImages.push('/img/' + place.image_url);
+                let fallbackSrc = place.image_url;
+                if(!fallbackSrc.startsWith('http') && !fallbackSrc.startsWith('/')) {
+                    fallbackSrc = '/img/' + fallbackSrc;
                 }
+                galleryImages.push(fallbackSrc);
             }
             
             console.log('Place detail gallery images:', galleryImages);
@@ -314,7 +312,7 @@
             
             <% galleryImages.forEach((imageSrc, index) => { %>
                 <div class="gallery-item" onclick="openLightbox('<%= imageSrc %>')">
-                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>" loading="lazy">
+                    <img src="<%= imageSrc %>" alt="<%= place.name %> - View <%= index + 1 %>" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
                     <div class="gallery-overlay">
                         <span class="view-icon">🔍</span>
                     </div>

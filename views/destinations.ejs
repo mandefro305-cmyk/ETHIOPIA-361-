@@ -189,14 +189,9 @@ function displayDestinations(places) {
             html += `
                 <div class="card">
                     ${place.image_url ? `
-                        ${place.image_url.startsWith('http') 
-                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img" loading="lazy">`
-                            : place.image_url.startsWith('/uploads/') 
-                            ? `<img src="${place.image_url}" alt="${place.name}" class="place-img" loading="lazy">`
-                            : `<img src="/img/${place.image_url}" alt="${place.name}" class="place-img" loading="lazy" onerror="this.src='https://picsum.photos/seed/${place.name}/400/300.jpg'">`
-                        }
+                        <img src="${place.image_url.startsWith('http') || place.image_url.startsWith('/') ? place.image_url : '/img/' + place.image_url}" alt="${place.name}" class="place-img" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
                     ` : `
-                        <img src="https://picsum.photos/seed/${place.name}/400/300.jpg" alt="${place.name}" class="place-img" loading="lazy">
+                        <img src="/img/placeholder.jpg" alt="${place.name}" class="place-img" loading="lazy">
                     `}
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
                     <p class="place-description">
