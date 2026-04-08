@@ -23,23 +23,26 @@ mongoose.connect('mongodb+srv://mandea:Mandea@cluster0.2pqdkpd.mongodb.net/?appN
     process.exit(1); // Exit if can't connect to database
 });
 
+// Use environment variable for persistent storage path, fallback to local public directory
+const UPLOAD_BASE_DIR = process.env.UPLOAD_DIR || path.join(__dirname, 'public/uploads');
+
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         if (file.mimetype.startsWith('image/')) {
-            const dir = path.join(__dirname, 'public/uploads/images');
+            const dir = path.join(UPLOAD_BASE_DIR, 'images');
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir, { recursive: true });
             }
             cb(null, dir);
         } else if (file.mimetype.startsWith('video/')) {
-            const dir = path.join(__dirname, 'public/uploads/videos');
+            const dir = path.join(UPLOAD_BASE_DIR, 'videos');
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir, { recursive: true });
             }
             cb(null, dir);
         } else if (file.mimetype === 'application/pdf') {
-            const dir = path.join(__dirname, 'public/uploads/pdfs');
+            const dir = path.join(UPLOAD_BASE_DIR, 'pdfs');
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir, { recursive: true });
             }
@@ -67,7 +70,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static('public'));
-app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use('/uploads', express.static(UPLOAD_BASE_DIR));
 app.use(session({
     secret: 'ethiopia-tourism-secret',
     resave: false,
@@ -78,10 +81,10 @@ app.use(session({
 // Create upload directories if they don't exist
 const ensureDirectoriesExist = () => {
     const dirs = [
-        path.join(__dirname, 'public/uploads'),
-        path.join(__dirname, 'public/uploads/images'),
-        path.join(__dirname, 'public/uploads/videos'),
-        path.join(__dirname, 'public/uploads/pdfs')
+        UPLOAD_BASE_DIR,
+        path.join(UPLOAD_BASE_DIR, 'images'),
+        path.join(UPLOAD_BASE_DIR, 'videos'),
+        path.join(UPLOAD_BASE_DIR, 'pdfs')
     ];
     
     dirs.forEach(dir => {
