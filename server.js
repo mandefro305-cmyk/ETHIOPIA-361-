@@ -372,9 +372,9 @@ If the question is about places not in the list above, use your general knowledg
 User question: ${message}`;
             }
 
-            // Using Google Gemini API (free and reliable)
+            // Using OpenRouter API
             try {
-                console.log('Gemini API Key:', process.env.GEMINI_API_KEY ? 'Key exists' : 'Key missing');
+                console.log('OpenRouter API Key:', process.env.OPENROUTER_API_KEY ? 'Key exists' : 'Key missing');
                 console.log('Language:', language);
                 console.log('Message:', message);
 
@@ -394,51 +394,38 @@ User question: ${message}`;
 የኢትዮጵያ ቱሪዝም መረጃ፦
 ${tourismContext}${conversationContext}
 
-እባክዎ የተጠየቁትን ጥያቄ ስለ ኢትዮጵያ ቱሪዝም ይመልሉ።
-- ይህንን በግልጽል እና በምርጫ ይዙሉት
-- አጭር እና በግልጽል ይሁኑ
-- የተማማኙን ጥያቄ በትክክል ያሟላት
-- ተጨማማ መረጃ ያካትቱ
-- አስተማማኪ ጥያቄዎች ይጠይ቉
-
 የተጠየቀው ጥያቄ፦ "${message}"` :
-    `You are an expert Ethiopia tourism assistant with a warm, conversational personality like ChatGPT. Be helpful, detailed, and engaging.
+    `You are an expert Ethiopia tourism assistant. Be helpful and engaging, but KEEP YOUR ANSWERS VERY SHORT AND CONCISE.
 
 Ethiopia tourism context:
 ${tourismContext}${conversationContext}
 
-Please answer this question about Ethiopia tourism: "${message}"
+User message: "${message}"`;
 
-Guidelines:
-- Be conversational and friendly, not robotic
-- Provide detailed, practical information
-- Include specific tips and recommendations
-- Ask follow-up questions when helpful
-- Use formatting (like bullet points) for readability
-- Mention practical details like best times to visit, costs, transportation
-- Be encouraging and enthusiastic about Ethiopia tourism
-- Reference previous conversation when relevant
-
-Make your response comprehensive and engaging!`;
-
-                const response = await axios.post(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${process.env.GEMINI_API_KEY}`, {
-                    contents: [{
-                        parts: [{
-                            text: simplePrompt
-                        }]
-                    }]
+                const token = process.env.OPENROUTER_API_KEY;
+                if (!token) {
+                    console.error("OPENROUTER_API_KEY environment variable is not set.");
+                    throw new Error("API token is missing.");
+                }
+                const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
+                    model: "openai/gpt-4o-mini",
+                    messages: [
+                        { role: "system", content: simplePrompt },
+                        { role: "user", content: message }
+                    ]
                 }, {
                     headers: {
-                        'Content-Type': 'application/json'
+                        "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json"
                     }
                 });
 
-                console.log('Gemini response status:', response.status);
-                const aiResponse = response.data.candidates[0].content.parts[0].text;
+                console.log('OpenRouter response status:', response.status);
+                const aiResponse = response.data.choices[0].message.content;
                 res.json({ response: aiResponse });
 
             } catch (apiError) {
-                console.error('Gemini API Error:', apiError.message);
+                console.error('OpenRouter API Error:', apiError.message);
                 
                 // Fallback response when API is not available
                 const fallbackResponse = `I apologize, but I'm having trouble connecting to my AI service right now. 
@@ -447,9 +434,7 @@ However, I can tell you about some amazing places in Ethiopia based on what I kn
 
 ${tourismContext}
 
-For more detailed information about these places or other Ethiopia tourism questions, please try again later or contact our tourism office.
-
-Would you like to know more about any specific place mentioned above?`;
+For more detailed information about these places or other Ethiopia tourism questions, please try again later or contact our tourism office.`;
 
                 res.json({ response: fallbackResponse });
             }
