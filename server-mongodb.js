@@ -493,7 +493,8 @@ app.post('/api/chat', async (req, res) => {
 
         if (language === 'am-ET') {
             // Amharic prompt
-            systemPrompt = 'እርስዎ የኢትዮጵያ ቱሪዝም ብቃት ያለው እርዳታ ናቸው። ስለ ኢትዮጵያ የቱሪዝም መዳረሻዎች፣ ባህል እና የጉዞ ምክርተኛ በአማርኛ በተሟላ መረጃ ይስጡ።';
+            const currentDateAm = new Date().toLocaleDateString('am-ET', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            systemPrompt = `እርስዎ የኢትዮጵያ ቱሪዝም ብቃት ያለው እርዳታ ናቸው። ስለ ኢትዮጵያ የቱሪዝም መዳረሻዎች፣ ባህል እና የጉዞ ምክርተኛ በአማርኛ በተሟላ መረጃ ይስጡ። እባክዎ የዛሬው ቀን ${currentDateAm} መሆኑን ያስተውሉ።`;
             userPrompt = `እርስዎ የኢትዮጵያን ቱሪዝም የሚያውቁ ተረዳኢ ናቸው። እነዚህን የኢትዮጵያ ቱሪዝም ቦታዎች ያውቁ፦
 ${tourismContext}
 
@@ -503,7 +504,8 @@ ${tourismContext}
 የተጠየቀው ጥያቄ፦ ${message}`;
         } else {
             // English prompt
-            systemPrompt = 'You are a knowledgeable tourism assistant for Ethiopia. Provide helpful, accurate information about Ethiopian tourist destinations, culture, and travel tips.';
+            const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            systemPrompt = `You are a knowledgeable tourism assistant for Ethiopia. Provide helpful, accurate information about Ethiopian tourist destinations, culture, and travel tips. For your awareness, today's date is ${currentDate}.`;
             userPrompt = `You are a helpful AI assistant specializing in Ethiopia tourism.
 You have knowledge about the following Ethiopia tourist places:
 ${tourismContext}
@@ -536,25 +538,27 @@ User question: ${message}`;
 የኢትዮጵያ ቱሪዝም መረጃ፦
 ${tourismContext}${conversationContext}
 
-እባክዎ የተጠየቁትን ጥያቄ ስለ ኢትዮጵያ ቱሪዝም ይመልሉ።
+የተጠየቀው ጥያቄ፦ "${message}"
+
+መመሪያዎች፦
+- ተጠቃሚው አጠቃላይ የውይይት ጥያቄ ከጠየቀ (ለምሳሌ "ሰላም"፣ "እንዴት ነህ"፣ "ዛሬ ስንት ቀን ነው")፣ በተለመደው እና በውይይት መልክ ይመልሱ።
 - ይህንን በግልጽል እና በምርጫ ይዙሉት
 - አጭር እና በግልጽል ይሁኑ
 - የተማማኙን ጥያቄ በትክክል ያሟላት
-- ተጨማማ መረጃ ያካትቱ
-- አስተማማኪ ጥያቄዎች ይጠይ቉
-
-የተጠየቀው ጥያቄ፦ "${message}"` :
+- አስተማማኪ ጥያቄዎች ይጠይ቉` :
 `You are an expert Ethiopia tourism assistant. Be helpful and engaging, but KEEP YOUR ANSWERS VERY SHORT AND CONCISE.
 
 Ethiopia tourism context:
 ${tourismContext}${conversationContext}
 
-Please answer this question about Ethiopia tourism: "${message}"
+User message: "${message}"
 
 Guidelines:
-- Keep your answers VERY short and concise. Answer only what is asked.
-- Be conversational and friendly, not robotic
-- Ask follow-up questions when helpful
+- If the user asks a general or conversational question (like "hi", "how are you", "what day is it"), answer it normally and conversationally.
+- If the user asks about Ethiopia tourism, use the context provided.
+- Keep your answers VERY short and concise.
+- Be conversational and friendly, not robotic.
+- Ask follow-up questions when helpful.
 - Reference previous conversation when relevant`;
 
             const token = process.env.OPENROUTER_API_KEY;
@@ -564,7 +568,7 @@ Guidelines:
             }
             const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
                 messages: [
-                    { role: "system", content: "You are a helpful assistant." },
+                    { role: "system", content: systemPrompt },
                     { role: "user", content: simplePrompt }
                 ],
                 model: "openai/gpt-4o-mini",
