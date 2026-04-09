@@ -58,7 +58,15 @@
 </section>
 
 <!-- Gallery Filter Section -->
-<section class="gallery-filters">
+<!-- Search Bar -->
+<section style="padding: 2rem; max-width: 800px; margin: 0 auto;">
+    <div class="search-container" style="position: relative;">
+        <input type="text" id="searchInput" placeholder="Search destinations..." data-en-placeholder="Search destinations..." data-am-placeholder="መዳረሻዎችን ይፈለ..." style="width: 100%; padding: 15px 20px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1rem; outline: none; transition: all 0.3s ease;">
+        <i class="fas fa-search" style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); color: #888;"></i>
+    </div>
+</section>
+
+<section class="gallery-filters" style="padding-top: 0;">
     <h2 data-en="Photo Gallery" data-am="የፎቶ ጋለሪ">Photo Gallery</h2>
     <p class="gallery-subtitle" data-en="Click on a destination to explore its photos" data-am="ፎቶዎቹን ለማየት መዳረሻ ላይ ጠቅ ያድርጉ">Click on a destination to explore its photos</p>
     <div class="filter-buttons" id="filterButtons">
@@ -202,11 +210,22 @@ function getCategoryIcon(category) {
 
 function displayPlaceCards(places) {
     const container = document.getElementById('galleryContent');
-    console.log('Filter:', currentFilter, 'Total places:', places.length);
-    console.log('Categories in data:', [...new Set(places.map(p => p.category))]);
+    const searchTerm = document.getElementById('searchInput') ? document.getElementById('searchInput').value.toLowerCase() : '';
+
+    console.log('Filter:', currentFilter, 'Search:', searchTerm, 'Total places:', places.length);
+
     const filtered = places.filter(p => {
-        if (currentFilter === 'all') return true;
-        return p.category && p.category.toLowerCase() === currentFilter.toLowerCase();
+        // Match category
+        const matchCat = currentFilter === 'all' || (p.category && p.category.toLowerCase() === currentFilter.toLowerCase());
+
+        // Match search term
+        const matchSearch = !searchTerm ||
+            (p.name && p.name.toLowerCase().includes(searchTerm)) ||
+            (p.name_am && p.name_am.toLowerCase().includes(searchTerm)) ||
+            (p.description && p.description.toLowerCase().includes(searchTerm)) ||
+            (p.description_am && p.description_am.toLowerCase().includes(searchTerm));
+
+        return matchCat && matchSearch;
     });
 
     if (filtered.length === 0) {
@@ -339,6 +358,14 @@ const categoryMap = {
 
 document.addEventListener('DOMContentLoaded', function() {
     loadGallery();
+
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            displayPlaceCards(allPlaces);
+        });
+    }
 
     document.getElementById('filterButtons').addEventListener('click', function(e) {
         var btn = e.target.closest('.filter-btn');
