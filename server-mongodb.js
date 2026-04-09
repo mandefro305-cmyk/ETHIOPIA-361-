@@ -516,9 +516,9 @@ If the question is about places not in the list above, use your general knowledg
 User question: ${message}`;
         }
 
-        // Using Google Gemini API (free and reliable)
+        // Using OpenRouter API
         try {
-            console.log('Gemini API Key:', process.env.GEMINI_API_KEY ? 'Key exists' : 'Key missing');
+            console.log('OpenRouter API Key:', process.env.OPENROUTER_API_KEY ? 'Key exists' : 'Key missing');
             console.log('Language:', language);
             console.log('Message:', message);
 
