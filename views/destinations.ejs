@@ -163,6 +163,9 @@ function displayDestinations(places) {
             </div>
         `;
         document.getElementById('pagination').innerHTML = '';
+        if (typeof updateLanguage === 'function') {
+            updateLanguage(localStorage.getItem('selectedLanguage') || 'en');
+        }
         return;
     }
 
@@ -256,6 +259,10 @@ function displayDestinations(places) {
         document.getElementById('pagination').innerHTML = paginationHtml;
     } else {
         document.getElementById('pagination').innerHTML = '';
+    }
+
+    if (typeof updateLanguage === 'function') {
+        updateLanguage(localStorage.getItem('selectedLanguage') || 'en');
     }
 }
 

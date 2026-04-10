@@ -258,8 +258,8 @@
 </section>
 
 <div class="place-detail">
-    <a href="/" class="back-btn">&larr; Back to Destinations</a>
-    <h2><%= place.name %></h2>
+    <a href="/" class="back-btn" data-en="&larr; Back to Destinations" data-am="&larr; ወደ መዳረሻዎች ይመለሱ">&larr; Back to Destinations</a>
+    <h2 data-en="<%= place.name %>" data-am="<%= place.name_am || place.name %>"><%= place.name %></h2>
     
     <% if(place.image_url && place.image_url !== '') { %>
         <% let imgSrc = place.image_url; %>
@@ -272,7 +272,7 @@
     <% if(place && place.description) { %>
         <div class="description-section" style="margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid var(--primary-color, #004d40);">
             <h3 data-en="About This Place" data-am="ስለዚህ ቦታ" style="color: var(--primary-color, #004d40); margin-bottom: 1rem;">About This Place</h3>
-            <p style="color: #333; line-height: 1.6; font-size: 1.1rem; margin: 0;"><%= place.description %></p>
+            <p data-en="<%= place.description %>" data-am="<%= place.description_am || place.description %>" style="color: #333; line-height: 1.6; font-size: 1.1rem; margin: 0;"><%= place.description %></p>
         </div>
     <% } else { %>
         <div class="description-section" style="margin: 2rem 0; padding: 1.5rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #ccc;">

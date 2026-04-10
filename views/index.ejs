@@ -136,6 +136,10 @@ async function loadPlaces() {
             </div>
         `).join('');
         
+        if (typeof updateLanguage === 'function') {
+            updateLanguage(localStorage.getItem('selectedLanguage') || 'en');
+        }
+
     } catch (error) {
         console.error('Error loading places:', error);
         document.getElementById('placesGrid').innerHTML = `
