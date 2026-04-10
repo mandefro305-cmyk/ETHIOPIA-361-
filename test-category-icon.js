@@ -10,7 +10,8 @@ const testCategoryIcon = () => {
             'Unique & Adventure Destinations': '🌋',
             'Lakes & Water Attractions': '🌊',
             'Cities & Urban Tourism': '🏙️',
-            'Relaxation & Resort Areas': '🌿'
+            'Relaxation & Resort Areas': '🌿',
+            'Religious': '⛪'
         };
         return icons[category] || '🏛️';
     })();
@@ -26,6 +27,7 @@ const testCategoryIcon = () => {
         'Lakes & Water Attractions',
         'Cities & Urban Tourism',
         'Relaxation & Resort Areas',
+        'Religious',
         'Unknown Category'
     ];
     
@@ -38,7 +40,8 @@ const testCategoryIcon = () => {
                 'Unique & Adventure Destinations': '🌋',
                 'Lakes & Water Attractions': '🌊',
                 'Cities & Urban Tourism': '🏙️',
-                'Relaxation & Resort Areas': '🌿'
+                'Relaxation & Resort Areas': '🌿',
+                'Religious': '⛪'
             };
             return icons[cat] || '🏛️';
         })();

@@ -727,7 +727,8 @@ app.post('/admin/add', isAuthenticated, upload.fields([{ name: 'image', maxCount
                     'Unique & Adventure Destinations': '🌋',
                     'Lakes & Water Attractions': '🌊',
                     'Cities & Urban Tourism': '🏙️',
-                    'Relaxation & Resort Areas': '🌿'
+                    'Relaxation & Resort Areas': '🌿',
+                    'Religious': '⛪'
                 };
                 return icons[category] || '🏛️';
             })(),
@@ -877,6 +878,18 @@ app.post('/admin/update/:id', isAuthenticated, upload.fields([{ name: 'image', m
             name_am: name_am || '',
             description_am: description_am || '',
             category: category || currentPlace.category,
+            category_icon: (() => {
+                const icons = {
+                    'Historical & Cultural Sites': '🏛️',
+                    'Nature & Mountains': '🌄',
+                    'Unique & Adventure Destinations': '🌋',
+                    'Lakes & Water Attractions': '🌊',
+                    'Cities & Urban Tourism': '🏙️',
+                    'Relaxation & Resort Areas': '🌿',
+                    'Religious': '⛪'
+                };
+                return icons[category || currentPlace.category] || '🏛️';
+            })(),
             image_url: imagePath,
             video_url: videoPath,
             gallery_images: galleryImages,
