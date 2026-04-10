@@ -40,7 +40,8 @@ const placeSchema = new mongoose.Schema({
             'Unique & Adventure Destinations',
             'Lakes & Water Attractions',
             'Cities & Urban Tourism',
-            'Relaxation & Resort Areas'
+            'Relaxation & Resort Areas',
+            'Religious'
         ],
         default: 'Historical & Cultural Sites'
     },
