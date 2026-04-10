@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="deployed" content="2026-04-02-08-15">
 <title><%= place.name %> - Ethiopia 361°</title>
+<meta name="description" content="<%= place.description ? place.description.substring(0, 150) + '...' : 'Discover ' + place.name + ' in Ethiopia.' %>">
+<meta name="keywords" content="<%= place.name %>, Ethiopia tourism, <%= place.category %>, travel Ethiopia">
+<meta property="og:title" content="<%= place.name %> - Ethiopia 361°">
+<meta property="og:description" content="<%= place.description ? place.description.substring(0, 150) + '...' : 'Discover ' + place.name + ' in Ethiopia.' %>">
+<% if(place.image_url) { %>
+<meta property="og:image" content="<%= place.image_url.startsWith('http') ? place.image_url : 'https://ethiopia-361-bg5k5.sevalla.app' + (place.image_url.startsWith('/') ? place.image_url : '/' + place.image_url) %>">
+<% } %>
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://ethiopia-361-bg5k5.sevalla.app/place/<%= place._id %>">
+<meta name="google-site-verification" content="2VZYuENAl9wrFf2V5xkHc3ZEfQlxEwBauNZmPFq-8BQ" />
 <link rel="stylesheet" href="/css/style.css">
 <link rel="stylesheet" href="/css/ai-chat.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
