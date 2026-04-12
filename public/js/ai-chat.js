@@ -1,7 +1,7 @@
 // AI Chat Widget JavaScript with Voice Recognition
 class AIChatWidget {
     constructor() {
-        this.isMinimized = false;
+        this.isMinimized = true; // Start minimized by default
         this.isRecording = false;
         this.recognition = null;
         this.synthesis = window.speechSynthesis;
@@ -20,6 +20,9 @@ class AIChatWidget {
     createChatWidget() {
         // Create chat widget HTML
         const chatHTML = `
+            <div class="ai-fab" id="aiFab" onclick="aiChat.toggleChat()" style="display: flex;">
+                💬
+            </div>
             <div class="ai-chat-widget minimized" id="aiChatWidget">
                 <div class="chat-header" onclick="aiChat.toggleChat()">
                     <h3>🇪🇹 Ethiopia Tourism AI</h3>
@@ -37,17 +40,21 @@ class AIChatWidget {
                     </div>
                 </div>
                 <div class="chat-input-container">
-                    <input 
-                        type="text" 
-                        class="chat-input" 
-                        id="chatInput" 
-                        placeholder="Ask about Ethiopia tourism... (Click 🎤 to speak)"
-                        maxlength="500"
-                    >
-                    <input type="file" id="chatImageUpload" accept="image/*" style="display: none">
-                    <button class="chat-upload" id="chatUploadBtn" title="Upload Image">📎</button>
-                    <button class="chat-mic" id="chatMic" title="Click to speak">🎤</button>
-                    <button class="chat-send" id="chatSend">Send</button>
+                    <div class="input-row">
+                        <input
+                            type="text"
+                            class="chat-input"
+                            id="chatInput"
+                            placeholder="Ask about Ethiopia..."
+                            maxlength="500"
+                        >
+                    </div>
+                    <div class="action-row">
+                        <input type="file" id="chatImageUpload" accept="image/*" style="display: none">
+                        <button class="action-btn chat-upload" id="chatUploadBtn" title="Upload Image">📎</button>
+                        <button class="action-btn chat-mic" id="chatMic" title="Click to speak">🎤</button>
+                        <button class="action-btn chat-send" id="chatSend">Send</button>
+                    </div>
                 </div>
             </div>
         `;
@@ -187,13 +194,35 @@ class AIChatWidget {
         if (this.isRecording) {
             this.recognition.stop();
         } else {
-            // Request microphone permission first
+            // Update UI to show we are listening *before* requesting permissions
+            // to provide immediate feedback to the user, particularly on mobile
+            // where the permission popup might block the main thread.
+            const micButton = document.getElementById('chatMic');
+            if (micButton) {
+                micButton.textContent = '⏳';
+                micButton.style.background = '#ffc107';
+            }
+
+            // Request microphone permission first to handle mobile browser requirements
             navigator.mediaDevices.getUserMedia({ audio: true })
-                .then(() => {
-                    this.recognition.start();
+                .then((stream) => {
+                    // Release the manual stream, we just needed to prompt for permission
+                    stream.getTracks().forEach(track => track.stop());
+
+                    try {
+                        this.recognition.start();
+                    } catch (e) {
+                        // Handle case where recognition is already started
+                        if (e.name === 'InvalidStateError') {
+                            console.warn('Recognition already started');
+                        } else {
+                            throw e;
+                        }
+                    }
                 })
                 .catch((error) => {
                     console.error('Microphone permission denied:', error);
+                    this.stopRecording();
                     this.addMessage('🎤 Microphone access is required for voice input. Please allow microphone access in your browser settings and try again.', 'ai');
                     
                     // Show helpful instructions
@@ -236,16 +265,16 @@ class AIChatWidget {
 
     toggleChat() {
         const widget = document.getElementById('aiChatWidget');
-        const toggle = document.getElementById('chatToggle');
+        const fab = document.getElementById('aiFab');
         
         this.isMinimized = !this.isMinimized;
         
         if (this.isMinimized) {
             widget.classList.add('minimized');
-            toggle.textContent = '+';
+            fab.style.display = 'flex';
         } else {
             widget.classList.remove('minimized');
-            toggle.textContent = '−';
+            fab.style.display = 'none';
             // Focus input when opening
             document.getElementById('chatInput').focus();
         }

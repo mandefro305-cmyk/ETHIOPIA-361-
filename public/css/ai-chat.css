@@ -15,7 +15,30 @@
 }
 
 .ai-chat-widget.minimized {
+    display: none;
+}
+
+.ai-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
     height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1000;
+    display: none; /* Initially hidden, since widget is not minimized by default */
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.ai-fab:hover {
+    transform: scale(1.1);
 }
 
 .chat-header {
@@ -99,15 +122,29 @@
 }
 
 .chat-input-container {
-    padding: 15px;
+    padding: 10px;
     border-top: 1px solid #eee;
     display: none;
+    flex-direction: column;
     background: white;
     border-radius: 0 0 10px 10px;
 }
 
 .ai-chat-widget:not(.minimized) .chat-input-container {
     display: flex;
+}
+
+.input-row {
+    display: flex;
+    width: 100%;
+    margin-bottom: 8px;
+}
+
+.action-row {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 8px;
 }
 
 .chat-input {
@@ -117,48 +154,40 @@
     border-radius: 20px;
     outline: none;
     font-size: 14px;
+    width: 100%;
 }
 
-.chat-send {
+.action-btn {
     background: #007bff;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 8px 12px;
     border-radius: 20px;
-    margin-left: 10px;
     cursor: pointer;
     font-size: 14px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.chat-send:hover {
+.action-btn:hover {
     background: #0056b3;
+    transform: scale(1.05);
+}
+
+.action-btn:active {
+    transform: scale(0.95);
+}
+
+.chat-send {
+    padding: 8px 15px;
 }
 
 .chat-send:disabled {
     background: #ccc;
     cursor: not-allowed;
-}
-
-.chat-mic, .chat-upload {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 12px;
-    border-radius: 20px;
-    margin-left: 10px;
-    cursor: pointer;
-    font-size: 14px;
-    min-width: 44px;
-    transition: all 0.3s ease;
-}
-
-.chat-mic:hover, .chat-upload:hover {
-    background: #0056b3;
-    transform: scale(1.05);
-}
-
-.chat-mic:active, .chat-upload:active {
-    transform: scale(0.95);
+    transform: none;
 }
 
 .typing-indicator {
@@ -175,8 +204,14 @@
 /* Responsive design */
 @media (max-width: 768px) {
     .ai-chat-widget {
-        width: 300px;
+        width: calc(100vw - 20px);
         right: 10px;
         bottom: 10px;
+        height: 400px;
+    }
+
+    .ai-fab {
+        bottom: 10px;
+        right: 10px;
     }
 }
