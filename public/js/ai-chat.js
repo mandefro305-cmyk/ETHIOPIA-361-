@@ -44,6 +44,8 @@ class AIChatWidget {
                         placeholder="Ask about Ethiopia tourism... (Click 🎤 to speak)"
                         maxlength="500"
                     >
+                    <input type="file" id="chatImageUpload" accept="image/*" style="display: none">
+                    <button class="chat-upload" id="chatUploadBtn" title="Upload Image">📎</button>
                     <button class="chat-mic" id="chatMic" title="Click to speak">🎤</button>
                     <button class="chat-send" id="chatSend">Send</button>
                 </div>
@@ -58,9 +60,36 @@ class AIChatWidget {
         const chatInput = document.getElementById('chatInput');
         const chatSend = document.getElementById('chatSend');
         const chatMic = document.getElementById('chatMic');
+        const chatUploadBtn = document.getElementById('chatUploadBtn');
+        const chatImageUpload = document.getElementById('chatImageUpload');
+
+        this.selectedImageBase64 = null;
+
+        // Image upload handling
+        if (chatUploadBtn && chatImageUpload) {
+            chatUploadBtn.addEventListener('click', () => {
+                chatImageUpload.click();
+            });
+
+            chatImageUpload.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        this.selectedImageBase64 = event.target.result;
+                        chatUploadBtn.style.background = '#28a745'; // Green to indicate success
+                        chatUploadBtn.title = 'Image attached: ' + file.name;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
 
         // Send message on button click
-        chatSend.addEventListener('click', () => this.sendMessage());
+        chatSend.addEventListener('click', () => {
+            this.lastInputWasVoice = false;
+            this.sendMessage();
+        });
 
         // Voice recording on microphone click
         chatMic.addEventListener('click', () => this.toggleVoiceRecording());
@@ -68,6 +97,7 @@ class AIChatWidget {
         // Send message on Enter key
         chatInput.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
+                this.lastInputWasVoice = false;
                 this.sendMessage();
             }
         });
@@ -91,6 +121,7 @@ class AIChatWidget {
             this.recognition.onresult = (event) => {
                 const transcript = event.results[0][0].transcript;
                 document.getElementById('chatInput').value = transcript;
+                this.lastInputWasVoice = true;
                 this.sendMessage();
             };
 
@@ -253,17 +284,35 @@ class AIChatWidget {
         }
 
         try {
+            const payload = {
+                message: message,
+                language: this.currentLang,
+                history: this.conversationHistory.slice(0, -1) // Send all previous messages except current
+            };
+
+            if (this.selectedImageBase64) {
+                payload.image = this.selectedImageBase64;
+            }
+
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    message: message,
-                    language: this.currentLang,
-                    history: this.conversationHistory.slice(0, -1) // Send all previous messages except current
-                })
+                body: JSON.stringify(payload)
             });
+
+            // Clear selected image
+            this.selectedImageBase64 = null;
+            const chatUploadBtn = document.getElementById('chatUploadBtn');
+            const chatImageUpload = document.getElementById('chatImageUpload');
+            if (chatUploadBtn) {
+                chatUploadBtn.style.background = '#007bff';
+                chatUploadBtn.title = 'Upload Image';
+            }
+            if (chatImageUpload) {
+                chatImageUpload.value = '';
+            }
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -284,8 +333,10 @@ class AIChatWidget {
                 timestamp: new Date().toISOString()
             });
             
-            // Speak the response
-            this.speakResponse(data.response);
+            // Speak the response only if the user used voice input
+            if (this.lastInputWasVoice) {
+                this.speakResponse(data.response);
+            }
             
         } catch (error) {
             console.error('Chat error:', error);
