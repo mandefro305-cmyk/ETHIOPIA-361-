@@ -463,11 +463,11 @@ const CACHE_TTL = 1000 * 60 * 60; // 1 hour
 // AI Chat API endpoint
 app.post('/api/chat', async (req, res) => {
     try {
-        const { message, language = 'en-US', history = [], conversationHistory = [] } = req.body;
+        const { message, image, language = 'en-US', history = [], conversationHistory = [] } = req.body;
         const chatHistory = history.length > 0 ? history : conversationHistory;
         
-        if (!message) {
-            return res.status(400).json({ error: 'Message is required' });
+        if (!message && !image) {
+            return res.status(400).json({ error: 'Message or image is required' });
         }
 
         // Get tourism data from database for context (with caching)
@@ -494,24 +494,21 @@ app.post('/api/chat', async (req, res) => {
         if (language === 'am-ET') {
             // Amharic prompt
             const currentDateAm = new Date().toLocaleDateString('am-ET', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            systemPrompt = `እርስዎ የኢትዮጵያ ቱሪዝም ብቃት ያለው እርዳታ ናቸው። ስለ ኢትዮጵያ የቱሪዝም መዳረሻዎች፣ ባህል እና የጉዞ ምክርተኛ በአማርኛ በተሟላ መረጃ ይስጡ። እባክዎ የዛሬው ቀን ${currentDateAm} መሆኑን ያስተውሉ።`;
-            userPrompt = `እርስዎ የኢትዮጵያን ቱሪዝም የሚያውቁ ተረዳኢ ናቸው። እነዚህን የኢትዮጵያ ቱሪዝም ቦታዎች ያውቁ፦
+            systemPrompt = `እርስዎ ብልጥ እና አጠቃላይ እርዳታ ነዎት። የኢትዮጵያ ቱሪዝም ላይ ልዩ እውቀት አለዎት። ነገር ግን ማንኛውንም ጥያቄ (ስለ አጠቃላይ እውቀት፣ በምስል ላይ የተመሰረቱ ጥያቄዎች እና ስለ ሌሎች ጉዳዮች) መመለስ ይችላሉ። በተጠቃሚው ጥያቄ መሰረት ተገቢውን መልስ በአማርኛ ይስጡ። የዛሬው ቀን ${currentDateAm} ነው።`;
+            userPrompt = `እርስዎ አጠቃላይ እውቀት ያለው ረዳት ነዎት (በተለይ ስለ ኢትዮጵያ ቱሪዝም ያውቃሉ)። ከዚህ በታች ያለው የኢትዮጵያ ቱሪዝም መረጃ ለጥያቄው ጠቃሚ ከሆነ ይጠቀሙበት፦
 ${tourismContext}
 
-እባክዎ የተጠየቁትን ጥያቄ ስለ ኢትዮጵያ ቱሪዝም በአማርኛ ይመልሱ። ብቃት ያለው፣ ትክክለኛነት ያለው እና ዝርዝር መረጃ ይስጡ።
-በላይኛው ዝርዝር ውስጥ ያልተገኘውን ቦታ ከሆነ ጥያቄው፣ የኢትዮጵያን ቱሪዝም አጠቃላይ እውቀትዎን ይጠቀሙ።
+እባክዎ የተጠቃሚውን ጥያቄ ወይም የተላከውን ምስል መርምረው በአማርኛ ይመልሱ። ብቃት ያለው፣ ትክክለኛነት ያለው፣ እና ተስማሚ መልስ ይስጡ።
 
-የተጠየቀው ጥያቄ፦ ${message}`;
+የተጠቃሚው ጥያቄ፦ ${message}`;
         } else {
             // English prompt
             const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            systemPrompt = `You are a knowledgeable tourism assistant for Ethiopia. Provide helpful, accurate information about Ethiopian tourist destinations, culture, and travel tips. For your awareness, today's date is ${currentDate}.`;
-            userPrompt = `You are a helpful AI assistant specializing in Ethiopia tourism.
-You have knowledge about the following Ethiopia tourist places:
+            systemPrompt = `You are a highly intelligent, conversational, and general-purpose AI assistant. You specialize in Ethiopian tourism, but you are fully capable of answering general knowledge questions, analyzing uploaded images, or discussing any topic the user asks about. For your awareness, today's date is ${currentDate}.`;
+            userPrompt = `You are a helpful and intelligent AI assistant. Use the following context about Ethiopia tourist places ONLY if it is relevant to the user's question:
 ${tourismContext}
 
-Please answer the user's question about Ethiopia tourism. Be helpful, accurate, and provide detailed information.
-If the question is about places not in the list above, use your general knowledge about Ethiopia tourism.
+Please answer the user's question or analyze the provided image. Be conversational, helpful, accurate, and provide detailed information regardless of the topic.
 
 User question: ${message}`;
         }
@@ -566,14 +563,24 @@ Guidelines:
                 console.error("OPENROUTER_API_KEY environment variable is not set.");
                 throw new Error("API token is missing.");
             }
+
+            let userContent = simplePrompt;
+            if (image) {
+                userContent = [
+                    { type: "text", text: simplePrompt },
+                    { type: "image_url", image_url: { url: image } }
+                ];
+            }
+
             const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
                 messages: [
                     { role: "system", content: systemPrompt },
-                    { role: "user", content: simplePrompt }
+                    { role: "user", content: userContent }
                 ],
                 model: "openai/gpt-4o-mini",
                 temperature: 0.7,
-                max_tokens: 150
+                max_tokens: 150,
+                plugins: [{ id: "web", max_results: 5 }]
             }, {
                 headers: {
                     'Content-Type': 'application/json',

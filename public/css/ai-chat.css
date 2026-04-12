@@ -139,7 +139,7 @@
     cursor: not-allowed;
 }
 
-.chat-mic {
+.chat-mic, .chat-upload {
     background: #007bff;
     color: white;
     border: none;
@@ -152,12 +152,12 @@
     transition: all 0.3s ease;
 }
 
-.chat-mic:hover {
+.chat-mic:hover, .chat-upload:hover {
     background: #0056b3;
     transform: scale(1.05);
 }
 
-.chat-mic:active {
+.chat-mic:active, .chat-upload:active {
     transform: scale(0.95);
 }
 
