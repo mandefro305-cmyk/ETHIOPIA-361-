@@ -17,6 +17,26 @@ class AIChatWidget {
         this.initVoiceRecognition();
     }
 
+    clearImageSelection() {
+        this.selectedImageBase64 = null;
+        const chatUploadBtn = document.getElementById('chatUploadBtn');
+        const chatImageUpload = document.getElementById('chatImageUpload');
+        const previewContainer = document.getElementById('imagePreviewContainer');
+        const previewImg = document.getElementById('imagePreview');
+
+        if (chatUploadBtn) {
+            chatUploadBtn.style.background = '';
+            chatUploadBtn.title = 'Upload Image';
+        }
+        if (chatImageUpload) {
+            chatImageUpload.value = '';
+        }
+        if (previewContainer && previewImg) {
+            previewContainer.style.display = 'none';
+            previewImg.src = '';
+        }
+    }
+
     createChatWidget() {
         // Create chat widget HTML
         const chatHTML = `
@@ -40,6 +60,10 @@ class AIChatWidget {
                     </div>
                 </div>
                 <div class="chat-input-container">
+                    <div id="imagePreviewContainer" style="display: none; position: relative; margin-bottom: 10px; max-width: 100px;">
+                        <img id="imagePreview" src="" alt="Preview" style="max-width: 100%; border-radius: 8px;">
+                        <button id="removeImageBtn" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; padding: 0;">×</button>
+                    </div>
                     <div class="input-row">
                         <input
                             type="text"
@@ -86,10 +110,24 @@ class AIChatWidget {
                         this.selectedImageBase64 = event.target.result;
                         chatUploadBtn.style.background = '#28a745'; // Green to indicate success
                         chatUploadBtn.title = 'Image attached: ' + file.name;
+
+                        const previewContainer = document.getElementById('imagePreviewContainer');
+                        const previewImg = document.getElementById('imagePreview');
+                        if (previewContainer && previewImg) {
+                            previewImg.src = this.selectedImageBase64;
+                            previewContainer.style.display = 'block';
+                        }
                     };
                     reader.readAsDataURL(file);
                 }
             });
+
+            const removeImageBtn = document.getElementById('removeImageBtn');
+            if (removeImageBtn) {
+                removeImageBtn.addEventListener('click', () => {
+                    this.clearImageSelection();
+                });
+            }
         }
 
         // Send message on button click
@@ -283,11 +321,12 @@ class AIChatWidget {
     async sendMessage() {
         const input = document.getElementById('chatInput');
         const message = input.value.trim();
+        const hasImage = this.selectedImageBase64 !== null;
         
-        if (!message) return;
+        if (!message && !hasImage) return;
 
         // Add user message to chat
-        this.addMessage(message, 'user');
+        this.addMessage(message, 'user', this.selectedImageBase64);
         
         // Clear input
         input.value = '';
@@ -332,16 +371,7 @@ class AIChatWidget {
             });
 
             // Clear selected image
-            this.selectedImageBase64 = null;
-            const chatUploadBtn = document.getElementById('chatUploadBtn');
-            const chatImageUpload = document.getElementById('chatImageUpload');
-            if (chatUploadBtn) {
-                chatUploadBtn.style.background = '#007bff';
-                chatUploadBtn.title = 'Upload Image';
-            }
-            if (chatImageUpload) {
-                chatImageUpload.value = '';
-            }
+            this.clearImageSelection();
 
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -385,11 +415,26 @@ class AIChatWidget {
         }
     }
 
-    addMessage(text, sender) {
+    addMessage(text, sender, imageUrl = null) {
         const messagesContainer = document.getElementById('chatMessages');
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
-        messageDiv.textContent = text;
+
+        if (imageUrl) {
+            const imgElement = document.createElement('img');
+            imgElement.src = imageUrl;
+            imgElement.style.maxWidth = '100%';
+            imgElement.style.borderRadius = '8px';
+            imgElement.style.marginBottom = '8px';
+            imgElement.style.display = 'block';
+            messageDiv.appendChild(imgElement);
+        }
+
+        if (text) {
+            const textElement = document.createElement('span');
+            textElement.textContent = text;
+            messageDiv.appendChild(textElement);
+        }
         
         messagesContainer.appendChild(messageDiv);
         
