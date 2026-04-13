@@ -27,6 +27,7 @@ class AIChatWidget {
         if (chatUploadBtn) {
             chatUploadBtn.style.background = '';
             chatUploadBtn.title = 'Upload Image';
+            chatUploadBtn.innerHTML = '<i class="fa-solid fa-paperclip"></i>';
         }
         if (chatImageUpload) {
             chatImageUpload.value = '';
@@ -41,7 +42,7 @@ class AIChatWidget {
         // Create chat widget HTML
         const chatHTML = `
             <div class="ai-fab" id="aiFab" onclick="aiChat.toggleChat()" style="display: flex;">
-                💬
+                <i class="fa-solid fa-robot"></i>
             </div>
             <div class="ai-chat-widget minimized" id="aiChatWidget">
                 <div class="chat-header" onclick="aiChat.toggleChat()">
@@ -60,26 +61,31 @@ class AIChatWidget {
                     </div>
                 </div>
                 <div class="chat-input-container">
-                    <div id="imagePreviewContainer" style="display: none; position: relative; margin-bottom: 10px; max-width: 100px;">
-                        <img id="imagePreview" src="" alt="Preview" style="max-width: 100%; border-radius: 8px;">
-                        <button id="removeImageBtn" style="position: absolute; top: -5px; right: -5px; background: red; color: white; border: none; border-radius: 50%; width: 20px; height: 20px; cursor: pointer; display: flex; justify-content: center; align-items: center; font-size: 12px; padding: 0;">×</button>
+                    <div id="imagePreviewContainer" style="display: none;">
+                        <img id="imagePreview" src="" alt="Preview">
+                        <button id="removeImageBtn"><i class="fa-solid fa-times"></i></button>
                     </div>
                     <div class="input-row">
-                        <input
-                            type="text"
+                        <textarea
                             class="chat-input"
                             id="chatInput"
                             placeholder="Ask about Ethiopia..."
                             maxlength="500"
-                        >
+                            rows="1"
+                        ></textarea>
                     </div>
                     <div class="action-row">
                         <input type="file" id="chatImageUpload" accept="image/*" style="display: none">
-                        <button class="action-btn chat-upload" id="chatUploadBtn" title="Upload Image">📎</button>
-                        <button class="action-btn chat-mic" id="chatMic" title="Click to speak">🎤</button>
-                        <button class="action-btn chat-send" id="chatSend">Send</button>
+                        <button class="action-btn chat-upload" id="chatUploadBtn" title="Upload Image"><i class="fa-solid fa-paperclip"></i></button>
+                        <button class="action-btn chat-mic" id="chatMic" title="Click to speak"><i class="fa-solid fa-microphone"></i></button>
+                        <button class="action-btn chat-send" id="chatSend"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
+            </div>
+            <!-- Image Modal -->
+            <div id="chatImageModal" class="chat-image-modal">
+                <button class="chat-image-modal-close" onclick="document.getElementById('chatImageModal').classList.remove('show')">&times;</button>
+                <img class="chat-image-modal-content" id="chatImageModalImg">
             </div>
         `;
 
@@ -93,10 +99,46 @@ class AIChatWidget {
         const chatMic = document.getElementById('chatMic');
         const chatUploadBtn = document.getElementById('chatUploadBtn');
         const chatImageUpload = document.getElementById('chatImageUpload');
+        const removeImageBtn = document.getElementById('removeImageBtn');
 
         this.selectedImageBase64 = null;
 
+        // Auto-resize textarea
+        if (chatInput) {
+            chatInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = (this.scrollHeight) + 'px';
+            });
+
+            // Handle enter key to send (Shift+Enter for new line)
+            chatInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.sendMessage();
+                }
+            });
+        }
+
+        // Modal background click to close
+        const modal = document.getElementById('chatImageModal');
+        if (modal) {
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('show');
+                }
+            });
+        }
+
+        if (removeImageBtn) {
+            removeImageBtn.addEventListener('click', () => {
+                this.clearImageSelection();
+            });
+        }
+
         // Image upload handling
+
+        // Image upload handling
+// Image upload handling
         if (chatUploadBtn && chatImageUpload) {
             chatUploadBtn.addEventListener('click', () => {
                 chatImageUpload.click();
@@ -108,7 +150,8 @@ class AIChatWidget {
                     const reader = new FileReader();
                     reader.onload = (event) => {
                         this.selectedImageBase64 = event.target.result;
-                        chatUploadBtn.style.background = '#28a745'; // Green to indicate success
+                        chatUploadBtn.style.background = '#28a745';
+                        chatUploadBtn.innerHTML = '<i class="fa-solid fa-check"></i>'; // Green to indicate success
                         chatUploadBtn.title = 'Image attached: ' + file.name;
 
                         const previewContainer = document.getElementById('imagePreviewContainer');
@@ -237,7 +280,7 @@ class AIChatWidget {
             // where the permission popup might block the main thread.
             const micButton = document.getElementById('chatMic');
             if (micButton) {
-                micButton.textContent = '⏳';
+                micButton.innerHTML = '<i class="fa-solid fa-hourglass-half"></i>';
                 micButton.style.background = '#ffc107';
             }
 
@@ -275,7 +318,7 @@ class AIChatWidget {
         this.isRecording = false;
         const micButton = document.getElementById('chatMic');
         if (micButton) {
-            micButton.textContent = '🎤';
+            micButton.innerHTML = '<i class="fa-solid fa-microphone"></i>';
             micButton.style.background = '#007bff';
         }
     }
@@ -330,11 +373,12 @@ class AIChatWidget {
         
         // Clear input
         input.value = '';
+        input.style.height = 'auto';
         
         // Disable send button
         const sendButton = document.getElementById('chatSend');
         sendButton.disabled = true;
-        sendButton.textContent = '...';
+        sendButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
 
         // Show typing indicator
         this.showTypingIndicator();
@@ -411,7 +455,7 @@ class AIChatWidget {
         } finally {
             // Re-enable send button
             sendButton.disabled = false;
-            sendButton.textContent = 'Send';
+            sendButton.innerHTML = '<i class="fa-solid fa-paper-plane"></i>';
         }
     }
 
@@ -424,13 +468,25 @@ class AIChatWidget {
             const imgElement = document.createElement('img');
             imgElement.src = imageUrl;
             imgElement.style.maxWidth = '100%';
+            imgElement.style.maxHeight = '150px'; // Keep inline small
             imgElement.style.borderRadius = '8px';
             imgElement.style.marginBottom = '8px';
             imgElement.style.display = 'block';
+            imgElement.style.objectFit = 'cover';
+
+            // Add click event for modal
+            imgElement.onclick = function() {
+                const modal = document.getElementById('chatImageModal');
+                const modalImg = document.getElementById('chatImageModalImg');
+                if (modal && modalImg) {
+                    modalImg.src = this.src;
+                    modal.classList.add('show');
+                }
+            };
+
             messageDiv.appendChild(imgElement);
         }
-
-        if (text) {
+if (text) {
             const textElement = document.createElement('span');
             textElement.textContent = text;
             messageDiv.appendChild(textElement);
