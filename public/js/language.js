@@ -13,9 +13,9 @@ function updateLanguage(lang) {
     
     for(var i = 0; i < elements.length; i++) {
         if(lang === "am"){
-            elements[i].innerText = elements[i].getAttribute("data-am");
+            elements[i].textContent = elements[i].getAttribute("data-am");
         } else {
-            elements[i].innerText = elements[i].getAttribute("data-en");
+            elements[i].textContent = elements[i].getAttribute("data-en");
         }
     }
 }

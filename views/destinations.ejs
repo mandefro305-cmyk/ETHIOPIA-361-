@@ -323,15 +323,20 @@ function toggleReadMore(button) {
     const card = button.closest('.card');
     const shortText = card.querySelector('.short-text');
     const fullText = card.querySelector('.full-text');
+    const currentLang = localStorage.getItem('selectedLanguage') || 'en';
     
     if (shortText.style.display === 'none') {
         shortText.style.display = 'inline';
         fullText.style.display = 'none';
-        button.innerHTML = button.getAttribute('data-en') === 'Read More' ? 'Read More' : 'ተጨማሪ ያንብቡ';
+        button.setAttribute('data-en', 'Read More');
+        button.setAttribute('data-am', 'ተጨማሪ ያንብቡ');
+        button.textContent = currentLang === 'am' ? 'ተጨማሪ ያንብቡ' : 'Read More';
     } else {
         shortText.style.display = 'none';
         fullText.style.display = 'inline';
-        button.innerHTML = button.getAttribute('data-en') === 'Read More' ? 'Read Less' : 'ተነባይ ያንብቡ';
+        button.setAttribute('data-en', 'Read Less');
+        button.setAttribute('data-am', 'ያነሰ ያንብቡ');
+        button.textContent = currentLang === 'am' ? 'ያነሰ ያንብቡ' : 'Read Less';
     }
 }
 
