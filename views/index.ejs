@@ -203,7 +203,7 @@ function toggleMobileMenu() {
 function toggleReadMore(button) {
     const card = button.closest('.destination-card');
     const description = card.querySelector('.card-description');
-    const currentLang = document.documentElement.lang || 'en';
+    const currentLang = localStorage.getItem('selectedLanguage') || 'en';
     
     if (description) {
         const isExpanded = description.style.maxHeight === 'none';
@@ -212,6 +212,8 @@ function toggleReadMore(button) {
             // Collapse
             description.style.maxHeight = '4.8rem';
             description.style.overflow = 'hidden';
+            button.setAttribute('data-en', 'Read More');
+            button.setAttribute('data-am', 'ተጨማሪ ያንብቡ');
             button.textContent = currentLang === 'am' ? 'ተጨማሪ ያንብቡ' : 'Read More';
         } else {
             // Expand
@@ -219,7 +221,9 @@ function toggleReadMore(button) {
             description.textContent = fullText;
             description.style.maxHeight = 'none';
             description.style.overflow = 'visible';
-            button.textContent = currentLang === 'am' ? 'ያነሰውን ያንብቡ' : 'Read Less';
+            button.setAttribute('data-en', 'Read Less');
+            button.setAttribute('data-am', 'ያነሰ ያንብቡ');
+            button.textContent = currentLang === 'am' ? 'ያነሰ ያንብቡ' : 'Read Less';
         }
     }
 }
