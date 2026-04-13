@@ -577,7 +577,7 @@ Guidelines:
                     { role: "system", content: systemPrompt },
                     { role: "user", content: userContent }
                 ],
-                model: "openai/gpt-4o-mini",
+                model: "google/gemma-3-27b-it:free",
                 temperature: 0.7,
                 max_tokens: 150,
                 plugins: [{ id: "web", max_results: 5 }]
