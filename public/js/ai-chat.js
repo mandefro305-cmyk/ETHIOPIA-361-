@@ -48,7 +48,11 @@ class AIChatWidget {
                 <div class="chat-header" onclick="aiChat.toggleChat()">
                     <h3>🇪🇹 Ethiopia Tourism AI</h3>
                     <div class="header-controls">
-                        <select class="lang-selector" id="langSelector" onchange="aiChat.changeLanguage(this.value)">
+                        <select class="lang-selector" id="aiProviderSelector" onclick="event.stopPropagation();">
+                            <option value="groq">Groq</option>
+                            <option value="openrouter">OpenRouter</option>
+                        </select>
+                        <select class="lang-selector" id="langSelector" onchange="aiChat.changeLanguage(this.value)" onclick="event.stopPropagation();">
                             <option value="en-US">🇬🇧 EN</option>
                             <option value="am-ET">🇪🇹 አማ</option>
                         </select>
@@ -396,10 +400,14 @@ class AIChatWidget {
         }
 
         try {
+            const providerSelector = document.getElementById('aiProviderSelector');
+            const provider = providerSelector ? providerSelector.value : 'groq';
+
             const payload = {
                 message: message,
                 language: this.currentLang,
-                history: this.conversationHistory.slice(0, -1) // Send all previous messages except current
+                history: this.conversationHistory.slice(0, -1), // Send all previous messages except current
+                provider: provider
             };
 
             if (this.selectedImageBase64) {

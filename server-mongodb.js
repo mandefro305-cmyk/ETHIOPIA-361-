@@ -463,7 +463,7 @@ const CACHE_TTL = 1000 * 60 * 60; // 1 hour
 // AI Chat API endpoint
 app.post('/api/chat', async (req, res) => {
     try {
-        const { message, image, language = 'en-US', history = [], conversationHistory = [] } = req.body;
+        const { message, image, language = 'en-US', history = [], conversationHistory = [], provider = 'groq' } = req.body;
         const chatHistory = history.length > 0 ? history : conversationHistory;
         
         if (!message && !image) {
@@ -558,56 +558,107 @@ Guidelines:
 - Ask follow-up questions when helpful.
 - Reference previous conversation when relevant`;
 
-            console.log('Groq API Key:', process.env.GROQ_API_KEY ? 'Key exists' : 'Key missing');
-            const token = process.env.GROQ_API_KEY;
-
-            if (!token) {
-                console.error("GROQ_API_KEY environment variable is not set.");
-                throw new Error("API token is missing.");
-            }
-
-            // Note: Groq chat completions generally prefer text-only for standard models unless
-            // using specific multimodal models. For now, we fallback to text only.
-            let userContent = simplePrompt;
-            if (image) {
-                const imageFallbackInstruction = language === 'am-ET' ?
-                    "\n\n[ማሳሰቢያ ለረዳት፡ ተጠቃሚው ምስል ልኳል፣ ነገር ግን አሁን ምስሎችን ማየት አይችሉም። እባክዎ እንደ ቱሪዝም ባለሙያ ሆነው በታላቅ ትህትና ተጠቃሚው የቦታውን ስም እንዲነግሩዎት ወይም ምስሉን በቃላት እንዲገልጹልዎት ይጠይቁ።]" :
-                    "\n\n[SYSTEM NOTE: The user uploaded an image, but your vision capabilities are currently offline. Act as the helpful tourism expert and politely ask the user to describe the image or tell you the name of the place they are showing you.]";
-                userContent = simplePrompt + imageFallbackInstruction;
-            }
-
-            const model = "llama-3.3-70b-versatile";
             let aiResponse = null;
 
-            try {
-                console.log(`Trying Groq model: ${model}`);
-                const response = await axios.post(`https://api.groq.com/openai/v1/chat/completions`, {
-                    messages: [
-                        { role: "system", content: systemPrompt },
-                        { role: "user", content: userContent }
-                    ],
-                    model: model,
-                    temperature: 0.7,
-                    max_tokens: 150
-                }, {
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
+            if (provider === 'openrouter') {
+                console.log('OpenRouter API Key:', process.env.OPENROUTER_API_KEY ? 'Key exists' : 'Key missing');
+                const token = process.env.OPENROUTER_API_KEY;
 
-                console.log(`Groq API response status for ${model}:`, response.status);
-                aiResponse = response.data.choices[0].message.content;
-
-                res.json({ response: aiResponse });
-
-            } catch (error) {
-                console.error(`Groq API Error with model ${model}:`, error.message);
-                if (error.response && error.response.data) {
-                    console.error('Groq API Error Details:', JSON.stringify(error.response.data, null, 2));
+                if (!token) {
+                    console.error("OPENROUTER_API_KEY environment variable is not set.");
+                    throw new Error("OpenRouter API token is missing.");
                 }
-                throw error;
+
+                let userContent = simplePrompt;
+                if (image) {
+                    userContent = [
+                        { type: "text", text: simplePrompt },
+                        { type: "image_url", image_url: { url: image } }
+                    ];
+                }
+
+                try {
+                    const model = "openai/gpt-4o-mini";
+                    console.log(`Trying OpenRouter model: ${model}`);
+                    const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userContent }
+                        ],
+                        model: model,
+                        temperature: 0.7,
+                        max_tokens: 150,
+                        plugins: [{ id: "web", max_results: 5 }]
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                            'HTTP-Referer': 'https://ethiopia361.com',
+                            'X-Title': 'Ethiopia 361 AI Chat'
+                        }
+                    });
+
+                    console.log(`OpenRouter API response status for ${model}:`, response.status);
+                    aiResponse = response.data.choices[0].message.content;
+                } catch (error) {
+                    console.error(`OpenRouter API Error:`, error.message);
+                    if (error.response && error.response.data) {
+                        console.error('OpenRouter API Error Details:', JSON.stringify(error.response.data, null, 2));
+                    }
+                    throw error;
+                }
+            } else {
+                // Default to Groq
+                console.log('Groq API Key:', process.env.GROQ_API_KEY ? 'Key exists' : 'Key missing');
+                const token = process.env.GROQ_API_KEY;
+
+                if (!token) {
+                    console.error("GROQ_API_KEY environment variable is not set.");
+                    throw new Error("Groq API token is missing.");
+                }
+
+                // Note: Groq chat completions generally prefer text-only for standard models unless
+                // using specific multimodal models. For now, we fallback to text only.
+                let userContent = simplePrompt;
+                if (image) {
+                    const imageFallbackInstruction = language === 'am-ET' ?
+                        "\n\n[ማሳሰቢያ ለረዳት፡ ተጠቃሚው ምስል ልኳል፣ ነገር ግን አሁን ምስሎችን ማየት አይችሉም። እባክዎ እንደ ቱሪዝም ባለሙያ ሆነው በታላቅ ትህትና ተጠቃሚው የቦታውን ስም እንዲነግሩዎት ወይም ምስሉን በቃላት እንዲገልጹልዎት ይጠይቁ።]" :
+                        "\n\n[SYSTEM NOTE: The user uploaded an image, but your vision capabilities are currently offline. Act as the helpful tourism expert and politely ask the user to describe the image or tell you the name of the place they are showing you.]";
+                    userContent = simplePrompt + imageFallbackInstruction;
+                }
+
+                const model = "llama-3.3-70b-versatile";
+
+                try {
+                    console.log(`Trying Groq model: ${model}`);
+                    const response = await axios.post(`https://api.groq.com/openai/v1/chat/completions`, {
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userContent }
+                        ],
+                        model: model,
+                        temperature: 0.7,
+                        max_tokens: 150
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+
+                    console.log(`Groq API response status for ${model}:`, response.status);
+                    aiResponse = response.data.choices[0].message.content;
+
+                } catch (error) {
+                    console.error(`Groq API Error with model ${model}:`, error.message);
+                    if (error.response && error.response.data) {
+                        console.error('Groq API Error Details:', JSON.stringify(error.response.data, null, 2));
+                    }
+                    throw error;
+                }
             }
+
+            res.json({ response: aiResponse });
 
         } catch (apiError) {
             console.error('AI API Error:', apiError.message);
