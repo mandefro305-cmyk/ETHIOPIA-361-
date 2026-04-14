@@ -1,7 +1,7 @@
 {
   "name": "ethiopia-tourism-website",
   "version": "1.0.0",
-  "description": "A modern, responsive tourism website showcasing the beauty of Ethiopia with multi-language support, video backgrounds, and AI-powered chat assistance.",
+  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node server-mongodb.js",
@@ -28,13 +28,5 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mandefro305-cmyk/ETHIOPIA-361-.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mandefro305-cmyk/ETHIOPIA-361-/issues"
-  },
-  "homepage": "https://github.com/mandefro305-cmyk/ETHIOPIA-361-#readme"
+  }
 }

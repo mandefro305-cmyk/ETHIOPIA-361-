@@ -572,27 +572,48 @@ Guidelines:
                 ];
             }
 
-            const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
-                messages: [
-                    { role: "system", content: systemPrompt },
-                    { role: "user", content: userContent }
-                ],
-                model: "google/gemma-3-27b-it:free",
-                temperature: 0.7,
-                max_tokens: 150,
-                plugins: [{ id: "web", max_results: 5 }]
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                    'HTTP-Referer': 'https://ethiopia361.com',
-                    'X-Title': 'Ethiopia 361 AI Chat'
-                }
-            });
+            const models = ["google/gemma-3-4b-it:free", "nvidia/nemotron-nano-12b-v2-vl:free", "google/gemma-4-26b-a4b-it:free"];
+            let aiResponse = null;
+            let lastError = null;
 
-            console.log('OpenRouter API response status:', response.status);
-            const aiResponse = response.data.choices[0].message.content;
-            res.json({ response: aiResponse });
+            for (const currentModel of models) {
+                try {
+                    console.log(`Trying OpenRouter model: ${currentModel}`);
+                    const response = await axios.post(`https://openrouter.ai/api/v1/chat/completions`, {
+                        messages: [
+                            { role: "system", content: systemPrompt },
+                            { role: "user", content: userContent }
+                        ],
+                        model: currentModel,
+                        temperature: 0.7,
+                        max_tokens: 150,
+                        plugins: [{ id: "web", max_results: 5 }]
+                    }, {
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`,
+                            'HTTP-Referer': 'https://ethiopia361.com',
+                            'X-Title': 'Ethiopia 361 AI Chat'
+                        }
+                    });
+
+                    console.log(`OpenRouter API response status for ${currentModel}:`, response.status);
+                    aiResponse = response.data.choices[0].message.content;
+                    break; // Success, break out of loop
+                } catch (error) {
+                    console.error(`OpenRouter API Error with model ${currentModel}:`, error.message);
+                    if (error.response && error.response.data) {
+                        console.error('OpenRouter API Error Details:', JSON.stringify(error.response.data, null, 2));
+                    }
+                    lastError = error;
+                }
+            }
+
+            if (aiResponse) {
+                res.json({ response: aiResponse });
+            } else {
+                throw lastError || new Error("All fallback models failed");
+            }
 
         } catch (apiError) {
             console.error('OpenRouter API Error:', apiError.message);
