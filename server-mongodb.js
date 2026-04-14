@@ -494,7 +494,7 @@ app.post('/api/chat', async (req, res) => {
         if (language === 'am-ET') {
             // Amharic prompt
             const currentDateAm = new Date().toLocaleDateString('am-ET', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            systemPrompt = `እርስዎ ብልጥ እና አጠቃላይ እርዳታ ነዎት። የኢትዮጵያ ቱሪዝም ላይ ልዩ እውቀት አለዎት። ነገር ግን ማንኛውንም ጥያቄ (ስለ አጠቃላይ እውቀት፣ በምስል ላይ የተመሰረቱ ጥያቄዎች እና ስለ ሌሎች ጉዳዮች) መመለስ ይችላሉ። በተጠቃሚው ጥያቄ መሰረት ተገቢውን መልስ በአማርኛ ይስጡ። የዛሬው ቀን ${currentDateAm} ነው።`;
+            systemPrompt = `እርስዎ ብልጥ እና አጠቃላይ እርዳታ ነዎት። የኢትዮጵያ ቱሪዝም ላይ ልዩ እውቀት አለዎት። ነገር ግን ማንኛውንም ጥያቄ (ስለ አጠቃላይ እውቀት፣ በምስል ላይ የተመሰረቱ ጥያቄዎች እና ስለ ሌሎች ጉዳዮች) መመለስ ይችላሉ። በተጠቃሚው ጥያቄ መሰረት ተገቢውን መልስ በአማርኛ ይስጡ። የዛሬው ቀን ${currentDateAm} ነው። እባክዎ እንደ ባለሙያ የቱሪዝም ባለሙያ ሁሌም የቱሪዝም አውድ ያቆዩ።`;
             userPrompt = `እርስዎ አጠቃላይ እውቀት ያለው ረዳት ነዎት (በተለይ ስለ ኢትዮጵያ ቱሪዝም ያውቃሉ)። ከዚህ በታች ያለው የኢትዮጵያ ቱሪዝም መረጃ ለጥያቄው ጠቃሚ ከሆነ ይጠቀሙበት፦
 ${tourismContext}
 
@@ -504,7 +504,7 @@ ${tourismContext}
         } else {
             // English prompt
             const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-            systemPrompt = `You are a highly intelligent, conversational, and general-purpose AI assistant. You specialize in Ethiopian tourism, but you are fully capable of answering general knowledge questions, analyzing uploaded images, or discussing any topic the user asks about. For your awareness, today's date is ${currentDate}.`;
+            systemPrompt = `You are an expert Ethiopia tourism assistant. You are highly intelligent, conversational, and specialize entirely in Ethiopian tourism. Always maintain the persona of a helpful and engaging tourism expert. You are also capable of answering general knowledge questions, analyzing uploaded images, or discussing any topic the user asks about, but always tie it back to your persona as a tourism guide. For your awareness, today's date is ${currentDate}.`;
             userPrompt = `You are a helpful and intelligent AI assistant. Use the following context about Ethiopia tourist places ONLY if it is relevant to the user's question:
 ${tourismContext}
 
@@ -570,7 +570,10 @@ Guidelines:
             // using specific multimodal models. For now, we fallback to text only.
             let userContent = simplePrompt;
             if (image) {
-                userContent = simplePrompt + " [User uploaded an image, but I can only process text right now.]";
+                const imageFallbackInstruction = language === 'am-ET' ?
+                    "\n\n[ማሳሰቢያ ለረዳት፡ ተጠቃሚው ምስል ልኳል፣ ነገር ግን አሁን ምስሎችን ማየት አይችሉም። እባክዎ እንደ ቱሪዝም ባለሙያ ሆነው በታላቅ ትህትና ተጠቃሚው የቦታውን ስም እንዲነግሩዎት ወይም ምስሉን በቃላት እንዲገልጹልዎት ይጠይቁ።]" :
+                    "\n\n[SYSTEM NOTE: The user uploaded an image, but your vision capabilities are currently offline. Act as the helpful tourism expert and politely ask the user to describe the image or tell you the name of the place they are showing you.]";
+                userContent = simplePrompt + imageFallbackInstruction;
             }
 
             const model = "llama-3.3-70b-versatile";
