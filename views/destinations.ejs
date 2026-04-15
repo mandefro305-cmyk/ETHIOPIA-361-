@@ -107,7 +107,7 @@
 let allPlaces = [];
 let currentCategory = 'all';
 let currentPage = 1;
-const placesPerPage = 4;
+const placesPerPage = 6;
 
 // Load destinations from database
 async function loadDestinations() {
@@ -206,7 +206,7 @@ function displayDestinations(places) {
                     `}
                     <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
                     <p class="place-description">
-                        <span class="short-text" data-en="${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 150) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 150) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
+                        <span class="short-text" data-en="${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 120) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
                         <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
                     </p>
                     <div class="card-actions">
