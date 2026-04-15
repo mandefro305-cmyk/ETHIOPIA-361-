@@ -433,9 +433,29 @@ select#language option {
 }
 
 .places-grid {
-  background: linear-gradient(180deg, #f8faf9 0%, #eef2f0 100%);
+  background-image: url('../img/places-bg.png');
+  background-size: cover;
+  background-attachment: fixed;
+  background-position: center;
+  position: relative;
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
+}
+
+.places-grid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(248, 250, 249, 0.4);
+  z-index: 0;
+}
+
+.places-grid h2, .places-grid .grid-container, .places-grid .category-filters, .places-grid .category-section {
+  position: relative;
+  z-index: 1;
 }
 
 .grid-container {
@@ -622,15 +642,16 @@ footer {
 
 /* Enhanced Destination Cards */
 .destination-card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     position: relative;
     transform: translateY(0);
     scale: 1;
-    border: 1px solid rgba(0,0,0,0.04);
+    border: 1px solid rgba(255,255,255,0.2);
 }
 
 .destination-card:hover {
