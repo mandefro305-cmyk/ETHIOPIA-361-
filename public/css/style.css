@@ -994,3 +994,10 @@ footer {
         height: 60px;
     }
 }
+
+/* Dark mode overrides for transparent backgrounds */
+body.dark-mode .gallery-place-card,
+body.dark-mode .place-rank-card {
+    background: transparent;
+    border-color: rgba(255,255,255,0.06);
+}

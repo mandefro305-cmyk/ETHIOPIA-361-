@@ -63,11 +63,16 @@
 .top10-section {
     max-width: 1000px;
     margin: 3rem auto;
-    padding: 0 2rem;
+    padding: 2rem;
+    background-image: url("/img/places-bg.png");
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    border-radius: 15px;
 }
 .top10-section > h2 {
     text-align: center;
-    color: var(--primary-color);
+    color: #0000ff;
     font-size: 2rem;
     margin-bottom: 2rem;
 }
@@ -75,7 +80,8 @@
 .place-rank-card {
     display: flex;
     gap: 2rem;
-    background: white;
+    background: transparent;
+    border: 1px solid rgba(0,0,0,0.1);
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 4px 20px rgba(0,0,0,0.08);
@@ -121,7 +127,7 @@
     flex: 1;
 }
 .place-rank-content h3 {
-    color: var(--primary-color);
+    color: #0000ff;
     font-size: 1.5rem;
     margin-bottom: 0.3rem;
 }
@@ -136,7 +142,7 @@
     margin-bottom: 0.75rem;
 }
 .place-rank-content .description {
-    color: #555;
+    color: #000000;
     line-height: 1.7;
     margin-bottom: 1rem;
 }
