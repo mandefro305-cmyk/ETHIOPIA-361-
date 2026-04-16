@@ -276,6 +276,7 @@ body.dark-mode .card-content h3 {
 }
 
 body.dark-mode .card p,
+body.dark-mode .place-description,
 body.dark-mode .card-description,
 body.dark-mode .short-text,
 body.dark-mode .full-text {
@@ -491,14 +492,10 @@ select#language option {
 }
 
 .place-description {
-  color: #555;
-  /* background-color removed */ /* A nice deep blue */
+  color: #333;
   line-height: 1.6;
   margin-bottom: 1.5rem;
   font-size: 1rem;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 .place-img {
@@ -716,13 +713,10 @@ footer {
 }
 
 .card-description {
-    color: #555;
-    /* background-color removed */
+    color: #333;
     line-height: 1.6;
     font-size: 0.95rem;
     margin-bottom: 1.5rem;
-    padding: 10px;
-    border-radius: 8px;
 }
 
 .card-actions {
