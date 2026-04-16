@@ -235,7 +235,7 @@ async function loadDestinations() {
         if (places.length === 0) {
             container.innerHTML = `
                 <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 2rem;">
-                    <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+                    <i class="fas fa-map-marked-alt" style="font-size: 3rem; color: #000; margin-bottom: 1rem;"></i>
                     <p data-en="No destinations available yet." data-am="መዳረሻዎች ገና የሉም።">No destinations available yet.</p>
                 </div>
             `;
@@ -332,7 +332,7 @@ function displayTravelGuides(places) {
                 <div class="travel-guide-info" style="display: grid; gap: 1rem;">
                     ${travelGuide.best_time_to_visit ? `
                         <div class="guide-item">
-                            <i class="fas fa-calendar-alt" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-calendar-alt" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="Best Time to Visit:" data-am="የሚጥ ጊዜያ:">Best Time to Visit:</strong>
                             <span data-en="${travelGuide.best_time_to_visit}" data-am="${travelGuide.best_time_to_visit_am || travelGuide.best_time_to_visit}">${travelGuide.best_time_to_visit}</span>
                         </div>
@@ -340,7 +340,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.how_to_get_there ? `
                         <div class="guide-item">
-                            <i class="fas fa-route" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-route" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="How to Get There:" data-am="እንዴ መድረም:">How to Get There:</strong>
                             <span data-en="${travelGuide.how_to_get_there}" data-am="${travelGuide.how_to_get_there_am || travelGuide.how_to_get_there}">${travelGuide.how_to_get_there}</span>
                         </div>
@@ -348,7 +348,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.what_to_bring ? `
                         <div class="guide-item">
-                            <i class="fas fa-backpack" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-backpack" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="What to Bring:" data-am="ምን ይውሰው:">What to Bring:</strong>
                             <span data-en="${travelGuide.what_to_bring}" data-am="${travelGuide.what_to_bring_am || travelGuide.what_to_bring}">${travelGuide.what_to_bring}</span>
                         </div>
@@ -356,7 +356,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.local_tips ? `
                         <div class="guide-item">
-                            <i class="fas fa-lightbulb" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-lightbulb" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="Local Tips:" data-am="የአካባ አሳሉ:">Local Tips:</strong>
                             <span data-en="${travelGuide.local_tips}" data-am="${travelGuide.local_tips_am || travelGuide.local_tips}">${travelGuide.local_tips}</span>
                         </div>
@@ -364,7 +364,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.entrance_fees ? `
                         <div class="guide-item">
-                            <i class="fas fa-ticket-alt" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-ticket-alt" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="Entrance Fees:" data-am="የግቢያ ክፍያ:">Entrance Fees:</strong>
                             <span data-en="${travelGuide.entrance_fees}" data-am="${travelGuide.entrance_fees_am || travelGuide.entrance_fees}">${travelGuide.entrance_fees}</span>
                         </div>
@@ -372,7 +372,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.opening_hours ? `
                         <div class="guide-item">
-                            <i class="fas fa-clock" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-clock" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="Opening Hours:" data-am="የመክፍክታ ሰዓታ:">Opening Hours:</strong>
                             <span data-en="${travelGuide.opening_hours}" data-am="${travelGuide.opening_hours_am || travelGuide.opening_hours}">${travelGuide.opening_hours}</span>
                         </div>
@@ -380,7 +380,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.accommodation ? `
                         <div class="guide-item">
-                            <i class="fas fa-bed" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-bed" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="Accommodation:" data-am="እንግ:">Accommodation:</strong>
                             <span data-en="${travelGuide.accommodation}" data-am="${travelGuide.accommodation_am || travelGuide.accommodation}">${travelGuide.accommodation}</span>
                         </div>
@@ -388,7 +388,7 @@ function displayTravelGuides(places) {
                     
                     ${travelGuide.nearby_attractions ? `
                         <div class="guide-item">
-                            <i class="fas fa-map-marked" style="color: var(--primary-color); margin-right: 0.5rem;"></i>
+                            <i class="fas fa-map-marked" style="color: #000; margin-right: 0.5rem;"></i>
                             <strong data-en="Nearby Attractions:" data-am="አቅር መስልከቶች:">Nearby Attractions:</strong>
                             <span data-en="${travelGuide.nearby_attractions}" data-am="${travelGuide.nearby_attractions_am || travelGuide.nearby_attractions}">${travelGuide.nearby_attractions}</span>
                         </div>
@@ -445,7 +445,7 @@ function showVideo(videoUrl, placeName) {
     modal.innerHTML = `
         <div style="background: white; border-radius: 16px; max-width: 800px; width: 90%; max-height: 90vh; position: relative;">
             <div style="padding: 2rem; border-bottom: 1px solid #e0e0e0;">
-                <h3 style="margin: 0; color: var(--primary-color);">${placeName}</h3>
+                <h3 style="margin: 0; color: #000;">${placeName}</h3>
                 <button onclick="this.closest('.video-modal').remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;">×</button>
             </div>
             <div style="padding: 2rem; text-align: center;">
