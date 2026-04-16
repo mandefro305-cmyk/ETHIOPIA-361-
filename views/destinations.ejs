@@ -175,63 +175,43 @@ function displayDestinations(places) {
     const endIndex = startIndex + placesPerPage;
     const paginatedPlaces = filteredPlaces.slice(startIndex, endIndex);
 
-    // Group by category
-    const groupedPlaces = {};
-    paginatedPlaces.forEach(place => {
-        if (!groupedPlaces[place.category]) {
-            groupedPlaces[place.category] = [];
-        }
-        groupedPlaces[place.category].push(place);
-    });
-
-    // Display grouped places
     let html = '';
-    Object.keys(groupedPlaces).forEach(category => {
-        html += `
-            <div class="category-section" style="margin-bottom: 3rem;">
-                <h3 style="color: var(--primary-color); margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.5rem;">
-                    <span>${getCategoryIcon(category)}</span>
-                    <span data-en="${category}" data-am="${getCategoryAmharic(category)}">${category}</span>
-                </h3>
-                <div class="grid-container">
-        `;
-        
-        groupedPlaces[category].forEach(place => {
+
+    // Group places by category if not 'all'
+    if (currentCategory === 'all') {
+        html = '<div class="grid-container">';
+        paginatedPlaces.forEach(place => {
+            html += generatePlaceCard(place);
+        });
+        html += '</div>';
+    } else {
+        const groupedPlaces = paginatedPlaces.reduce((acc, place) => {
+            const category = place.category || 'Other';
+            if (!acc[category]) acc[category] = [];
+            acc[category].push(place);
+            return acc;
+        }, {});
+
+        for (const [category, categoryPlaces] of Object.entries(groupedPlaces)) {
             html += `
-                <div class="card">
-                    ${place.image_url ? `
-                        <img src="${place.image_url.startsWith('http') || place.image_url.startsWith('/') ? place.image_url : '/img/' + place.image_url}" alt="${place.name}" class="place-img" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
-                    ` : `
-                        <img src="/img/placeholder.jpg" alt="${place.name}" class="place-img" loading="lazy">
-                    `}
-                    <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
-                    <p class="place-description">
-                        <span class="short-text" data-en="${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 120) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
-                        <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
-                    </p>
-                    <div class="card-actions">
-                        <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
-                        <a href="/place/${place._id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
-                        ${place.video_url ? `
-                            <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
-                                <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
-                            </button>
-                        ` : ''}
-                        ${place.description_pdf ? `
-                            <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
-                                <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
-                            </a>
-                        ` : ''}
+                <div class="category-section" style="grid-column: 1 / -1; margin-bottom: 3rem;">
+                    <h2 class="category-title" style="margin-bottom: 2rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; display: inline-block;">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">${getCategoryIcon(category)}</span>
+                        <span data-en="${category}" data-am="${getCategoryAmharic(category)}">${category}</span>
+                    </h2>
+                    <div class="grid-container">
+            `;
+
+            categoryPlaces.forEach(place => {
+                html += generatePlaceCard(place);
+            });
+
+            html += `
                     </div>
                 </div>
             `;
-        });
-        
-        html += `
-                </div>
-            </div>
-        `;
-    });
+        }
+    }
 
     container.innerHTML = html;
     
@@ -264,6 +244,37 @@ function displayDestinations(places) {
     if (typeof updateLanguage === 'function') {
         updateLanguage(localStorage.getItem('selectedLanguage') || 'en');
     }
+}
+
+function generatePlaceCard(place) {
+    return `
+        <div class="card">
+            ${place.image_url ? `
+                <img src="${place.image_url.startsWith('http') || place.image_url.startsWith('/') ? place.image_url : '/img/' + place.image_url}" alt="${place.name}" class="place-img" loading="lazy" onerror="this.onerror=null; this.src='/img/placeholder.jpg';">
+            ` : `
+                <img src="/img/placeholder.jpg" alt="${place.name}" class="place-img" loading="lazy">
+            `}
+            <h3 data-en="${place.name}" data-am="${place.name_am || place.name}">${place.name}</h3>
+            <p class="place-description">
+                <span class="short-text" data-en="${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am ? place.description_am.substring(0, 120) + '...' : 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description ? place.description.substring(0, 120) + '...' : 'Discover this amazing destination in Ethiopia'}</span>
+                <span class="full-text" style="display: none;" data-en="${place.description || 'Discover this amazing destination in Ethiopia'}" data-am="${place.description_am || 'ይህንን የሚያምር የኢትዮጵያን መዳረሻ ያግኙ'}">${place.description || 'Discover this amazing destination in Ethiopia'}</span>
+            </p>
+            <div class="card-actions">
+                <button class="btn-read-more" onclick="toggleReadMore(this)" data-en="Read More" data-am="ተጨማሪ ያንብቡ">Read More</button>
+                <a href="/place/${place._id}" class="btn-view-details" data-en="View Details" data-am="ዝርዝሮችን ይመልከቱ">View Details</a>
+                ${place.video_url ? `
+                    <button class="btn-read-more" onclick="showVideo('${place.video_url}', '${place.name}')" style="background-color: var(--secondary-color); color: var(--text-dark);">
+                        <i class="fas fa-play"></i> <span data-en="Watch Video" data-am="ቪዲዮውን ይመልከቱ">Watch Video</span>
+                    </button>
+                ` : ''}
+                ${place.description_pdf ? `
+                    <a href="${place.description_pdf}" target="_blank" class="btn-read-more" style="background-color: #e74c3c; color: white; text-decoration: none;">
+                        <i class="fas fa-file-pdf"></i> <span data-en="Download PDF" data-am="PDF ያውርዱ">Download PDF</span>
+                    </a>
+                ` : ''}
+            </div>
+        </div>
+    `;
 }
 
 // Change page function
