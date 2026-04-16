@@ -74,7 +74,7 @@
 
 <!-- Categories Section -->
 <section class="categories-section" style="padding: 2rem; max-width: 1200px; margin: 0 auto;">
-    <h2 data-en="Browse by Category" data-am="በምድግ ይዝርዱ" style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">Browse by Category</h2>
+    <h2 data-en="Browse by Category" data-am="በምድግ ይዝርዱ" style="text-align: center; margin-bottom: 2rem; color: #000;">Browse by Category</h2>
     <div class="category-filters" style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 2rem;">
         <button class="category-btn active" data-category="all" data-en="All" data-am="ሁሉን">All</button>
         <button class="category-btn" data-category="Historical" data-en="Historical" data-am="ታሪክ">Historical</button>
@@ -92,7 +92,7 @@
 <div class="grid-container" id="destinationsContent">
     <!-- Loading spinner -->
     <div id="destinationsLoader" style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-        <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: var(--primary-color); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+        <div style="display: inline-block; width: 50px; height: 50px; border: 4px solid #e0e0e0; border-top-color: #000; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
         <p style="margin-top: 1rem; color: #888;" data-en="Loading destinations..." data-am="መዳረሻዎችን በመጫን ላይ...">Loading destinations...</p>
     </div>
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
@@ -195,7 +195,7 @@ function displayDestinations(places) {
         for (const [category, categoryPlaces] of Object.entries(groupedPlaces)) {
             html += `
                 <div class="category-section" style="grid-column: 1 / -1; margin-bottom: 3rem;">
-                    <h2 class="category-title" style="margin-bottom: 2rem; color: var(--primary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; display: inline-block;">
+                    <h2 class="category-title" style="margin-bottom: 2rem; color: #000; border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; display: inline-block;">
                         <span style="font-size: 1.5rem; margin-right: 0.5rem;">${getCategoryIcon(category)}</span>
                         <span data-en="${category}" data-am="${getCategoryAmharic(category)}">${category}</span>
                     </h2>
@@ -370,7 +370,7 @@ function showVideo(videoUrl, placeName) {
     modal.innerHTML = `
         <div style="background: white; border-radius: 16px; max-width: 800px; width: 90%; max-height: 90vh; position: relative;">
             <div style="padding: 2rem; border-bottom: 1px solid #e0e0e0;">
-                <h3 style="margin: 0; color: var(--primary-color);">${placeName}</h3>
+                <h3 style="margin: 0; color: #000;">${placeName}</h3>
                 <button onclick="this.closest('.video-modal').remove()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #999;">×</button>
             </div>
             <div style="padding: 2rem; text-align: center;">
@@ -465,7 +465,7 @@ function toggleMobileMenu() {
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
-    color: var(--primary-color);
+    color: #000;
 }
 
 .category-btn:hover {
@@ -485,7 +485,7 @@ function toggleMobileMenu() {
 }
 
 .search-container input:focus {
-    border-color: var(--primary-color);
+    border-color: #000;
     box-shadow: 0 0 0 3px rgba(0,77,64,0.1);
 }
 
@@ -524,7 +524,7 @@ function toggleMobileMenu() {
 
 .page-info {
     font-weight: bold;
-    color: var(--primary-color);
+    color: #000;
     font-size: 1.1rem;
 }
 </style>
