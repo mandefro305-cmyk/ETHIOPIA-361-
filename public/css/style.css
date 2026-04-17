@@ -1001,7 +1001,22 @@ footer {
 
 /* Dark mode overrides for transparent backgrounds */
 body.dark-mode .gallery-place-card,
-body.dark-mode .place-rank-card {
-    background: transparent;
+body.dark-mode .place-rank-card,
+body.dark-mode .tip-card {
+    background: #2a2a2a;
     border-color: rgba(255,255,255,0.06);
+}
+
+
+/* Dark mode text colors for gallery and blog */
+body.dark-mode .gallery-card-info h3,
+body.dark-mode .place-rank-content h3,
+body.dark-mode .tip-card h3 {
+    color: #4dd0c8;
+}
+
+body.dark-mode .gallery-card-cat,
+body.dark-mode .place-rank-content p,
+body.dark-mode .tip-card p {
+    color: #ccc;
 }
