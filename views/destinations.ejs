@@ -117,8 +117,13 @@ async function loadDestinations() {
         
         console.log('Loaded places:', places.length);
         
-        // Show all places (removed slice that was skipping first 10)
-        allPlaces = places;
+        // Duplicate places to fill up empty space for visual testing/mock data
+        let duplicatedPlaces = [...places];
+        while (duplicatedPlaces.length < 24) {
+             duplicatedPlaces = duplicatedPlaces.concat(places);
+        }
+
+        allPlaces = duplicatedPlaces;
         // Remove loader
         const loader = document.getElementById('destinationsLoader');
         if (loader) loader.remove();
