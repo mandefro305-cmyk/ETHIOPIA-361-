@@ -242,7 +242,13 @@ async function loadDestinations() {
             return;
         }
         
-        container.innerHTML = places.slice(0, 6).map(place => `
+        // Duplicate places for visual layout testing
+        let duplicatedPlaces = [...places];
+        while (duplicatedPlaces.length < 12) {
+            duplicatedPlaces = duplicatedPlaces.concat(places);
+        }
+
+        container.innerHTML = duplicatedPlaces.slice(0, 12).map(place => `
             <div class="card" onclick="window.location.href='/place/${place._id}'" style="cursor: pointer;">
                 ${place.image_url ? `
                     ${place.image_url.startsWith('/uploads/') 
