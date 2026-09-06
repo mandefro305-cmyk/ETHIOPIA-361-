@@ -76,10 +76,13 @@ npm install
 npm start
 ```
 
-### Vercel Deployment
-1. Push to GitHub
-2. Import to Vercel
-3. Automatic deployment
+### Deployment Options
+
+- **Railway Deployment:** See [RAILWAY_DEPLOY.md](./RAILWAY_DEPLOY.md) for full instructions on deploying to Railway with persistent volume support and MongoDB configuration.
+- **Vercel Deployment:**
+  1. Push to GitHub
+  2. Import to Vercel
+  3. Automatic deployment
 
 ## 🔧 Configuration
 
